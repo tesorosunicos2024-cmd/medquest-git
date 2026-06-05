@@ -11385,16 +11385,16 @@ function AppContent() {
                 </div>
 
                 {/* Ponto Fraco — dinâmico */}
-                <div className="bg-[#1a1a18] p-7 rounded-[2.5rem] border border-white/5 shadow-2xl relative overflow-hidden">
+                <div className="bg-white p-7 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden">
                   <div className="flex items-center gap-4 mb-5">
-                    <div className="w-12 h-12 bg-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange shadow-inner shrink-0">
+                    <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-brand-primary shrink-0">
                       <Activity size={22} strokeWidth={2.5} />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-white uppercase tracking-tighter leading-none mb-1">
+                      <h3 className="text-base font-black text-slate-900 uppercase tracking-tighter leading-none mb-1">
                         {weakSubject ? 'Ponto Fraco Detectado' : 'Análise de Desempenho'}
                       </h3>
-                      <p className="text-neutral-500 text-[10px] font-black uppercase tracking-widest leading-none">
+                      <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest leading-none">
                         {weakSubject ? `${weakSubject} • ${weakAttempts} questões respondidas` : 'Baseado no seu histórico'}
                       </p>
                     </div>
@@ -11402,15 +11402,15 @@ function AppContent() {
 
                   {weakSubject ? (
                     <>
-                      <p className="text-slate-400 font-medium mb-6 leading-relaxed italic text-sm">
+                      <p className="text-slate-600 font-medium mb-6 leading-relaxed italic text-sm">
                         "Seu aproveitamento em <span className="text-brand-orange font-black not-italic">{weakSubject}</span> está em {weakMastery}%. Recomendamos reforçar esse tema para subir sua pontuação."
                       </p>
                       <div className="mb-6">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Aproveitamento atual</span>
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Aproveitamento atual</span>
                           <span className="text-[11px] font-black" style={{ color: weakMastery < 40 ? '#EF4444' : weakMastery < 70 ? '#F59E0B' : '#22C55E' }}>{weakMastery}%</span>
                         </div>
-                        <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${weakMastery}%` }}
@@ -11422,7 +11422,7 @@ function AppContent() {
                       </div>
                       <button
                         onClick={() => { setSelectedSubject(weakSubject as any); startQuiz(false, weakSubject as any, null); }}
-                        className="w-full bg-brand-orange py-4 rounded-2xl text-black font-black text-sm shadow-xl shadow-brand-orange/20 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+                        className="w-full bg-brand-orange py-4 rounded-2xl text-white font-extrabold text-sm shadow-xl shadow-brand-orange/25 hover:scale-[1.01] active:scale-95 transition-all uppercase tracking-widest"
                       >
                         Revisar {weakSubject} Agora
                       </button>
@@ -11430,12 +11430,12 @@ function AppContent() {
                   ) : (
                     <div className="flex flex-col items-center py-6 gap-3 text-center">
                       <span className="text-4xl">🎯</span>
-                      <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                      <p className="text-slate-600 text-sm font-medium leading-relaxed">
                         Responda questões para que o Dr. Will identifique seus pontos fracos automaticamente.
                       </p>
                       <button
                         onClick={() => setView('home')}
-                        className="mt-2 px-6 py-3 bg-brand-orange/20 text-brand-orange rounded-xl font-black text-xs uppercase tracking-widest hover:bg-brand-orange/30 transition-all"
+                        className="mt-2 px-6 py-3 bg-brand-primary text-white hover:bg-blue-600 font-black text-xs uppercase tracking-widest rounded-xl shadow-md min-h-[44px] shadow-blue-500/10 active:scale-95 transition-all"
                       >
                         Começar a Jogar
                       </button>
@@ -11445,21 +11445,21 @@ function AppContent() {
 
                 {/* Performance por matéria */}
                 {performanceRows.length > 0 && (
-                  <div className="bg-[#1a1a18] p-6 rounded-[2.5rem] border border-white/5 shadow-2xl flex flex-col gap-4">
+                  <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col gap-4">
                     <div className="flex items-center gap-3 mb-1">
-                      <div className="bg-blue-500/10 p-2 rounded-lg text-blue-400">
+                      <div className="bg-blue-50 border border-blue-100 p-2 rounded-xl text-brand-primary">
                         <BarChart2 size={16} />
                       </div>
-                      <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Seu Desempenho por Matéria</span>
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Seu Desempenho por Matéria</span>
                     </div>
                     <div className="space-y-4">
                       {performanceRows.map(row => (
                         <div key={row.subj}>
                           <div className="flex justify-between items-center mb-1.5">
-                            <span className="text-xs font-bold text-slate-300 truncate">{row.subj}</span>
+                            <span className="text-xs font-bold text-slate-700 truncate">{row.subj}</span>
                             <span className="text-[10px] font-black shrink-0 ml-2" style={{ color: row.mastery < 40 ? '#EF4444' : row.mastery < 70 ? '#F59E0B' : '#22C55E' }}>{row.mastery}%</span>
                           </div>
-                          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${row.mastery}%` }}
@@ -11468,7 +11468,7 @@ function AppContent() {
                               style={{ background: row.mastery < 40 ? '#EF4444' : row.mastery < 70 ? '#F59E0B' : '#22C55E' }}
                             />
                           </div>
-                          <span className="text-[9px] text-neutral-600 font-bold">{row.attempts} questão{row.attempts !== 1 ? 'ões' : ''} respondida{row.attempts !== 1 ? 's' : ''}</span>
+                          <span className="text-[9px] text-slate-400 font-bold">{row.attempts} questão{row.attempts !== 1 ? 'ões' : ''} respondida{row.attempts !== 1 ? 's' : ''}</span>
                         </div>
                       ))}
                     </div>
@@ -11477,12 +11477,12 @@ function AppContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Temas Críticos — dinâmico */}
-                  <div className="bg-[#1a1a18] p-6 rounded-[2.5rem] border border-white/5 shadow-2xl flex flex-col gap-4">
+                  <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="bg-red-500/10 p-2 rounded-lg text-red-400">
+                      <div className="bg-red-50 border border-red-100 p-2 rounded-xl text-red-500">
                         <AlertTriangle size={16} />
                       </div>
-                      <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Temas Críticos</span>
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Temas Críticos</span>
                     </div>
                     {criticalTopics.length > 0 ? (
                       <div className="space-y-2">
@@ -11490,33 +11490,34 @@ function AppContent() {
                           <button
                             key={topic.label}
                             onClick={() => { setSelectedSubject(topic.subject as any); startQuiz(false, topic.subject as any, null); }}
-                            className="w-full flex justify-between items-center bg-white/5 hover:bg-white/10 active:scale-95 transition-all p-3 rounded-xl"
+                            className="w-full flex justify-between items-center bg-slate-50 hover:bg-slate-100/80 active:scale-95 transition-all p-3.5 rounded-2xl border border-slate-100/60"
                           >
                             <div className="flex items-center gap-2 min-w-0">
-                              <span className="w-5 h-5 rounded-full bg-red-500/20 text-red-400 text-[9px] font-black flex items-center justify-center shrink-0">{topic.count}</span>
-                              <span className="text-xs font-bold text-slate-300 truncate">{topic.label}</span>
+                              <span className="w-5 h-5 rounded-full bg-red-50 text-red-600 border border-red-100/50 text-[9px] font-black flex items-center justify-center shrink-0">{topic.count}</span>
+                              <span className="text-xs font-bold text-slate-700 truncate">{topic.label}</span>
                             </div>
-                            <ChevronRight size={13} className="text-neutral-600 shrink-0" />
+                            <ChevronRight size={13} className="text-slate-400 shrink-0" />
                           </button>
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center py-4 gap-2 text-center">
+                      <div className="flex flex-col items-center py-6 gap-2 text-center">
                         <span className="text-2xl">✅</span>
-                        <p className="text-neutral-500 text-xs font-medium">Nenhum tema crítico ainda.<br/>Continue jogando!</p>
+                        <p className="text-slate-700 text-xs font-bold">Nenhum tema crítico ainda.</p>
+                        <p className="text-slate-400 text-[10px] sm:text-[11px] font-medium leading-relaxed">Parabéns! Continue respondendo questões para o monitoramento personalizado.</p>
                       </div>
                     )}
                   </div>
 
                   {/* Simulado de Erros */}
-                  <div className="bg-slate-900 p-7 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+                  <div className="bg-gradient-to-br from-brand-primary to-blue-800 p-7 rounded-[2.5rem] text-white shadow-xl shadow-blue-500/10 relative overflow-hidden">
                     <div className="relative z-10">
                       <h4 className="text-lg font-black uppercase tracking-tighter mb-2">Simulado de Erros</h4>
-                      <p className="text-slate-400 text-xs font-medium mb-5 leading-relaxed">Refazer apenas as {user.missedQuestionIds.length} questão{user.missedQuestionIds.length !== 1 ? 'ões' : ''} que você errou.</p>
+                      <p className="text-blue-100/90 text-xs font-medium mb-5 leading-relaxed">Refazer apenas as {user.missedQuestionIds.length} questão{user.missedQuestionIds.length !== 1 ? 'ões' : ''} que você errou.</p>
                       <button
                         onClick={() => startQuiz(true)}
                         disabled={user.missedQuestionIds.length === 0}
-                        className="w-full py-3 bg-white text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="w-full py-3.5 bg-white text-brand-primary rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         {user.missedQuestionIds.length === 0 ? 'Sem erros pendentes' : `Gerar Simulado (${user.missedQuestionIds.length})`}
                       </button>
@@ -11760,7 +11761,7 @@ function AppContent() {
                     </div>
 
                     {/* Sua posição Footer Card */}
-                    <div className="bg-[#1a1a18] p-6 rounded-[2.5rem] mt-6 border border-white/5 space-y-4 shadow-2xl">
+                    <div className="bg-slate-950 p-6 rounded-[2.5rem] mt-6 border border-blue-900/40 space-y-4 shadow-2xl">
                        <div className="flex justify-between items-end">
                           <p className="text-[11px] font-black text-neutral-500 uppercase tracking-widest leading-none">Sua posição: 4º lugar</p>
                           <p className="text-[11px] font-black text-white/50 uppercase tracking-widest leading-none">+2.180 XP para o top 3</p>
@@ -11968,7 +11969,7 @@ function AppContent() {
                             content={({ active, payload }) => {
                               if (active && payload && payload.length) {
                                 return (
-                                  <div className="bg-[#1a1a18] border border-white/10 px-4 py-3 rounded-2xl shadow-2xl text-center">
+                                  <div className="bg-slate-950 border border-slate-800 px-4 py-3 rounded-2xl shadow-2xl text-center">
                                     <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest leading-none mb-1">{payload[0].payload.name}</p>
                                     <p className="text-xl font-black text-white">{payload[0].value}% <span className="text-[10px] text-blue-400 font-black ml-1 uppercase">acerto</span></p>
                                   </div>
@@ -12014,7 +12015,7 @@ function AppContent() {
                             content={({ active, payload }) => {
                               if (active && payload && payload.length) {
                                 return (
-                                  <div className="bg-[#1a1a18] border border-white/10 px-4 py-3 rounded-2xl shadow-2xl text-center">
+                                  <div className="bg-slate-950 border border-slate-800 px-4 py-3 rounded-2xl shadow-2xl text-center">
                                     <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest leading-none mb-1">{payload[0].payload.name}</p>
                                     <p className="text-xl font-black text-white">{payload[0].value}%</p>
                                   </div>
@@ -12626,8 +12627,8 @@ function AppContent() {
       {/* Footer Navigation (Mobile) */}
       {view !== 'quiz' && (
         <nav className={`fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t px-6 py-4 flex justify-around md:hidden z-40 ${
-          view === 'ranking' || view === 'progress' || view === 'revision'
-            ? 'bg-[#1a1a18]/95 border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]'
+          view === 'ranking' || view === 'progress'
+            ? 'bg-slate-950/95 border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]'
             : 'bg-white/80 border-slate-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]'
         }`}>
           {[
@@ -12638,7 +12639,7 @@ function AppContent() {
             { id: 'profile', icon: <User size={24} />, label: 'Perfil' }
           ].map((item) => {
             const isActive = view === item.id;
-            const isDark = view === 'ranking' || view === 'progress' || view === 'revision';
+            const isDark = view === 'ranking' || view === 'progress';
             return (
               <button
                 key={item.id}
