@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, useRef, Component, ErrorInfo, ReactNode } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Component, ErrorInfo, ReactNode, MouseEvent, WheelEvent } from 'react';
 import { 
   Trophy, 
   Flame, 
@@ -8278,6 +8278,49 @@ const MEDICAL_AVATARS = [
   }
 ];
 
+const dragScrollProps = {
+  onMouseDown: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    el.dataset.isDown = 'true';
+    el.dataset.startX = String(e.pageX - el.offsetLeft);
+    el.dataset.scrollLeft = String(el.scrollLeft);
+    el.style.cursor = 'grabbing';
+    el.style.userSelect = 'none';
+  },
+  onMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.dataset.isDown === 'true') {
+      el.dataset.isDown = 'false';
+      el.style.cursor = '';
+      el.style.userSelect = '';
+    }
+  },
+  onMouseUp: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.dataset.isDown === 'true') {
+      el.dataset.isDown = 'false';
+      el.style.cursor = '';
+      el.style.userSelect = '';
+    }
+  },
+  onMouseMove: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.dataset.isDown !== 'true') return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const startX = Number(el.dataset.startX || 0);
+    const scrollLeft = Number(el.dataset.scrollLeft || 0);
+    const walk = (x - startX) * 1.5;
+    el.scrollLeft = scrollLeft - walk;
+  },
+  onWheel: (e: React.WheelEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (e.deltaY !== 0) {
+      el.scrollLeft += e.deltaY;
+    }
+  }
+};
+
 function AppContent() {
   const [view, setView] = useState<'landing' | 'home' | 'quiz' | 'summary' | 'ranking' | 'profile' | 'progress' | 'revision' | 'residencia-onboarding' | 'session-review'>('landing');
   const [reviewQuestionIndex, setReviewQuestionIndex] = useState<number>(0);
@@ -8765,7 +8808,7 @@ function AppContent() {
             <MedQuestLogo />
           </div>
 
-          <div className="flex items-center bg-slate-50 px-2 py-1.5 rounded-full border border-slate-200 hide-scrollbar overflow-x-auto max-w-[220px] sm:max-w-none shadow-sm">
+          <div className="flex items-center bg-slate-50 px-2 py-1.5 rounded-full border border-slate-200 hide-scrollbar overflow-x-auto max-w-[220px] sm:max-w-none shadow-sm cursor-grab active:cursor-grabbing select-none" {...dragScrollProps}>
             <div className="flex items-center gap-1.5 px-2.5 border-r border-slate-200 shrink-0">
               <Flame size={16} className="text-brand-orange fill-brand-orange" />
               <span className="font-black text-slate-900 text-sm">{user.streak}</span>
@@ -9114,7 +9157,7 @@ function AppContent() {
                   </div>
 
                   {/* UF Filters */}
-                  <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 mb-4">
+                  <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 mb-4 cursor-grab active:cursor-grabbing select-none" {...dragScrollProps}>
                     {['Todas', 'BR', 'SP', 'RJ', 'RS', 'PR', 'MG', 'SC', 'BA', 'CE', 'PE', 'DF', 'GO', 'MS', 'AM', 'PA'].map(uf => {
                       const key = uf === 'Todas' ? 'TODAS' : uf;
                       const active = bancaUfFilter === key;
@@ -9819,7 +9862,7 @@ function AppContent() {
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Estudar por Matéria</p>
 
                       {/* Cycle Toggle */}
-                      <div className="flex bg-slate-100 p-1 rounded-2xl w-fit mx-auto shadow-inner overflow-x-auto">
+                      <div className="flex bg-slate-100 p-1 rounded-2xl w-fit mx-auto shadow-inner overflow-x-auto cursor-grab active:cursor-grabbing select-none" {...dragScrollProps}>
                         {(['Ciclo Clínico', 'Internato'] as Cycle[]).map((cycle) => (
                           <button
                             key={cycle}
@@ -11514,7 +11557,7 @@ function AppContent() {
 
               {/* League Tabs */}
               <div className="px-6 mb-8">
-                <div className="flex overflow-x-auto bg-white/5 p-1 rounded-2xl border border-white/10 gap-0.5 scrollbar-none">
+                <div className="flex overflow-x-auto bg-white/5 p-1 rounded-2xl border border-white/10 gap-0.5 scrollbar-none cursor-grab active:cursor-grabbing select-none" {...dragScrollProps}>
                   {([
                     { id: 'bronze'  as LeagueTier, label: 'Bronze',   icon: Shield  },
                     { id: 'prata'   as LeagueTier, label: 'Prata',    icon: Star    },
@@ -12077,7 +12120,7 @@ function AppContent() {
               <div className="space-y-4">
                 <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-[0.2em] px-4">Comprometimento Semanal</h4>
                 <div className="bg-gradient-to-br from-blue-950 to-slate-900 p-6 rounded-[2.5rem] border border-blue-800/40 shadow-2xl shadow-blue-900/20 overflow-hidden">
-                  <div className="flex justify-between items-center gap-1 min-w-0 overflow-x-auto hide-scrollbar py-2">
+                  <div className="flex justify-between items-center gap-1 min-w-0 overflow-x-auto hide-scrollbar py-2 cursor-grab active:cursor-grabbing select-none" {...dragScrollProps}>
                     {['Seg', 'Ter', 'Qua', 'Qui', 'Hoje', 'Sáb', 'Dom'].map((day, i) => {
                       const isDone = i < 4;
                       const isToday = i === 4;
