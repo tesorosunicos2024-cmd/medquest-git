@@ -10,8 +10,7 @@ __pycache__/
 
 # Data folders (PDFs, raw data, extraction outputs)
 data/raw/
-data/processed/*.json
-data/processed/*.ts
+# We allow committing processed database questions for GitHub sync!
 
 # Local script outputs
 scripts/utils/scraper.log
