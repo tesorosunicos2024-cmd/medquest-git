@@ -353,6 +353,33 @@ const SUBJECT_ICONS: Record<string, any> = {
   'Neurocirurgia': { image: '/9710955.png', icon: Brain, color: 'bg-violet-700', ringColor: '#6D28D9', textColor: 'text-white', shadow: 'shadow-violet-700/40' }
 };
 
+// ── SUBJECT RESILIENT ICON COMPONENT ──────────────────────────────────
+interface SubjectResilientIconProps {
+  subject: string;
+  size?: number;
+  className?: string;
+}
+
+function SubjectResilientIcon({ subject, size = 24, className = "" }: SubjectResilientIconProps) {
+  const iconData = SUBJECT_ICONS[subject] || { icon: BookOpen, color: 'bg-slate-400' };
+  const Icon = iconData.icon || BookOpen;
+  const [imgError, setImgError] = useState(false);
+
+  if (iconData.image && !imgError) {
+    return (
+      <img
+        src={iconData.image}
+        alt={subject}
+        className={className || `w-12 h-12 object-contain aspect-square ${subject === 'Anatomia' ? '-translate-y-1' : ''}`}
+        referrerPolicy="no-referrer"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return <Icon size={size} className="text-white" strokeWidth={3} />;
+}
+
 // ── MEDQUEST LOGO COMPONENT ──────────────────────────────────────────
 function MedQuestLogoIcon({ size = 40 }: { size?: number }) {
   return (
@@ -466,7 +493,6 @@ const GamePathNode = ({
   questionCount = 0,
 }: GamePathNodeProps) => {
   const iconData = SUBJECT_ICONS[subject] || { icon: BookOpen, color: 'bg-slate-400', ringColor: '#CBD5E1' };
-  const Icon = iconData.icon;
 
   return (
     <motion.div 
@@ -513,16 +539,11 @@ const GamePathNode = ({
               ? `scale-110 shadow-lg border-b-4 border-black/10` 
               : `hover:scale-105 border-b-4 border-black/20`
           } ${iconData.color || 'bg-brand-primary'}`}>
-             {iconData.image ? (
-               <img 
-                 src={iconData.image} 
-                 alt={subject} 
-                 className={`w-12 h-12 object-contain aspect-square ${subject === 'Anatomia' ? '-translate-y-1' : ''}`} 
-                 referrerPolicy="no-referrer"
-               />
-             ) : (
-               <Icon size={26} className="text-white" strokeWidth={3} />
-             )}
+             <SubjectResilientIcon 
+               subject={subject} 
+               className={`w-12 h-12 object-contain aspect-square ${subject === 'Anatomia' ? '-translate-y-1' : ''}`} 
+               size={26} 
+             />
           </div>
 
           {/* Level Crown Badge - Duolingo Style */}
@@ -2639,15 +2660,14 @@ export default function App() {
                 <div className="absolute top-0 left-0 w-2 h-full bg-brand-primary/20" />
                 <div className="flex items-center gap-2 mb-6">
                   {(() => {
-                    const iconData = SUBJECT_ICONS[activeQuestions[currentQuestionIndex].subject];
-                    const Icon = iconData?.icon;
+                    const iconData = SUBJECT_ICONS[activeQuestions[currentQuestionIndex].subject] || { color: 'bg-slate-200' };
                     return (
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden shrink-0 ${iconData?.color || 'bg-slate-200'}`}>
-                        {iconData?.image ? (
-                          <img src={iconData.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" />
-                        ) : Icon ? (
-                          <Icon size={18} className="text-white" />
-                        ) : null}
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden shrink-0 ${iconData.color}`}>
+                        <SubjectResilientIcon 
+                          subject={activeQuestions[currentQuestionIndex].subject} 
+                          className="w-6 h-6 object-contain" 
+                          size={18} 
+                        />
                       </div>
                     );
                   })()}
