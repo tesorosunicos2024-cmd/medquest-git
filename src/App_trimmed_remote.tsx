@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { QUESTIONS as ALL_QUESTIONS_IMPORTED } from "./questions";
 import { 
   Trophy, 
   Flame, 
@@ -200,7 +199,7 @@ const HIERARCHY: Record<Cycle, Partial<Record<Subject, string[]>>> = {
   }
 };
 
-const QUESTIONS: Question[] = ALL_QUESTIONS_IMPORTED;
+export const QUESTIONS: any[] = [];
 
 const RANKING = [
   { name: 'Dr. Ricardo M.', xp: 15420, level: 42, active: true, trend: 0 },
@@ -744,7 +743,7 @@ const BANCAS = [
   { id: 'amp',         short: 'AMP',             name: 'Associação Médica do Paraná',                     uf: 'PR' },
   { id: 'ams',         short: 'AMS',             name: 'Autarquia Municipal de Saúde de Apucarana',       uf: 'PR' },
   { id: 'ufmg',        short: 'UFMG',            name: 'Universidade Federal de Minas Gerais',            uf: 'MG' },
-  { id: 'psumg',       short: 'PSU-MG',          name: 'Processo Seletivo Unificado do SUS - Minas Gerais (AREMG)', uf: 'MG' },
+  { id: 'hcufmg',      short: 'HC-UFMG',         name: 'Hospital das Clínicas da UFMG',                  uf: 'MG' },
   { id: 'ufsc',        short: 'UFSC',            name: 'Universidade Federal de Santa Catarina',          uf: 'SC' },
   { id: 'ufba',        short: 'UFBA',            name: 'Universidade Federal da Bahia',                   uf: 'BA' },
   { id: 'saorafael',   short: 'São Rafael',      name: 'Hospital São Rafael',                             uf: 'BA' },
@@ -1935,7 +1934,7 @@ export default function App() {
                   {/* Banca Filter */}
                   <div className="flex items-center gap-2 flex-wrap justify-center">
                     <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Filtrar por banca:</span>
-                    {['IAMSPE', 'CERMAM', 'ENARE', 'UNESP', 'PSU-MG'].map(b => (
+                    {['IAMSPE', 'CERMAM', 'ENARE', 'UNESP'].map(b => (
                       <button
                         key={b}
                         onClick={() => setQuizBancaFilter(quizBancaFilter === b ? null : b)}
