@@ -1,22 +1,22 @@
 # Questões Organizadas por Banca
 
-## CERMAM (1136 questões)
+## CERMAM (1231 questões)
 
-- **Ginecologia & Obstetrícia**: 234 questões
-- **Pediatria**: 214 questões
-- **Medicina de Família/SUS**: 183 questões
-- **Cirurgia Geral**: 145 questões
-- **Gastroenterologia**: 46 questões
-- **Infectologia**: 39 questões
-- **Endocrinologia**: 29 questões
+- **Ginecologia & Obstetrícia**: 253 questões
+- **Pediatria**: 232 questões
+- **Medicina de Família/SUS**: 203 questões
+- **Cirurgia Geral**: 165 questões
+- **Gastroenterologia**: 48 questões
+- **Infectologia**: 40 questões
+- **Endocrinologia**: 32 questões
 - **Epidemiologia**: 29 questões
-- **Neurologia**: 27 questões
-- **Nefrologia**: 25 questões
-- **Cardiologia**: 24 questões
+- **Neurologia**: 28 questões
+- **Cardiologia**: 28 questões
+- **Nefrologia**: 26 questões
+- **Urgência e Emergência**: 23 questões
 - **Reumatologia**: 23 questões
+- **Hematologia**: 19 questões
 - **Pneumologia**: 18 questões
-- **Hematologia**: 18 questões
-- **Urgência e Emergência**: 18 questões
 - **Neonatologia**: 15 questões
 - **Urologia**: 8 questões
 - **Clínica Médica**: 7 questões
@@ -134,4 +134,4 @@
 - **Cardiologia**: 1 questões
 - **Gastroenterologia**: 1 questões
 
-**TOTAL: 1800 questões**
+**TOTAL: 1895 questões**
