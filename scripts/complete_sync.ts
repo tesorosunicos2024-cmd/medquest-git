@@ -118,33 +118,44 @@ export const QUESTIONS: any[] = ALL_QUESTIONS.map(q => ({
   
   let startLine = -1;
   let endLine = -1;
-  let bracketCount = 0;
   
+  // Find where the first questions part starts
   for (let i = 0; i < appLines.length; i++) {
-    const l = appLines[i];
-    if (startLine === -1) {
-      if (l.includes('const QUESTIONS') && l.includes('[')) {
-        startLine = i;
-        for (let ch of l.slice(l.indexOf('['))) {
-          if (ch === '[') bracketCount++;
-          else if (ch === ']') bracketCount--;
-        }
+    if (appLines[i].includes('const QUESTIONS_PART1') || (appLines[i].includes('const QUESTIONS') && appLines[i].includes('['))) {
+      startLine = i;
+      break;
+    }
+  }
+  
+  // Find where the combination QUESTIONS array starts
+  let comboStartLine = -1;
+  if (startLine !== -1) {
+    for (let i = startLine; i < appLines.length; i++) {
+      if (appLines[i] && appLines[i].includes('const QUESTIONS') && !appLines[i].includes('QUESTIONS_PART')) {
+        comboStartLine = i;
+        break;
       }
-    } else {
+    }
+  }
+  
+  if (comboStartLine !== -1) {
+    let bracketCount = 0;
+    for (let i = comboStartLine; i < appLines.length; i++) {
+      const l = appLines[i];
+      if (!l) continue;
       for (let ch of l) {
         if (ch === '[') bracketCount++;
         else if (ch === ']') bracketCount--;
       }
-      if (bracketCount === 0) {
+      if (bracketCount === 0 && l.includes(']')) {
         endLine = i;
         break;
       }
     }
   }
   
-  console.log(`QUESTIONS block located at lines ${startLine + 1} - ${endLine + 1}.`);
-  
   if (startLine !== -1 && endLine !== -1) {
+    console.log(`QUESTIONS block located at lines ${startLine + 1} - ${endLine + 1}.`);
     const trimmedAppLines = [
       ...appLines.slice(0, startLine),
       'const QUESTIONS: Question[] = ALL_QUESTIONS_IMPORTED;',
@@ -165,7 +176,7 @@ export const QUESTIONS: any[] = ALL_QUESTIONS.map(q => ({
     fs.writeFileSync('src/App.tsx', trimmedAppLines.join('\n'), 'utf8');
     console.log(`Successfully trimmed src/App.tsx down to ${trimmedAppLines.length} lines and injected dynamic questions import!`);
   } else {
-    console.error('CRITICAL ERROR: QUESTIONS block not found in checked out App.tsx!');
+    console.log('QUESTIONS block already trimmed or not found in checked out App.tsx, skipping App.tsx trimming.');
   }
 
   console.log('--- COMPILATION CHECK ---');
