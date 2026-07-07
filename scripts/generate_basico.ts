@@ -169,6 +169,9 @@ Retorne APENAS um array JSON contendo objetos com os seguintes campos exatos:
         saveDatabase(questions, jsonPath, tsPath);
         console.log(`  -> Lote de ${newBatchQuestions.length} questões salvo com sucesso! (Total na matéria: ${existingCount + generatedSoFar})`);
 
+        // Sleep for 3 seconds to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
       } catch (err: any) {
         console.error(`  [ERRO] Falha ao gerar ou salvar o lote: ${err.message}. Tentando novamente em 5 segundos...`);
         await new Promise(resolve => setTimeout(resolve, 5000));

@@ -7,12 +7,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const SUBJECTS = [
-  'Ginecologia & Obstetrícia', 'Pediatria', 'Medicina de Família/SUS', 'Cirurgia Geral',
-  'Cardiologia', 'Pneumologia', 'Gastroenterologia', 'Infectologia', 'Endocrinologia',
-  'Clínica Médica', 'Clínica Cirúrgica', 'Psiquiatria', 'Reumatologia', 'Nefrologia',
-  'Neurologia', 'Hematologia', 'Dermatologia', 'Oftalmologia', 'Otorrinolaringologia',
-  'Ortopedia', 'Urologia', 'Geriatria', 'Radiologia',
-  'Cirurgia Vascular', 'Epidemiologia', 'Neonatologia', 'Parasitologia', 'Urgência e Emergência'
+  'Urgência e Emergência',
+  'Neonatologia',
+  'Cirurgia Vascular',
+  'Medicina Intensiva',
+  'Anestesiologia',
+  'Neurocirurgia'
 ];
 
 interface Question {
@@ -30,7 +30,7 @@ interface Question {
 }
 
 async function main() {
-  console.log('=== INICIANDO GERADOR DE QUESTÕES DO CICLO CLÍNICO ===');
+  console.log('=== INICIANDO GERADOR DE QUESTÕES DO INTERNATO ===');
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -64,46 +64,54 @@ async function main() {
     console.log('Nenhum banco de dados existente encontrado. Criando novo banco de dados.');
   }
 
-  // Count existing questions per subject in "Ciclo Clínico"
-  const counts: Record<string, number> = {};
-  for (const subj of SUBJECTS) {
-    counts[subj] = questions.filter(q => q.cycle === 'Ciclo Clínico' && q.subject === subj).length;
-    console.log(`- ${subj}: ${counts[subj]} questões existentes.`);
-  }
+  // Define original counts (before we started generating any questions today)
+  const originalCounts: Record<string, number> = {
+    'Urgência e Emergência': 17,
+    'Neonatologia': 13,
+    'Cirurgia Vascular': 9,
+    'Medicina Intensiva': 4,
+    'Anestesiologia': 2,
+    'Neurocirurgia': 1
+  };
 
-  // Generate questions for each subject
   for (const subj of SUBJECTS) {
-    const existingCount = counts[subj];
-    const targetCount = 100;
-    const needed = targetCount - existingCount;
+    const currentCount = questions.filter(q => q.cycle === 'Internato' && q.subject === subj).length;
+    const originalCount = originalCounts[subj] || 0;
+    const targetCount = originalCount + 100;
+    const needed = targetCount - currentCount;
 
     if (needed <= 0) {
-      console.log(`[${subj}] Já possui ${existingCount} questões (meta de ${targetCount} atingida). Pulando...`);
+      console.log(`\n[${subj}] Já possui ${currentCount} questões (meta de ${targetCount} atingida). Pulando...`);
       continue;
     }
 
-    console.log(`\n[${subj}] Iniciando geração de ${needed} questões para atingir a meta de ${targetCount}...`);
+    console.log(`\n[${subj}] Atualmente possui ${currentCount} questões. Iniciando geração de ${needed} questões para atingir a meta de ${targetCount}...`);
 
     let generatedSoFar = 0;
-    const batchSize = 15;
+    const batchSize = 15; // standard safe size
 
     while (generatedSoFar < needed) {
       const currentBatchCount = Math.min(batchSize, needed - generatedSoFar);
-      console.log(`  -> Gerando lote de ${currentBatchCount} questões (progresso: ${generatedSoFar}/${needed})...`);
+      console.log(`  -> Gerando lote de ${currentBatchCount} questões (progresso do lote atual: ${generatedSoFar}/${needed})...`);
 
-      const prompt = `Você é um professor renomado de medicina especialista em elaborar questões de alto nível para provas de residência médica (como ENARE, USP, UNICAMP, SUS-SP) adaptadas para o Ciclo Clínico da graduação de medicina.
-Gere um array JSON de exatamente ${currentBatchCount} questões inéditas de nível de dificuldade MEDIANO para estudantes de medicina na matéria "${subj}".
-As questões devem abordar conceitos importantes do Ciclo Clínico da graduação médica, com foco em diagnóstico, tratamento, conduta médica e exames complementares, mas com o rigor técnico e profundidade de questões de residência.
+      const prompt = `Você é um professor renomado de medicina especialista em elaborar questões de alto nível para provas de residência médica (como ENARE, USP, UNICAMP, SUS-SP) adaptadas para o Internato da graduação de medicina.
+Gere um array JSON de exatamente ${currentBatchCount} questões inéditas de nível de dificuldade de INTERNATO (alto nível prático e clínico, raciocínio diagnóstico e tomada de conduta imediata) para estudantes de medicina na matéria de Internato: "${subj}".
 
-Cada questão deve ser contextualizada clinicamente com um caso clínico completo e realista (apresentação clínica, exame físico relevante, evolução ou resultados de exames, etc.).
-Evite repetir temas idênticos. Forneça explicações detalhadas em português para cada alternativa.
+As questões devem abordar casos clínicos realistas, complexos e detalhados com foco em raciocínio prático de enfermaria, pronto-socorro ou unidade de terapia intensiva, condutas imediatas, prescrição, exames complementares específicos de urgência/internação e complicações.
+Evite repetir temas idênticos. 
+
+CRÍTICO: O usuário exigiu comentários detalhados tanto para o acerto quanto para os erros.
+Para cada questão, no campo "explanation", você deve fornecer uma explicação médica detalhada e didática em português estruturada da seguinte forma:
+- Por que a alternativa correta é a correta.
+- Por que cada uma das outras alternativas incorretas está incorreta, explicando o erro conceitual ou clínico envolvido nelas.
+Isso ajudará o estudante a entender perfeitamente por que acertou ou errou.
 
 Retorne APENAS um array JSON contendo objetos com os seguintes campos exatos:
-- subsubject (string): o sub-tema específico da matéria (ex: para Cardiologia, "Insuficiência Cardíaca", "Infarto Agudo do Miocárdio", etc.)
-- enunciado (string): o texto da questão com contexto clínico de caso clínico realista, claro e cientificamente preciso, em português.
+- subsubject (string): o sub-tema específico da matéria (ex: para Urgência, "Sepse", "Tromboembolismo Pulmonar", "Cetoacidose Diabética"; para Neonatologia, "Asfixia Neonatal", "Sepsis Neonatal Precoce", etc.)
+- enunciado (string): o texto da questão com contexto clínico completo, realista e cientificamente preciso, em português.
 - alternatives (array de strings): exatamente 4 alternativas plausíveis de múltipla escolha.
 - correctIndex (number): o índice de 0 a 3 da alternativa correta.
-- explanation (string): uma justificativa médica detalhada em português, explicando por que a alternativa correta está certa e as outras 3 estão incorretas.
+- explanation (string): a justificativa médica detalhada detalhando os comentários para cada uma das alternativas (correta e incorretas) em português.
 `;
 
       try {
@@ -146,13 +154,13 @@ Retorne APENAS um array JSON contendo objetos com os seguintes campos exatos:
 
         const newBatchQuestions: Question[] = items.map((item: any, idx: number) => {
           // Unique ID calculation
-          const idNum = existingCount + generatedSoFar + idx + 1;
+          const idNum = currentCount + generatedSoFar + idx + 1;
           const sanitizedSubj = subj.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_]/g, '_');
-          const id = `clinico_${sanitizedSubj}_${idNum}`;
+          const id = `internato_${sanitizedSubj}_${idNum}`;
 
           return {
             id,
-            cycle: 'Ciclo Clínico',
+            cycle: 'Internato',
             subject: subj,
             subsubject: item.subsubject || '',
             banca: 'Trilha Estudante',
@@ -171,10 +179,10 @@ Retorne APENAS um array JSON contendo objetos com os seguintes campos exatos:
 
         // Incremental save
         saveDatabase(questions, jsonPath, tsPath);
-        console.log(`  -> Lote de ${newBatchQuestions.length} questões salvo com sucesso! (Total na matéria: ${existingCount + generatedSoFar})`);
+        console.log(`  -> Lote de ${newBatchQuestions.length} questões salvo com sucesso! (Novas adicionadas nesta matéria: ${generatedSoFar}/${needed})`);
 
-        // Sleep for 3 seconds to avoid rate limits
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        // Sleep for 2.5 seconds to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 2500));
 
       } catch (err: any) {
         console.error(`  [ERRO] Falha ao gerar ou salvar o lote: ${err.message}. Tentando novamente em 5 segundos...`);

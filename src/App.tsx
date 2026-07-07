@@ -7,6 +7,13 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { QUESTIONS as ALL_QUESTIONS_IMPORTED } from "./questions";
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
+import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
+import {
+  ensureFriendCode, addFriendByCode, acceptFriend, watchFriendships,
+  createBattle, getBattle, submitBattleScore, markRewarded, watchBattles,
+  createRoom, findRoomByCode, joinRoom, watchRoom, updateRoom, answerRoom,
+  type Friendship, type Battle, type Room,
+} from './social';
 import { 
   Trophy, 
   Flame, 
@@ -52,7 +59,13 @@ import {
   CircleHelp,
   ArrowLeft,
   Share2,
+  Swords,
+  Plus,
   RefreshCcw,
+  Volume2,
+  VolumeX,
+  Timer,
+  TimerOff,
   BarChart3,
   Target,
   Thermometer,
@@ -137,7 +150,39 @@ interface UserState {
   missedQuestionIds: string[];
   dailyQuestionsUsed: number;
   lastActiveDate: string;
-  answeredQuestionIds?: string[];
+  // Registro real de atividade por dia (data ISO 'YYYY-MM-DD' -> nº de questões respondidas).
+  activityLog: Record<string, number>;
+  // Último dia em que o usuário efetivamente estudou (para o streak diário).
+  lastStudyDate: string;
+}
+
+// Máximo de corações (recarrega para este valor a cada novo dia).
+const MAX_HEARTS = 5;
+
+// Embaralhamento uniforme (Fisher-Yates) — substitui o enviesado sort(()=>Math.random()-0.5).
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Atualiza streak (dias consecutivos) e registra a atividade real do dia.
+// Chamado a cada questão respondida (certa ou errada).
+function dailyProgress(prev: UserState): Pick<UserState, 'streak' | 'lastStudyDate' | 'activityLog'> {
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  let streak = prev.streak;
+  let lastStudyDate = prev.lastStudyDate;
+  if (prev.lastStudyDate !== today) {
+    // Primeiro estudo do dia: +1 se estudou ontem, senão recomeça em 1.
+    streak = prev.lastStudyDate === yesterday ? prev.streak + 1 : 1;
+    lastStudyDate = today;
+  }
+  const activityLog = { ...prev.activityLog, [today]: (prev.activityLog[today] || 0) + 1 };
+  return { streak, lastStudyDate, activityLog };
 }
 
 interface SessionResult {
@@ -223,17 +268,7 @@ const ESTUDANTE_BANCA_IDS = new Set([
   'enare_2023_001','enare_2024_pr_cirmao_001','enare_2024_aa_transplant_cornea_001',
 ]);
 
-const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => 
-  !q.banca || 
-  q.banca === 'Trilha Estudante' || 
-  q.id.startsWith('basico_') || 
-  q.id.startsWith('clinico_') || 
-  q.cycle === 'Ciclo Básico' || 
-  q.cycle === 'Ciclo Clínico' || 
-  ESTUDANTE_BANCA_IDS.has(q.id)
-);
-
-const QUESTIONS_RESIDENCIA = QUESTIONS.filter(q => !q.id.startsWith('internato_'));
+const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca || ESTUDANTE_BANCA_IDS.has(q.id));
 
 const RANKING = [
   { name: 'Dr. Ricardo M.', xp: 15420, level: 42, active: true, trend: 0 },
@@ -822,9 +857,9 @@ const MEDICAL_AVATARS = [
 const FREE_DAILY_LIMIT = 10;
 
 export default function App() {
-  const { currentUser, plan, loading: authLoading, signOut, saveUserProgress, loadUserProgress, upgradeToPremium } = useAuth();
+  const { currentUser, plan, loading: authLoading, signOut, saveUserProgress, loadUserProgress } = useAuth();
 
-  const [view, setView] = useState<'landing' | 'home' | 'quiz' | 'summary' | 'ranking' | 'profile' | 'progress' | 'revision' | 'residencia-onboarding'>(() => {
+  const [view, setView] = useState<'landing' | 'home' | 'quiz' | 'summary' | 'ranking' | 'profile' | 'progress' | 'revision' | 'residencia-onboarding' | 'amigos' | 'desafios' | 'sala'>(() => {
     try {
       const saved = localStorage.getItem('mq_user');
       if (saved) {
@@ -839,8 +874,8 @@ export default function App() {
   const [activeLeague, setActiveLeague] = useState<LeagueTier>('bronze');
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [friendSearch, setFriendSearch] = useState('');
-  const [selectedTrack, setSelectedTrack] = useState<'estudante' | 'residencia'>(() => {
-    try { return (localStorage.getItem('mq_track') as 'estudante' | 'residencia') || 'estudante'; } catch { return 'estudante'; }
+  const [selectedTrack, setSelectedTrack] = useState<'estudante' | 'residencia' | null>(() => {
+    try { return (localStorage.getItem('mq_track') as 'estudante' | 'residencia') || null; } catch { return null; }
   });
   const [showBenefits, setShowBenefits] = useState(false);
   const [selectedBanca, setSelectedBanca] = useState<string | null>(null);
@@ -857,6 +892,55 @@ export default function App() {
   const [progressFilter, setProgressFilter] = useState<'7d' | '30d' | 'total'>('30d');
   const [hoveredCell, setHoveredCell] = useState<{ date: Date; count: number; x: number; y: number; col: number } | null>(null);
 
+  const [user, setUser] = useState<UserState>(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const defaults: UserState = {
+      name: '',
+      profileImage: undefined,
+      xp: 0,
+      level: 1,
+      streak: 0,
+      hearts: 5,
+      dailyGoalDone: 0,
+      dailyGoalTotal: 10,
+      weeklyGoalDone: 0,
+      weeklyGoalTotal: 70,
+      friends: [],
+      mastery: {
+        'Clínica Médica': 0, 'Clínica Cirúrgica': 0, 'Pediatria': 0,
+        'Ginecologia & Obstetrícia': 0, 'Medicina de Família/SUS': 0,
+        'Anatomia': 0, 'Fisiologia': 0, 'Histologia': 0,
+        'Embriologia': 0, 'Microbiologia': 0, 'Imunologia': 0, 'Farmacologia': 0,
+      },
+      subjectAttempts: {},
+      planStartDate: today,
+      missedQuestionIds: [],
+      dailyQuestionsUsed: 0,
+      lastActiveDate: today,
+      activityLog: {},
+      lastStudyDate: '',
+    };
+    try {
+      const saved = localStorage.getItem('mq_user');
+      if (!saved) return defaults;
+      const parsed: UserState = JSON.parse(saved);
+      // Reset daily counters if last active was a different day
+      const isNewDay = parsed.lastActiveDate !== today;
+      return {
+        ...defaults,
+        ...parsed,
+        hearts: isNewDay ? MAX_HEARTS : (parsed.hearts ?? MAX_HEARTS),
+        dailyGoalDone: isNewDay ? 0 : (parsed.dailyGoalDone ?? 0),
+        dailyQuestionsUsed: isNewDay ? 0 : (parsed.dailyQuestionsUsed ?? 0),
+        activityLog: parsed.activityLog ?? {},
+        lastStudyDate: parsed.lastStudyDate ?? '',
+        lastActiveDate: today,
+      };
+    } catch {
+      return defaults;
+    }
+  });
+
   const heatmapData = useMemo(() => {
     const data = [];
     const now = new Date();
@@ -868,15 +952,43 @@ export default function App() {
     for (let i = 0; i < 28; i++) {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);
-      // Data only up to today
-      const isPastOrToday = date <= now;
-      const count = isPastOrToday ? (Math.random() > 0.3 ? Math.floor(Math.random() * 12) + 1 : 0) : 0;
+      // Atividade real do dia (questões respondidas), a partir do activityLog.
+      const iso = date.toISOString().slice(0, 10);
+      const count = date <= now ? (user.activityLog[iso] || 0) : 0;
       data.push({ date, count });
     }
     return data;
-  }, []);
+  }, [user.activityLog]);
 
-  const currentChartData = CHART_DATA[progressFilter];
+  // Série real de questões respondidas, derivada do activityLog.
+  const currentChartData = useMemo(() => {
+    const now = new Date();
+    const out: { name: string; value: number }[] = [];
+    if (progressFilter === 'total') {
+      // 12 semanas (soma por semana).
+      for (let w = 11; w >= 0; w--) {
+        let sum = 0;
+        for (let d = 0; d < 7; d++) {
+          const dt = new Date(now);
+          dt.setDate(now.getDate() - (w * 7 + d));
+          sum += user.activityLog[dt.toISOString().slice(0, 10)] || 0;
+        }
+        out.push({ name: `S${12 - w}`, value: sum });
+      }
+    } else {
+      const days = progressFilter === '7d' ? 7 : 30;
+      for (let i = days - 1; i >= 0; i--) {
+        const dt = new Date(now);
+        dt.setDate(now.getDate() - i);
+        out.push({
+          name: dt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          value: user.activityLog[dt.toISOString().slice(0, 10)] || 0,
+        });
+      }
+    }
+    return out;
+  }, [progressFilter, user.activityLog]);
+  const hasActivity = currentChartData.some(d => d.value > 0);
   const chartBest = Math.max(...currentChartData.map(d => d.value));
   const chartWorst = Math.min(...currentChartData.map(d => d.value));
   const chartGain = currentChartData.length > 1
@@ -936,53 +1048,6 @@ export default function App() {
     };
   }, [selectedCycle, view, selectedTrack]);
 
-  const [user, setUser] = useState<UserState>(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const defaults: UserState = {
-      name: '',
-      profileImage: undefined,
-      xp: 0,
-      level: 1,
-      streak: 0,
-      hearts: 5,
-      dailyGoalDone: 0,
-      dailyGoalTotal: 10,
-      weeklyGoalDone: 0,
-      weeklyGoalTotal: 70,
-      friends: [],
-      mastery: {
-        'Clínica Médica': 0, 'Clínica Cirúrgica': 0, 'Pediatria': 0,
-        'Ginecologia & Obstetrícia': 0, 'Medicina de Família/SUS': 0,
-        'Anatomia': 0, 'Fisiologia': 0, 'Histologia': 0,
-        'Embriologia': 0, 'Microbiologia': 0, 'Imunologia': 0, 'Farmacologia': 0,
-      },
-      subjectAttempts: {},
-      planStartDate: today,
-      missedQuestionIds: [],
-      dailyQuestionsUsed: 0,
-      lastActiveDate: today,
-      answeredQuestionIds: [],
-    };
-    try {
-      const saved = localStorage.getItem('mq_user');
-      if (!saved) return defaults;
-      const parsed: UserState = JSON.parse(saved);
-      // Reset daily counters if last active was a different day
-      const isNewDay = parsed.lastActiveDate !== today;
-      return {
-        ...defaults,
-        ...parsed,
-        hearts: isNewDay ? 5 : (parsed.hearts ?? 5),
-        dailyGoalDone: isNewDay ? 0 : (parsed.dailyGoalDone ?? 0),
-        dailyQuestionsUsed: isNewDay ? 0 : (parsed.dailyQuestionsUsed ?? 0),
-        answeredQuestionIds: parsed.answeredQuestionIds ?? [],
-        lastActiveDate: today,
-      };
-    } catch {
-      return defaults;
-    }
-  });
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [activeQuestions, setActiveQuestions] = useState<Question[]>([]);
   const [isRevisionMode, setIsRevisionMode] = useState(false);
@@ -990,6 +1055,9 @@ export default function App() {
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
   const [sessionResults, setSessionResults] = useState<SessionResult>({ correct: 0, total: 0, xpGained: 0 });
   const [sessionHistory, setSessionHistory] = useState<{questionId: string, selectedIndex: number}[]>([]);
+  // Reforço: questões erradas durante a sessão, reapresentadas no fim.
+  const [retryIds, setRetryIds] = useState<string[]>([]);
+  const [isRetryPhase, setIsRetryPhase] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [tempName, setTempName] = useState('');
@@ -999,8 +1067,40 @@ export default function App() {
   const [showToast, setShowToast] = useState(false);
   const [showStreakLostModal, setShowStreakLostModal] = useState(false);
   const [lostStreakCount, setLostStreakCount] = useState(0);
+  const [showNoHearts, setShowNoHearts] = useState(false);
   const [quizTimer, setQuizTimer] = useState(0);
   const [combo, setCombo] = useState(0);
+  // Som + vibração (ligado por padrão, persistido).
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem('mq_sound') !== 'off'; } catch { return true; }
+  });
+  // Modo prova: cronômetro por questão (ligado por padrão, persistido).
+  const [examMode, setExamMode] = useState<boolean>(() => {
+    try { return localStorage.getItem('mq_exam') !== 'off'; } catch { return true; }
+  });
+  const QUESTION_SECONDS = 60; // tempo por questão no modo prova
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(QUESTION_SECONDS);
+  const questionStartRef = useRef<number>(Date.now());
+
+  // ── Social / Batalhas ──
+  const BATTLE_XP_REWARD = 150;
+  const [friendCode, setFriendCode] = useState<string>('');
+  const [friendships, setFriendships] = useState<Friendship[]>([]);
+  const [battles, setBattles] = useState<Battle[]>([]);
+  const [addFriendInput, setAddFriendInput] = useState('');
+  const [addFriendMsg, setAddFriendMsg] = useState('');
+  const [challengeFriend, setChallengeFriend] = useState<{ uid: string; name: string } | null>(null);
+  const [battleCtx, setBattleCtx] = useState<{ id: string; role: 'challenger' | 'opponent'; subject: string; opponentName: string } | null>(null);
+  const [battleCorrect, setBattleCorrect] = useState(0);
+  const [pendingBattleLink, setPendingBattleLink] = useState<string | null>(null);
+  const [socialToast, setSocialToast] = useState<string>('');
+  // Salas em grupo (Kahoot)
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const [room, setRoom] = useState<Room | null>(null);
+  const [joinCodeInput, setJoinCodeInput] = useState('');
+  const [roomPickTopic, setRoomPickTopic] = useState(false);
+  const [roomSelectedOption, setRoomSelectedOption] = useState<number | null>(null);
+  const [roomNow, setRoomNow] = useState(Date.now());
   const [showXpFloat, setShowXpFloat] = useState(false);
   const [summaryXP, setSummaryXP] = useState(0);
   const [summaryTimer, setSummaryTimer] = useState(0);
@@ -1023,6 +1123,53 @@ export default function App() {
     const id = setInterval(() => setQuizTimer((t: number) => t + 1), 1000);
     return () => clearInterval(id);
   }, [view]);
+
+  // Preferências de som / modo prova (persistência + sincroniza com o sfx).
+  useEffect(() => {
+    setSfxEnabled(soundEnabled);
+    try { localStorage.setItem('mq_sound', soundEnabled ? 'on' : 'off'); } catch { /* ignore */ }
+  }, [soundEnabled]);
+  useEffect(() => {
+    try { localStorage.setItem('mq_exam', examMode ? 'on' : 'off'); } catch { /* ignore */ }
+  }, [examMode]);
+
+  // Tempo esgotado numa questão (modo prova): revela a resposta sem tirar vida.
+  const handleTimeout = useCallback(() => {
+    if (isFeedbackVisible) return;
+    const currentQuestion = activeQuestions[currentQuestionIndex];
+    if (!currentQuestion) return;
+    setSelectedOption(-1);
+    setIsFeedbackVisible(true);
+    setCombo(0);
+    playTimeout();
+    if (isRetryPhase) return;
+    setSessionHistory(prev => [...prev, { questionId: currentQuestion.id, selectedIndex: -1 }]);
+    setRetryIds(prev => prev.includes(currentQuestion.id) ? prev : [...prev, currentQuestion.id]);
+    setUser(prev => ({
+      ...prev,
+      ...dailyProgress(prev),
+      subjectAttempts: { ...prev.subjectAttempts, [currentQuestion.subject]: (prev.subjectAttempts[currentQuestion.subject] || 0) + 1 },
+      dailyQuestionsUsed: prev.dailyQuestionsUsed + 1,
+      lastActiveDate: new Date().toISOString().slice(0, 10),
+      missedQuestionIds: Array.from(new Set([...prev.missedQuestionIds, currentQuestion.id])),
+    }));
+  }, [isFeedbackVisible, activeQuestions, currentQuestionIndex, isRetryPhase]);
+
+  // Cronômetro POR QUESTÃO (modo prova). Reinicia a cada nova questão.
+  useEffect(() => {
+    if (view !== 'quiz' || !examMode || isFeedbackVisible || battleCtx) return;
+    setQuestionTimeLeft(QUESTION_SECONDS);
+    questionStartRef.current = Date.now();
+    const id = setInterval(() => {
+      setQuestionTimeLeft((s) => {
+        if (s <= 1) { clearInterval(id); handleTimeout(); return 0; }
+        if (s <= 6) playTick(); // tique tenso nos últimos segundos
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, examMode, currentQuestionIndex, isFeedbackVisible]);
 
   // Loading text rotation
   useEffect(() => {
@@ -1050,66 +1197,95 @@ export default function App() {
   useEffect(() => {
     if (!currentUser) return;
     loadUserProgress().then((saved) => {
-      if (!saved) {
-        // If there is no cloud progress (e.g. guest or new user), check localStorage first
-        try {
-          const localSaved = localStorage.getItem('mq_user');
-          const localTrack = localStorage.getItem('mq_track') as 'estudante' | 'residencia' | null;
-          if (localSaved) {
-            const parsed = JSON.parse(localSaved);
-            if (parsed.name && localTrack) {
-              setUser(prev => ({
-                ...prev,
-                ...parsed,
-              }));
-              setSelectedTrack(localTrack);
-              setView('home');
-              return;
-            }
-          }
-        } catch { /* noop */ }
-
-        // If no saved progress, direct them to landing screen
-        if (currentUser.displayName && currentUser.uid !== 'guest') {
-          setNameInput(currentUser.displayName);
-        } else {
-          setNameInput('');
-        }
-        setView('landing');
-        setLandingStep(0);
-        return;
-      }
+      if (!saved) return;
       const today = new Date().toISOString().slice(0, 10);
-      if (saved.selectedTrack) {
-        setSelectedTrack(saved.selectedTrack as 'estudante' | 'residencia');
-      }
+      const isNewDay = (saved.lastActiveDate as string) !== today;
       setUser((prev) => ({
         ...prev,
         name: (saved.name as string) || currentUser.displayName || prev.name,
         xp: (saved.xp as number) ?? prev.xp,
         level: (saved.level as number) ?? prev.level,
         streak: (saved.streak as number) ?? prev.streak,
-        hearts: (saved.hearts as number) ?? prev.hearts,
+        // Corações recarregam para o máximo em um novo dia (também no login em nuvem).
+        hearts: isNewDay ? MAX_HEARTS : ((saved.hearts as number) ?? prev.hearts),
         mastery: (saved.mastery as Record<string, number>) ?? prev.mastery,
         subjectAttempts: (saved.subjectAttempts as Record<string, number>) ?? prev.subjectAttempts,
         missedQuestionIds: (saved.missedQuestionIds as string[]) ?? prev.missedQuestionIds,
-        answeredQuestionIds: (saved.answeredQuestionIds as string[]) ?? prev.answeredQuestionIds ?? [],
         planStartDate: (saved.planStartDate as string) ?? prev.planStartDate,
-        dailyGoalDone: (saved.lastActiveDate as string) === today ? ((saved.dailyGoalDone as number) ?? 0) : 0,
+        activityLog: (saved.activityLog as Record<string, number>) ?? prev.activityLog,
+        lastStudyDate: (saved.lastStudyDate as string) ?? prev.lastStudyDate,
+        dailyGoalDone: isNewDay ? 0 : ((saved.dailyGoalDone as number) ?? 0),
         weeklyGoalDone: (saved.weeklyGoalDone as number) ?? prev.weeklyGoalDone,
-        dailyQuestionsUsed: (saved.lastActiveDate as string) === today ? ((saved.dailyQuestionsUsed as number) ?? 0) : 0,
+        dailyQuestionsUsed: isNewDay ? 0 : ((saved.dailyQuestionsUsed as number) ?? 0),
         lastActiveDate: today,
       }));
-      if (saved.name && saved.selectedTrack) {
+      if (saved.selectedTrack) setSelectedTrack(saved.selectedTrack as 'estudante' | 'residencia');
+      if ((saved.name as string) || currentUser.displayName) {
         setView('home');
-      } else {
-        if (currentUser.displayName && currentUser.uid !== 'guest') {
-          setNameInput(currentUser.displayName);
-        }
-        setView('landing');
-        setLandingStep(0);
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
+
+  // Social: garante código de amigo e observa amizades/batalhas em tempo real.
+  useEffect(() => {
+    if (!currentUser) { setFriendships([]); setBattles([]); setFriendCode(''); return; }
+    const name = currentUser.displayName || user.name || 'Colega';
+    ensureFriendCode(currentUser.uid, name).then((c) => { if (c) setFriendCode(c); });
+    const un1 = watchFriendships(currentUser.uid, setFriendships);
+    const un2 = watchBattles(currentUser.uid, setBattles);
+    return () => { un1(); un2(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
+
+  // Observa a sala em grupo (Kahoot) em tempo real.
+  useEffect(() => {
+    if (!roomId) { setRoom(null); return; }
+    return watchRoom(roomId, setRoom);
+  }, [roomId]);
+
+  // Relógio para o cronômetro sincronizado da sala.
+  useEffect(() => {
+    if (view !== 'sala' || room?.state !== 'question') return;
+    const id = setInterval(() => setRoomNow(Date.now()), 250);
+    return () => clearInterval(id);
+  }, [view, room?.state]);
+
+  // Zera a seleção quando a sala muda de questão/estado.
+  useEffect(() => { setRoomSelectedOption(null); }, [room?.currentIndex, room?.state]);
+
+  // Recompensa do vencedor: +XP e +1 coração, uma única vez por batalha.
+  useEffect(() => {
+    if (!currentUser) return;
+    for (const b of battles) {
+      if (b.status === 'finished' && b.winnerUid === currentUser.uid && !b.rewarded?.[currentUser.uid]) {
+        markRewarded(b.id, currentUser.uid);
+        setUser(prev => ({ ...prev, xp: prev.xp + BATTLE_XP_REWARD, hearts: prev.hearts + 1 }));
+        setSocialToast(`🏆 Você venceu a batalha! +${BATTLE_XP_REWARD} XP e +1 coração`);
+        setTimeout(() => setSocialToast(''), 4000);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [battles, currentUser]);
+
+  // Deep-links: ?battle=<id> abre uma batalha para jogar; ?add=<code> pré-preenche adicionar amigo.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const addCode = params.get('add');
+      if (addCode) { setAddFriendInput(addCode.toUpperCase()); setView('amigos'); }
+      const bId = params.get('battle');
+      if (bId && currentUser) {
+        getBattle(bId).then((b) => {
+          if (b && b.opponentUid === currentUser.uid && b.opponentScore == null) {
+            openBattlePlay(b, 'opponent');
+          } else {
+            setView('amigos');
+          }
+        });
+      }
+      if (addCode || bId) window.history.replaceState({}, '', window.location.pathname);
+    } catch { /* noop */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
@@ -1124,13 +1300,14 @@ export default function App() {
       mastery: user.mastery,
       subjectAttempts: user.subjectAttempts,
       missedQuestionIds: user.missedQuestionIds,
-      answeredQuestionIds: user.answeredQuestionIds || [],
       planStartDate: user.planStartDate,
       dailyGoalDone: user.dailyGoalDone,
       weeklyGoalDone: user.weeklyGoalDone,
       dailyQuestionsUsed: user.dailyQuestionsUsed,
       lastActiveDate: user.lastActiveDate,
-      selectedTrack,
+      activityLog: user.activityLog,
+      lastStudyDate: user.lastStudyDate,
+      selectedTrack: selectedTrack ?? '',
     });
   }, [currentUser, user, saveUserProgress, selectedTrack]);
 
@@ -1152,6 +1329,15 @@ export default function App() {
     try { localStorage.setItem('mq_track', selectedTrack); } catch { /* noop */ }
   }, [selectedTrack]);
 
+  // Se o usuário está logado e foi direto pro home sem trilha selecionada, pede para escolher
+  useEffect(() => {
+    if (!currentUser) return;
+    if (view === 'home' && !selectedTrack) {
+      setLandingStep(1);
+      setView('landing');
+    }
+  }, [view, selectedTrack, currentUser]);
+
   const copyInviteLink = () => {
     const inviteLink = `https://med-ia.app/invite/${user.name.toLowerCase().replace(/\s+/g, '-')}`;
     navigator.clipboard.writeText(inviteLink);
@@ -1168,49 +1354,114 @@ export default function App() {
     setView('home');
   };
 
+  // ── Batalhas: adicionar amigo, desafiar, jogar ──
+  const handleAddFriend = async () => {
+    if (!currentUser || !addFriendInput.trim()) return;
+    const res = await addFriendByCode(
+      { uid: currentUser.uid, name: currentUser.displayName || user.name || 'Colega' },
+      addFriendInput.trim().toUpperCase()
+    );
+    setAddFriendMsg(res.message);
+    if (res.ok) setAddFriendInput('');
+    setTimeout(() => setAddFriendMsg(''), 4000);
+  };
+
+  // Abre a tela de jogo para uma batalha (mesmas questões para os dois).
+  const openBattlePlay = (b: Battle, role: 'challenger' | 'opponent') => {
+    const qs = b.questionIds
+      .map(id => QUESTIONS.find(q => q.id === id))
+      .filter((q): q is Question => Boolean(q));
+    if (qs.length === 0) { setView('amigos'); return; }
+    setBattleCtx({ id: b.id, role, subject: b.subject, opponentName: role === 'challenger' ? b.opponentName : b.challengerName });
+    setBattleCorrect(0);
+    setActiveQuestions(qs);
+    setSessionResults({ correct: 0, total: qs.length, xpGained: 0 });
+    setSessionHistory([]);
+    setRetryIds([]);
+    setIsRetryPhase(false);
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setCombo(0);
+    setQuizTimer(0);
+    setIsFeedbackVisible(false);
+    setView('quiz');
+  };
+
+  // Cria a batalha (desafiante escolhe o tópico) e já começa a jogar.
+  const createAndPlayBattle = async (friend: { uid: string; name: string }, subject: Subject) => {
+    if (!currentUser) return;
+    const pool = QUESTIONS.filter(q => q.subject === subject);
+    const ids = shuffle(pool).slice(0, 10).map(q => q.id);
+    if (ids.length < 3) { setSocialToast('Poucas questões nesse tópico.'); setTimeout(() => setSocialToast(''), 3000); return; }
+    const me = { uid: currentUser.uid, name: currentUser.displayName || user.name || 'Você' };
+    const id = await createBattle(me, friend, subject, ids);
+    setChallengeFriend(null);
+    if (!id) { setSocialToast('Não foi possível criar a batalha.'); setTimeout(() => setSocialToast(''), 3000); return; }
+    const link = `${window.location.origin}${window.location.pathname}?battle=${id}`;
+    setPendingBattleLink(link);
+    openBattlePlay(
+      { id, participants: [me.uid, friend.uid], challengerUid: me.uid, challengerName: me.name, opponentUid: friend.uid, opponentName: friend.name, subject, questionIds: ids, challengerScore: null, opponentScore: null, status: 'pending', winnerUid: null, rewarded: {} },
+      'challenger'
+    );
+  };
+
+  // ── Salas em grupo (Kahoot) ──
+  const ROOM_SECONDS = 20;
+  const createGroupRoom = async (subject: Subject) => {
+    if (!currentUser) return;
+    const ids = shuffle(QUESTIONS.filter(q => q.subject === subject)).slice(0, 10).map(q => q.id);
+    if (ids.length < 3) { setSocialToast('Poucas questões nesse tópico.'); setTimeout(() => setSocialToast(''), 3000); return; }
+    const res = await createRoom({ uid: currentUser.uid, name: currentUser.displayName || user.name || 'Host' }, subject, ids);
+    setRoomPickTopic(false);
+    if (!res) { setSocialToast('Não foi possível criar a sala.'); setTimeout(() => setSocialToast(''), 3000); return; }
+    setRoomId(res.id);
+    setView('sala');
+  };
+  const joinGroupRoom = async () => {
+    if (!currentUser || joinCodeInput.trim().length < 4) return;
+    const id = await findRoomByCode(joinCodeInput.trim());
+    if (!id) { setSocialToast('Sala não encontrada.'); setTimeout(() => setSocialToast(''), 3000); return; }
+    await joinRoom(id, { uid: currentUser.uid, name: currentUser.displayName || user.name || 'Colega' });
+    setJoinCodeInput('');
+    setRoomId(id);
+    setView('sala');
+  };
+  const roomHostStart = () => { if (room) updateRoom(room.id, { state: 'question', currentIndex: 0, questionStartAt: Date.now() }); };
+  const roomHostReveal = () => { if (room) updateRoom(room.id, { state: 'reveal' }); };
+  const roomHostNext = () => {
+    if (!room) return;
+    const next = room.currentIndex + 1;
+    if (next >= room.questionIds.length) updateRoom(room.id, { state: 'finished' });
+    else updateRoom(room.id, { state: 'question', currentIndex: next, questionStartAt: Date.now() });
+  };
+  const roomAnswer = (index: number) => {
+    if (!room || !currentUser || room.state !== 'question') return;
+    const me = room.players[currentUser.uid];
+    if (me && me.lastAnsweredIndex === room.currentIndex) return; // já respondeu
+    const q = QUESTIONS.find(qq => qq.id === room.questionIds[room.currentIndex]);
+    if (!q) return;
+    const correct = index === q.correctIndex;
+    if (correct) playCorrect(); else playWrong();
+    const elapsed = room.questionStartAt ? (Date.now() - room.questionStartAt) / 1000 : ROOM_SECONDS;
+    const frac = Math.max(0, 1 - elapsed / ROOM_SECONDS);
+    const points = correct ? Math.round(500 + 500 * frac) : 0;
+    setRoomSelectedOption(index);
+    answerRoom(room.id, currentUser.uid, room.currentIndex, points);
+  };
+  const leaveRoom = () => { setRoomId(null); setRoom(null); setView('desafios'); };
+
   const startQuizWithPool = (pool: Question[]) => {
-    if (plan === 'free' && user.dailyQuestionsUsed >= FREE_DAILY_LIMIT) {
-      setShowBenefits(true);
-      return;
-    }
     setIsThinking(true);
     setIsRevisionMode(false);
-
-    // Filter out answered questions from this pool first to prevent repetition
-    const answeredInPool = (user.answeredQuestionIds || []).filter(id => pool.some(q => q.id === id));
-    let uncompletedPool = pool;
-    if (answeredInPool.length < pool.length) {
-      uncompletedPool = pool.filter(q => !(user.answeredQuestionIds || []).includes(q.id));
-    }
-
-    let selected = [...uncompletedPool].sort(() => Math.random() - 0.5);
-    
-    // Backfill if fewer than 10 questions using the same subject pool (even if already answered)
-    if (selected.length < 10) {
-      const additional = pool
-        .filter(q => !selected.some(sq => sq.id === q.id))
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10 - selected.length);
-      selected = [...selected, ...additional];
-    }
-    
-    // If still fewer than 10 (e.g. subject has very few questions), backfill from trackPool
-    if (selected.length < 10) {
-      const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
-      const additional = trackPool
-        .filter(q => !selected.some(sq => sq.id === q.id))
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10 - selected.length);
-      selected = [...selected, ...additional];
-    }
-    
-    const finalSelected = selected.slice(0, 10);
-    
+    setBattleCtx(null);
+    const selected = shuffle(pool).slice(0, 10);
     setTimeout(() => {
       setIsThinking(false);
-      setActiveQuestions(finalSelected);
-      setSessionResults({ correct: 0, total: finalSelected.length, xpGained: 0 });
+      setActiveQuestions(selected);
+      setSessionResults({ correct: 0, total: selected.length, xpGained: 0 });
       setSessionHistory([]);
+      setRetryIds([]);
+      setIsRetryPhase(false);
       setCurrentQuestionIndex(0);
       setSelectedOption(null);
       setCombo(0);
@@ -1221,77 +1472,42 @@ export default function App() {
   };
 
   const startQuiz = (revision: boolean = false, overrideSubject?: Subject, overrideSubSubject?: string | null) => {
-    if (plan === 'free' && user.dailyQuestionsUsed >= FREE_DAILY_LIMIT) {
-      setShowBenefits(true);
-      return;
-    }
     setIsThinking(true);
     setIsRevisionMode(revision);
+    setBattleCtx(null);
     const activeSubject = overrideSubject ?? selectedSubject;
     const activeSubSubject = overrideSubSubject !== undefined ? overrideSubSubject : selectedSubSubject;
 
     // Select questions once at the start of the session
-    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
     let filtered = [...pool];
     if (revision) {
       filtered = pool.filter(q => user.missedQuestionIds.includes(q.id));
       if (filtered.length === 0) filtered = [...pool].slice(0, 5);
     } else {
       // Filter by subject (subject names are unique per cycle, so no need to also filter cycle)
-      const subjectPool = pool.filter(q => q.subject === activeSubject);
-      const answeredInSubject = (user.answeredQuestionIds || []).filter(id => subjectPool.some(q => q.id === id));
-      
-      let uncompletedPool = subjectPool;
-      if (answeredInSubject.length < subjectPool.length) {
-        uncompletedPool = subjectPool.filter(q => !(user.answeredQuestionIds || []).includes(q.id));
-      }
-
-      filtered = uncompletedPool;
+      filtered = pool.filter(q => q.subject === activeSubject);
       if (activeSubSubject) {
         filtered = filtered.filter(q => q.subSubject === activeSubSubject);
-        if (filtered.length === 0) {
-          filtered = subjectPool.filter(q => q.subSubject === activeSubSubject);
-        }
       }
       // Filter by banca if one is selected in the quiz banca filter (residência only)
       if (quizBancaFilter && selectedTrack === 'residencia') {
         const bancaFiltered = filtered.filter(q => q.banca === quizBancaFilter);
-        if (bancaFiltered.length > 0) {
-          filtered = bancaFiltered;
-        } else {
-          const allBanca = subjectPool.filter(q => q.banca === quizBancaFilter);
-          if (allBanca.length > 0) filtered = allBanca;
-        }
+        if (bancaFiltered.length > 0) filtered = bancaFiltered;
       }
     }
 
-    let selected = filtered.sort(() => Math.random() - 0.5);
-
-    // Backfill to ensure we ALWAYS have exactly 10 questions!
-    if (selected.length < 10) {
-      const subjectPool = pool.filter(q => q.subject === activeSubject);
-      const additional = subjectPool
-        .filter(q => !selected.some(sq => sq.id === q.id))
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10 - selected.length);
-      selected = [...selected, ...additional];
-    }
-
-    if (selected.length < 10) {
-      const additional = pool
-        .filter(q => !selected.some(sq => sq.id === q.id))
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10 - selected.length);
-      selected = [...selected, ...additional];
-    }
-
-    const finalSelected = selected.slice(0, 10);
+    const selected = filtered.length > 0
+      ? shuffle(filtered).slice(0, 10)
+      : shuffle(QUESTIONS.filter(q => q.subject === activeSubject)).slice(0, 10);
 
     setTimeout(() => {
       setIsThinking(false);
-      setActiveQuestions(finalSelected);
-      setSessionResults({ correct: 0, total: finalSelected.length, xpGained: 0 });
+      setActiveQuestions(selected);
+      setSessionResults({ correct: 0, total: selected.length, xpGained: 0 });
       setSessionHistory([]);
+      setRetryIds([]);
+      setIsRetryPhase(false);
       setCurrentQuestionIndex(0);
       setSelectedOption(null);
       setCombo(0);
@@ -1303,56 +1519,89 @@ export default function App() {
 
   const handleOptionSelect = (index: number) => {
     if (isFeedbackVisible) return;
+    // Block free users who hit the daily limit (não bloqueia reforço nem batalha)
+    if (!isRetryPhase && !battleCtx && plan === 'free' && user.dailyQuestionsUsed >= FREE_DAILY_LIMIT) return;
     setSelectedOption(index);
 
     // Auto-check answer on click
     setIsFeedbackVisible(true);
     const currentQuestion = activeQuestions[currentQuestionIndex];
     const isCorrect = index === currentQuestion.correctIndex;
-    
+
+    // Modo BATALHA: conta acertos, sem mexer em vidas/XP/estatísticas.
+    if (battleCtx) {
+      setSessionHistory(prev => [...prev, { questionId: currentQuestion.id, selectedIndex: index }]);
+      if (isCorrect) { playCorrect(); setBattleCorrect(c => c + 1); setCombo(c => c + 1); }
+      else { playWrong(); setCombo(0); }
+      return;
+    }
+
+    // Fase de reforço (reapresentação dos erros): não pontua, não perde vida e
+    // não altera estatísticas — apenas remove do caderno de erros ao acertar.
+    if (isRetryPhase) {
+      if (isCorrect) {
+        playCorrect();
+        setCombo(0);
+        setUser(prev => ({
+          ...prev,
+          missedQuestionIds: prev.missedQuestionIds.filter((id: string) => id !== currentQuestion.id),
+        }));
+      } else {
+        playWrong();
+      }
+      return;
+    }
+
     setSessionHistory(prev => [...prev, { questionId: currentQuestion.id, selectedIndex: index }]);
-    
+
     if (isCorrect) {
+      playCorrect();
       const newCombo = combo + 1;
       setCombo(newCombo);
       setShowXpFloat(true);
       setTimeout(() => setShowXpFloat(false), 900);
-      const xpEarned = newCombo >= 5 ? 100 : newCombo >= 3 ? 75 : 50;
+      // Bônus de rapidez no modo prova: resposta certa em até 20s dá XP extra.
+      const answeredIn = (Date.now() - questionStartRef.current) / 1000;
+      const speedBonus = examMode && answeredIn <= 20 ? 25 : 0;
+      const xpEarned = (newCombo >= 5 ? 100 : newCombo >= 3 ? 75 : 50) + speedBonus;
       setSessionResults(prev => ({ ...prev, correct: prev.correct + 1, xpGained: prev.xpGained + xpEarned }));
       setUser(prev => {
         const subj = currentQuestion.subject;
-        const attempts = ((prev.subjectAttempts || {})[subj] || 0) + 1;
-        const currentMastery = (prev.mastery || {})[subj] || 0;
+        const attempts = (prev.subjectAttempts[subj] || 0) + 1;
+        const currentMastery = prev.mastery[subj] || 0;
         const newMastery = Math.min(100, Math.round(currentMastery + (100 - currentMastery) * 0.15));
         return {
           ...prev,
-          mastery: { ...(prev.mastery || {}), [subj]: newMastery },
-          subjectAttempts: { ...(prev.subjectAttempts || {}), [subj]: attempts },
-          dailyGoalDone: Math.min(prev.dailyGoalTotal || 10, (prev.dailyGoalDone || 0) + 1),
-          dailyQuestionsUsed: (prev.dailyQuestionsUsed || 0) + 1,
+          ...dailyProgress(prev),
+          mastery: { ...prev.mastery, [subj]: newMastery },
+          subjectAttempts: { ...prev.subjectAttempts, [subj]: attempts },
+          dailyGoalDone: Math.min(prev.dailyGoalTotal, prev.dailyGoalDone + 1),
+          dailyQuestionsUsed: prev.dailyQuestionsUsed + 1,
           lastActiveDate: new Date().toISOString().slice(0, 10),
           missedQuestionIds: isRevisionMode
-            ? (prev.missedQuestionIds || []).filter((id: string) => id !== currentQuestion.id)
-            : (prev.missedQuestionIds || []),
-          answeredQuestionIds: Array.from(new Set([...(prev.answeredQuestionIds || []), currentQuestion.id])),
+            ? prev.missedQuestionIds.filter((id: string) => id !== currentQuestion.id)
+            : prev.missedQuestionIds,
         };
       });
     } else {
+      playWrong();
       setCombo(0);
+      // Enfileira a questão errada para reapresentar no fim da atividade (reforço).
+      setRetryIds(prev => prev.includes(currentQuestion.id) ? prev : [...prev, currentQuestion.id]);
       setUser(prev => {
         const subj = currentQuestion.subject;
-        const attempts = ((prev.subjectAttempts || {})[subj] || 0) + 1;
-        const currentMastery = (prev.mastery || {})[subj] || 0;
+        const attempts = (prev.subjectAttempts[subj] || 0) + 1;
+        const currentMastery = prev.mastery[subj] || 0;
         const newMastery = Math.max(0, Math.round(currentMastery - currentMastery * 0.08));
         return {
           ...prev,
-          hearts: Math.max(0, (prev.hearts ?? 5) - 1),
-          mastery: { ...(prev.mastery || {}), [subj]: newMastery },
-          subjectAttempts: { ...(prev.subjectAttempts || {}), [subj]: attempts },
-          dailyQuestionsUsed: (prev.dailyQuestionsUsed || 0) + 1,
+          ...dailyProgress(prev),
+          hearts: Math.max(0, prev.hearts - 1),
+          mastery: { ...prev.mastery, [subj]: newMastery },
+          subjectAttempts: { ...prev.subjectAttempts, [subj]: attempts },
+          dailyQuestionsUsed: prev.dailyQuestionsUsed + 1,
           lastActiveDate: new Date().toISOString().slice(0, 10),
-          missedQuestionIds: Array.from(new Set([...(prev.missedQuestionIds || []), currentQuestion.id])),
-          answeredQuestionIds: Array.from(new Set([...(prev.answeredQuestionIds || []), currentQuestion.id])),
+          missedQuestionIds: Array.from(new Set([...prev.missedQuestionIds, currentQuestion.id])),
         };
       });
     }
@@ -1360,12 +1609,9 @@ export default function App() {
 
   const nextQuestion = () => {
     if (currentQuestionIndex < activeQuestions.length - 1) {
-      if (user.hearts <= 0) {
-        if (user.streak > 0) {
-          setLostStreakCount(user.streak);
-          setUser((prev: typeof user) => ({ ...prev, streak: 0 }));
-          setShowStreakLostModal(true);
-        }
+      // Sem corações encerra a fase pontuada; reforço e batalha não têm vidas.
+      if (!isRetryPhase && !battleCtx && user.hearts <= 0) {
+        setShowNoHearts(true);
         setView('home');
         return;
       }
@@ -1373,24 +1619,52 @@ export default function App() {
       setSelectedOption(null);
       setIsFeedbackVisible(false);
     } else {
-      // End session — always show summary regardless of hearts
-      setSummaryTimer(quizTimer);
-      setIsThinking(false);
-      setIsFeedbackVisible(false);
-      const xpGained = sessionResults.xpGained;
-      const correct = sessionResults.correct;
-      setUser(prev => {
-        const newXp = prev.xp + xpGained;
-        const newLevel = Math.floor(newXp / 1000) + 1;
-        const newWeeklyDone = Math.min(prev.weeklyGoalTotal, prev.weeklyGoalDone + correct);
-        return {
-          ...prev,
-          xp: newXp,
-          level: newLevel,
-          streak: prev.streak + 1,
-          weeklyGoalDone: newWeeklyDone,
-        };
-      });
+      // Fim da BATALHA: envia o placar e volta para a tela de amigos.
+      if (battleCtx) {
+        const total = activeQuestions.length;
+        const role = battleCtx.role;
+        if (currentUser) submitBattleScore(battleCtx.id, currentUser.uid, battleCorrect);
+        setSocialToast(
+          `Você fez ${battleCorrect}/${total}. ` +
+          (role === 'challenger' ? 'Envie o link para o seu amigo jogar!' : 'Resultado computado!')
+        );
+        setTimeout(() => setSocialToast(''), 5000);
+        setBattleCtx(null);
+        setIsFeedbackVisible(false);
+        setSelectedOption(null);
+        setView('amigos');
+        return;
+      }
+      // Fim da lista atual.
+      if (!isRetryPhase) {
+        // Fim da fase pontuada: consolida XP/nível/meta semanal.
+        // (streak diário já é atualizado ao responder, em dailyProgress)
+        setSummaryTimer(quizTimer);
+        setIsThinking(false);
+        setIsFeedbackVisible(false);
+        const xpGained = sessionResults.xpGained;
+        const correct = sessionResults.correct;
+        setUser(prev => {
+          const newXp = prev.xp + xpGained;
+          const newLevel = Math.floor(newXp / 1000) + 1;
+          if (newLevel > prev.level) playLevelUp(); // subiu de nível
+          const newWeeklyDone = Math.min(prev.weeklyGoalTotal, prev.weeklyGoalDone + correct);
+          return { ...prev, xp: newXp, level: newLevel, weeklyGoalDone: newWeeklyDone };
+        });
+        // Havendo erros, entra na fase de reforço reapresentando essas questões.
+        const retryQs = retryIds
+          .map(id => activeQuestions.find(q => q.id === id))
+          .filter((q): q is Question => Boolean(q));
+        if (retryQs.length > 0) {
+          setActiveQuestions(retryQs);
+          setCurrentQuestionIndex(0);
+          setSelectedOption(null);
+          setIsFeedbackVisible(false);
+          setCombo(0);
+          setIsRetryPhase(true);
+          return;
+        }
+      }
       setView('summary');
     }
   };
@@ -1409,56 +1683,57 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-brand-bg font-sans text-slate-900 overflow-x-hidden">
-      {/* Header / Stats Bar */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-3 py-3 shadow-sm">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
-          <div className="cursor-pointer" onClick={() => setView('home')}>
-            <MedQuestLogo />
-          </div>
-
-          <div className="flex items-center bg-slate-50 px-2 py-1.5 rounded-full border border-slate-200 hide-scrollbar overflow-x-auto max-w-[220px] sm:max-w-none shadow-sm">
-            <div className="flex items-center gap-1.5 px-2.5 border-r border-slate-200 shrink-0">
-              <Flame size={16} className="text-brand-orange fill-brand-orange" />
-              <span className="font-black text-slate-900 text-sm">{user.streak}</span>
+      {/* Header / Stats Bar (2 linhas: logo+perfil em cima, stats completos embaixo) */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-3 py-2.5 shadow-sm">
+        <div className="max-w-4xl mx-auto flex flex-col gap-2">
+          {/* Linha 1 */}
+          <div className="flex items-center justify-between">
+            <div className="cursor-pointer" onClick={() => setView('home')}>
+              <MedQuestLogo />
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 border-r border-slate-200 shrink-0">
-              <Target size={16} className="text-rose-500" />
-              <span className="font-black text-rose-600 text-sm">{Math.max(0, user.dailyGoalTotal - user.dailyGoalDone)}</span>
-            </div>
-            <div 
-              className="flex items-center gap-1.5 px-2.5 border-r border-slate-200 shrink-0 cursor-pointer active:scale-95 transition-transform" 
-              onClick={() => setView('ranking')}
-            >
-              <Trophy size={16} className="text-brand-orange" />
-              <span className="font-black text-slate-900 text-[10px] uppercase tracking-tighter hidden sm:block">Liga</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-2.5 border-r border-slate-200 shrink-0">
-              <Heart size={16} className="text-brand-red fill-brand-red" />
-              <span className="font-black text-slate-900 text-sm">{user.hearts}</span>
-            </div>
-            <div className="flex items-center gap-2.5 pl-2.5 pr-2 shrink-0">
-              <div className="flex flex-col items-end">
-                <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden hidden sm:block mb-1 shadow-inner">
-                  <div 
-                    className="h-full bg-brand-primary transition-all duration-700" 
-                    style={{ width: `${(user.xp % 1000) / 10}%` }}
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black text-brand-primary leading-none">{user.xp.toLocaleString()} XP</span>
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Nív. {user.level}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button 
+            <button
               onClick={() => setView('profile')}
               className={`p-2.5 hover:bg-slate-100 rounded-xl transition-all shrink-0 active:scale-90 ${view === 'profile' ? 'bg-slate-100 text-brand-primary' : ''}`}
             >
               <User size={20} className={view === 'profile' ? 'text-brand-primary' : 'text-slate-400'} />
             </button>
+          </div>
+
+          {/* Linha 2 — todos os indicadores, largura total, sem cortar */}
+          <div className="w-full flex items-center justify-between bg-slate-50 px-1.5 py-1.5 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-1.5 px-2 border-r border-slate-200">
+              <Flame size={17} className="text-brand-orange fill-brand-orange shrink-0" />
+              <span className="font-black text-slate-900 text-sm">{user.streak}</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 border-r border-slate-200">
+              <Target size={17} className="text-rose-500 shrink-0" />
+              <span className="font-black text-rose-600 text-sm">{Math.max(0, user.dailyGoalTotal - user.dailyGoalDone)}</span>
+            </div>
+            <div
+              className="flex items-center gap-1.5 px-2 border-r border-slate-200 cursor-pointer active:scale-95 transition-transform"
+              onClick={() => setView('ranking')}
+            >
+              <Trophy size={17} className="text-brand-orange shrink-0" />
+              <span className="font-black text-slate-900 text-[10px] uppercase tracking-tighter">Liga</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 border-r border-slate-200">
+              <Heart size={17} className="text-brand-red fill-brand-red shrink-0" />
+              <span className="font-black text-slate-900 text-sm">{user.hearts}</span>
+            </div>
+            <div className="flex items-center gap-2 pl-2 pr-1">
+              <div className="flex flex-col items-end">
+                <div className="w-16 sm:w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden mb-1 shadow-inner">
+                  <div
+                    className="h-full bg-brand-primary transition-all duration-700"
+                    style={{ width: `${(user.xp % 1000) / 10}%` }}
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-black text-brand-primary leading-none">{user.xp.toLocaleString()} XP</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Nív. {user.level}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -2196,7 +2471,7 @@ export default function App() {
                   <div className="py-10 px-6 flex flex-col items-center bg-white rounded-[3rem] border border-slate-200/80 shadow-xl overflow-visible">
                     <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4">
                       {(Object.keys(HIERARCHY[selectedCycle]) as Subject[]).map((subj, idx) => {
-                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
                         const allQs = trackPool.filter(q => q.subject === subj);
                         const pool = allQs;
                         return (
@@ -2333,13 +2608,13 @@ export default function App() {
                       );
                     })()}
                     <button
-                      onClick={() => setView('ranking')}
+                      onClick={() => setView('amigos')}
                       className="bg-white border border-slate-200 p-5 rounded-[2rem] flex flex-col gap-3 shadow-lg hover:bg-slate-50 hover:scale-[1.02] active:scale-95 transition-all text-left"
                     >
-                      <UserPlus size={22} className="text-brand-primary" />
+                      <Swords size={22} className="text-brand-primary" />
                       <div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">Social</p>
-                        <p className="text-base font-black text-slate-900 leading-none">Amigos</p>
+                        <p className="text-base font-black text-slate-900 leading-none">Batalhas</p>
                       </div>
                     </button>
                   </div>
@@ -2414,7 +2689,7 @@ export default function App() {
                         {/* Main CTA */}
                         <motion.button
                           whileTap={{ scale: 0.97 }}
-                          onClick={() => { const sb = BANCAS.find(b => b.id === selectedBanca)?.short; setQuizBancaFilter(sb && QUESTIONS_RESIDENCIA.some(q => q.banca === sb) ? sb : null); startQuiz(false, selectedSubject, null); }}
+                          onClick={() => { const sb = BANCAS.find(b => b.id === selectedBanca)?.short; setQuizBancaFilter(sb && QUESTIONS.some(q => q.banca === sb) ? sb : null); startQuiz(false, selectedSubject, null); }}
                           className="group w-full relative overflow-hidden rounded-2xl py-4 flex items-center justify-between px-5"
                           style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', boxShadow: '0 8px 32px rgba(37,99,235,0.40)' }}
                         >
@@ -2469,7 +2744,7 @@ export default function App() {
                       <div className="py-8 px-5 flex flex-col items-center bg-white rounded-[2.5rem] border border-slate-200/80 shadow-xl overflow-visible">
                         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-4">
                           {(Object.keys(HIERARCHY[selectedCycle as Cycle]) as Subject[]).map((subj, idx) => {
-                            const pool2 = QUESTIONS_RESIDENCIA.filter(q => q.subject === subj);
+                            const pool2 = QUESTIONS.filter(q => q.subject === subj);
                             return (
                               <GamePathNode
                                 key={`res-path-${subj}-${idx}`}
@@ -2833,19 +3108,64 @@ export default function App() {
                       animate={{ width: `${(currentQuestionIndex / activeQuestions.length) * 100}%` }}
                     />
                   </div>
-                  {/* Timer */}
-                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs border shadow-sm shrink-0 transition-colors ${
-                    quizTimer > 480 ? 'bg-red-50 text-red-600 border-red-200' :
-                    quizTimer > 300 ? 'bg-amber-50 text-amber-600 border-amber-200' :
-                    'bg-white text-slate-900 border-slate-200'
-                  }`}>
-                    <Clock size={12} />
-                    {formatTimer(quizTimer)}
-                  </div>
+                  {/* Cronômetro: por questão (modo prova) ou da sessão */}
+                  {examMode ? (
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs border shadow-sm shrink-0 transition-colors ${
+                      questionTimeLeft <= 6 ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' :
+                      questionTimeLeft <= 15 ? 'bg-amber-50 text-amber-600 border-amber-200' :
+                      'bg-white text-slate-900 border-slate-200'
+                    }`}>
+                      <Timer size={12} />
+                      {questionTimeLeft}s
+                    </div>
+                  ) : (
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs border shadow-sm shrink-0 transition-colors ${
+                      quizTimer > 480 ? 'bg-red-50 text-red-600 border-red-200' :
+                      quizTimer > 300 ? 'bg-amber-50 text-amber-600 border-amber-200' :
+                      'bg-white text-slate-900 border-slate-200'
+                    }`}>
+                      <Clock size={12} />
+                      {formatTimer(quizTimer)}
+                    </div>
+                  )}
                   <div className="bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm shrink-0">
                     <span className="text-xs font-black text-slate-900">{currentQuestionIndex + 1}/{activeQuestions.length}</span>
                   </div>
+                  {/* Toggle modo prova (cronômetro por questão) */}
+                  <button
+                    onClick={() => setExamMode(v => !v)}
+                    title={examMode ? 'Modo prova (cronometrado) — ligado' : 'Modo prova — desligado'}
+                    className={`p-2 rounded-xl border shadow-sm shrink-0 transition-colors ${examMode ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-slate-400 border-slate-200'}`}
+                  >
+                    {examMode ? <Timer size={16} /> : <TimerOff size={16} />}
+                  </button>
+                  {/* Toggle som */}
+                  <button
+                    onClick={() => setSoundEnabled(v => !v)}
+                    title={soundEnabled ? 'Som ligado' : 'Som desligado'}
+                    className={`p-2 rounded-xl border shadow-sm shrink-0 transition-colors ${soundEnabled ? 'bg-white text-brand-primary border-slate-200' : 'bg-white text-slate-300 border-slate-200'}`}
+                  >
+                    {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                  </button>
                 </div>
+                {/* Banner de reforço (reapresentação dos erros) */}
+                {isRetryPhase && (
+                  <div className="flex items-center justify-center gap-2 mt-1 py-2 px-4 rounded-xl bg-brand-orange/10 border border-brand-orange/20">
+                    <RefreshCcw size={13} className="text-brand-orange" />
+                    <span className="text-[11px] font-black text-brand-orange uppercase tracking-widest">
+                      Revisão dos erros · fixe o aprendizado
+                    </span>
+                  </div>
+                )}
+                {/* Banner de batalha */}
+                {battleCtx && (
+                  <div className="flex items-center justify-center gap-2 mt-1 py-2 px-4 rounded-xl bg-brand-primary/10 border border-brand-primary/20">
+                    <Swords size={13} className="text-brand-primary" />
+                    <span className="text-[11px] font-black text-brand-primary uppercase tracking-widest">
+                      Batalha vs {battleCtx.opponentName} · {battleCorrect} acertos
+                    </span>
+                  </div>
+                )}
                 {/* Combo badge */}
                 <AnimatePresence>
                   {combo >= 2 && (
@@ -2945,13 +3265,50 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Card de explicação em destaque (momento de aprendizado) */}
+              {isFeedbackVisible && (() => {
+                const cq = activeQuestions[currentQuestionIndex];
+                const acertou = selectedOption === cq.correctIndex;
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`rounded-[2.5rem] border-2 p-6 md:p-8 shadow-xl ${acertou ? 'bg-brand-green/5 border-brand-green/30' : 'bg-brand-red/5 border-brand-red/30'}`}
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      {acertou ? <CheckCircle2 size={26} className="text-brand-green shrink-0" /> : <XCircle size={26} className="text-brand-red shrink-0" />}
+                      <span className={`text-xl font-black uppercase tracking-tight ${acertou ? 'text-brand-green' : 'text-brand-red'}`}>
+                        {selectedOption === -1 ? 'Tempo esgotado' : acertou ? 'Você acertou!' : 'Resposta incorreta'}
+                      </span>
+                    </div>
+                    {!acertou && (
+                      <p className="text-sm font-bold text-slate-500 mb-5">
+                        Resposta correta:{' '}
+                        <span className="text-brand-green">{String.fromCharCode(65 + cq.correctIndex)}) {cq.options[cq.correctIndex]}</span>
+                      </p>
+                    )}
+                    <div className="flex items-start gap-3">
+                      <div className="bg-brand-primary/10 p-2 rounded-xl text-brand-primary shrink-0 mt-0.5">
+                        <Zap size={18} fill="currentColor" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-1.5">Entenda</p>
+                        <p className="text-slate-700 text-base md:text-lg leading-relaxed">
+                          {cq.explanation || 'Sem explicação disponível para esta questão.'}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })()}
+
               {/* Action Bar */}
               <div 
                 onClick={isFeedbackVisible ? nextQuestion : undefined}
-                className={`fixed bottom-0 left-0 right-0 p-6 md:p-8 transition-all duration-500 transform z-50 border-t border-slate-100 ${
+                className={`fixed bottom-0 left-0 right-0 p-6 md:p-8 transition-all duration-500 transform translate-y-0 z-50 border-t border-slate-100 ${
                 isFeedbackVisible ? 
-                  `${selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'bg-brand-green cursor-pointer' : 'bg-brand-red cursor-pointer'} translate-y-0 opacity-100 pointer-events-auto shadow-2xl` : 
-                  'bg-white/80 backdrop-blur-xl translate-y-full opacity-0 pointer-events-none'
+                (selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'bg-brand-green cursor-pointer' : 'bg-brand-red cursor-pointer') : 
+                'bg-white/80 backdrop-blur-xl'
               }`}>
                 <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                   {isFeedbackVisible ? (
@@ -2967,11 +3324,8 @@ export default function App() {
                           <h4 className="font-black text-xl tracking-tight leading-none mb-1">
                             {selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'Resposta Correta!' : 'Resposta Errada!'}
                           </h4>
-                          <p className="text-white text-sm md:text-base leading-relaxed font-bold italic opacity-100">
-                            {activeQuestions[currentQuestionIndex].explanation}
-                          </p>
-                          <p className="text-white/80 text-[10px] font-black uppercase tracking-widest mt-2 animate-pulse">
-                            Toque em qualquer lugar para continuar
+                          <p className="text-white/80 text-[11px] font-black uppercase tracking-widest mt-1 animate-pulse">
+                            Veja a explicação acima · toque para continuar
                           </p>
                         </div>
                       </div>
@@ -3123,69 +3477,64 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Revision Section (Errors Only) */}
-              {sessionResults.total - sessionResults.correct > 0 ? (
+              {/* Revisão completa da sessão (acertos e erros) */}
+              {sessionHistory.length > 0 && (
                 <div className="space-y-6">
-                   <div className="flex items-center justify-between px-4">
-                     <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-[0.2em]">Revisão de Erros</h4>
-                     <span className="text-[10px] font-black text-brand-red bg-brand-red/10 px-3 py-1 rounded-full uppercase tracking-widest">Atenção</span>
-                   </div>
-                   <div className="space-y-4">
-                     {sessionHistory.filter(h => {
-                       const q = QUESTIONS.find(qi => qi.id === h.questionId);
-                       return q && q.correctIndex !== h.selectedIndex;
-                     }).map((h, i) => {
-                       const q = QUESTIONS.find(qi => qi.id === h.questionId)!;
-                       return (
-                         <div key={h.questionId} className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl relative overflow-hidden group">
-                           <div className="absolute top-0 left-0 w-1.5 h-full bg-brand-red" />
-                           <div className="p-6 pl-8">
-                           <div className="flex items-center gap-3 mb-4">
-                             <span className="bg-brand-red/10 text-brand-red text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Erro #{i + 1}</span>
-                             <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{q.subject}</span>
-                           </div>
-                           <h5 className="text-slate-900 font-bold text-lg leading-relaxed mb-6">{q.text}</h5>
-                           
-                           <div className="space-y-3">
-                              <div className="p-4 rounded-2xl bg-brand-red/5 border border-brand-red/10 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center text-white font-black text-xs">Sua</div>
-                                  <span className="text-sm font-bold text-brand-red">{q.options[h.selectedIndex]}</span>
-                                </div>
-                                <XCircle size={18} className="text-brand-red" />
-                              </div>
-                              <div className="p-4 rounded-2xl bg-brand-green/5 border border-brand-green/10 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-brand-green flex items-center justify-center text-white font-black text-xs">Correta</div>
-                                  <span className="text-sm font-bold text-brand-green">{q.options[q.correctIndex]}</span>
-                                </div>
-                                <CheckCircle2 size={18} className="text-brand-green" />
-                              </div>
-                           </div>
-
-                           <div className="mt-8 pt-8 border-t border-slate-200">
-                             <div className="flex items-start gap-4">
-                                <div className="bg-brand-primary/10 p-2 rounded-xl text-brand-primary">
-                                  <Zap size={20} fill="currentColor" />
-                                </div>
-                                <p className="text-slate-500 text-sm font-medium leading-relaxed italic">
-                                  {q.explanation}
-                                </p>
-                             </div>
-                           </div>
-                           </div>{/* end p-6 pl-8 */}
-                         </div>
-                       );
-                     })}
-                   </div>
-                </div>
-              ) : (
-                <div className="bg-white rounded-[3rem] p-10 border border-slate-200/80 shadow-xl text-center">
-                  <div className="w-16 h-16 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green mx-auto mb-4">
-                    <CheckCircle2 size={32} />
+                  <div className="flex items-center justify-between px-4">
+                    <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-[0.2em]">Revisão da Sessão</h4>
+                    <span className="text-[10px] font-black text-brand-green bg-brand-green/10 px-3 py-1 rounded-full uppercase tracking-widest">
+                      {sessionResults.correct}/{sessionResults.total} acertos
+                    </span>
                   </div>
-                  <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter mb-2">Sem erros para revisar</h3>
-                  <p className="text-slate-500 text-sm font-medium">Você mandou muito bem! Continue estudando para manter o ritmo.</p>
+                  <div className="space-y-4">
+                    {sessionHistory.map((h, i) => {
+                      const q = activeQuestions.find(qi => qi.id === h.questionId) || QUESTIONS.find(qi => qi.id === h.questionId);
+                      if (!q) return null;
+                      const isCorrect = q.correctIndex === h.selectedIndex;
+                      return (
+                        <div key={`${h.questionId}-${i}`} className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl relative overflow-hidden">
+                          <div className={`absolute top-0 left-0 w-1.5 h-full ${isCorrect ? 'bg-brand-green' : 'bg-brand-red'}`} />
+                          <div className="p-6 pl-8">
+                            <div className="flex items-center gap-3 mb-4">
+                              <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${isCorrect ? 'bg-brand-green/10 text-brand-green' : 'bg-brand-red/10 text-brand-red'}`}>
+                                {isCorrect ? `Acerto #${i + 1}` : `Erro #${i + 1}`}
+                              </span>
+                              <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{q.subject}</span>
+                            </div>
+                            <h5 className="text-slate-900 font-bold text-lg leading-relaxed mb-6">{q.text}</h5>
+                            <div className="space-y-3">
+                              <div className={`p-4 rounded-2xl flex items-center justify-between ${isCorrect ? 'bg-brand-green/5 border border-brand-green/10' : 'bg-brand-red/5 border border-brand-red/10'}`}>
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-[10px] shrink-0 ${isCorrect ? 'bg-brand-green' : 'bg-brand-red'}`}>Sua</div>
+                                  <span className={`text-sm font-bold ${isCorrect ? 'text-brand-green' : 'text-brand-red'}`}>{q.options[h.selectedIndex]}</span>
+                                </div>
+                                {isCorrect ? <CheckCircle2 size={18} className="text-brand-green shrink-0" /> : <XCircle size={18} className="text-brand-red shrink-0" />}
+                              </div>
+                              {!isCorrect && (
+                                <div className="p-4 rounded-2xl bg-brand-green/5 border border-brand-green/10 flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-brand-green flex items-center justify-center text-white font-black text-[10px] shrink-0">Correta</div>
+                                    <span className="text-sm font-bold text-brand-green">{q.options[q.correctIndex]}</span>
+                                  </div>
+                                  <CheckCircle2 size={18} className="text-brand-green shrink-0" />
+                                </div>
+                              )}
+                            </div>
+                            {q.explanation && (
+                              <div className="mt-6 pt-6 border-t border-slate-200">
+                                <div className="flex items-start gap-4">
+                                  <div className="bg-brand-primary/10 p-2 rounded-xl text-brand-primary shrink-0">
+                                    <Zap size={20} fill="currentColor" />
+                                  </div>
+                                  <p className="text-slate-500 text-sm font-medium leading-relaxed italic">{q.explanation}</p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -3937,6 +4286,12 @@ export default function App() {
                   </div>
 
                   <div className="h-[280px] w-full relative mb-12">
+                    {!hasActivity && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
+                        <p className="text-white/70 font-black uppercase tracking-widest text-sm mb-1">Sem dados ainda</p>
+                        <p className="text-white/40 text-xs font-medium">Responda questões para ver sua evolução real aqui.</p>
+                      </div>
+                    )}
                     <ResponsiveContainer width="100%" height="100%">
                       {chartType === 'bar' ? (
                         <BarChart data={currentChartData} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
@@ -4138,6 +4493,340 @@ export default function App() {
             </motion.div>
           )}
 
+          {/* DESAFIOS HUB */}
+          {view === 'desafios' && (
+            <motion.div key="desafios" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-5 pb-28 px-4 pt-4">
+              <div className="flex items-center justify-between">
+                <button onClick={() => setView('home')} className="text-slate-400 hover:text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm"><ArrowLeft size={20} /></button>
+                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tighter flex items-center gap-2"><Swords size={20} className="text-brand-primary" /> Desafios</h2>
+                <div className="w-10" />
+              </div>
+
+              {/* Batalha 1v1 */}
+              <button onClick={() => setView('amigos')} className="w-full text-left bg-slate-900 rounded-[2.5rem] p-7 shadow-xl relative overflow-hidden active:scale-[0.98] transition-transform">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full -mr-16 -mt-16" />
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-primary flex items-center justify-center mb-4 shadow-lg"><Swords size={28} className="text-white" /></div>
+                  <h3 className="text-2xl font-black text-white tracking-tight mb-1">Batalha com amigo</h3>
+                  <p className="text-white/60 font-medium text-sm leading-snug">Desafie um amigo 1×1 no tópico que escolher. Quem acerta mais ganha XP e 1 coração.</p>
+                </div>
+              </button>
+
+              {/* Sala em grupo */}
+              <div className="bg-white rounded-[2.5rem] p-7 border border-slate-200 shadow-lg">
+                <div className="w-14 h-14 rounded-2xl bg-brand-green flex items-center justify-center mb-4 shadow-lg"><Users size={28} className="text-white" /></div>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Sala em grupo</h3>
+                <p className="text-slate-500 font-medium text-sm leading-snug mb-5">Crie uma sala e responda ao vivo com vários amigos, estilo Kahoot — todos na mesma pergunta, placar em tempo real.</p>
+                <button onClick={() => setRoomPickTopic(true)} className="w-full py-3.5 bg-brand-green text-white font-black rounded-2xl text-sm uppercase tracking-widest mb-3 flex items-center justify-center gap-2"><Plus size={18} /> Criar sala</button>
+                <div className="flex gap-2">
+                  <input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="Código da sala" inputMode="numeric" className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-green outline-none font-black text-slate-900 tracking-[0.3em] text-center" />
+                  <button onClick={joinGroupRoom} className="px-5 py-3 bg-slate-900 text-white font-black rounded-xl text-sm">Entrar</button>
+                </div>
+              </div>
+
+              {/* Modal escolher tópico da sala */}
+              <AnimatePresence>
+                {roomPickTopic && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-end sm:items-center justify-center p-4" onClick={() => setRoomPickTopic(false)}>
+                    <motion.div initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }} className="bg-white w-full max-w-sm rounded-[2.5rem] p-6 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                      <h3 className="text-xl font-black text-slate-900 mb-4">Tópico da sala</h3>
+                      <div className="space-y-2">
+                        {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map(s => (
+                          <button key={s} onClick={() => createGroupRoom(s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-green hover:bg-brand-green/5 font-black text-slate-700 text-sm transition-all">{s}</button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+
+          {/* SALA (KAHOOT) */}
+          {view === 'sala' && (() => {
+            const uid = currentUser?.uid;
+            if (!room) return (
+              <motion.div key="sala-load" className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+                <div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin" />
+                <p className="text-slate-400 font-bold">Conectando à sala...</p>
+                <button onClick={leaveRoom} className="text-slate-400 font-black uppercase text-xs tracking-widest">Voltar</button>
+              </motion.div>
+            );
+            const isHost = room.hostUid === uid;
+            const players = Object.entries(room.players).map(([id, p]) => ({ id, ...(p as { name: string; score: number; lastAnsweredIndex: number }) })).sort((a, b) => b.score - a.score);
+            const cq = QUESTIONS.find(q => q.id === room.questionIds[room.currentIndex]);
+            const me = uid ? room.players[uid] : undefined;
+            const answered = !!me && me.lastAnsweredIndex === room.currentIndex;
+            const timeLeft = room.questionStartAt ? Math.max(0, Math.ceil(ROOM_SECONDS - (roomNow - room.questionStartAt) / 1000)) : ROOM_SECONDS;
+            return (
+              <motion.div key="sala" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5 pb-28 px-4 pt-4">
+                <div className="flex items-center justify-between">
+                  <button onClick={leaveRoom} className="text-slate-400 hover:text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm"><ArrowLeft size={20} /></button>
+                  <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">{room.subject}</span>
+                  <div className="w-10" />
+                </div>
+
+                {/* LOBBY */}
+                {room.state === 'lobby' && (
+                  <>
+                    <div className="bg-brand-green rounded-[2.5rem] p-8 text-center shadow-xl">
+                      <p className="text-[11px] font-black uppercase tracking-widest text-white/70 mb-1">Código da sala</p>
+                      <p className="text-5xl font-black text-white tracking-[0.3em] mb-4">{room.code}</p>
+                      <button onClick={() => { try { navigator.clipboard.writeText(room.code); setSocialToast('Código copiado!'); setTimeout(() => setSocialToast(''), 2000); } catch { /* noop */ } }} className="px-5 py-2.5 bg-white/15 text-white font-black rounded-xl text-xs border border-white/20 inline-flex items-center gap-2"><Copy size={14} /> Copiar código</button>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest px-2">Na sala ({players.length})</p>
+                      {players.map(p => (
+                        <div key={p.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-brand-green/10 flex items-center justify-center font-black text-brand-green">{p.name.charAt(0).toUpperCase()}</div>
+                          <span className="font-black text-slate-900">{p.name}{p.id === room.hostUid && <span className="text-[10px] text-brand-green ml-2 uppercase tracking-widest">host</span>}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {isHost ? (
+                      <button onClick={roomHostStart} disabled={players.length < 1} className="w-full py-4 bg-brand-primary text-white font-black rounded-2xl uppercase tracking-widest text-sm shadow-lg">Iniciar jogo</button>
+                    ) : (
+                      <p className="text-center text-slate-400 font-bold text-sm py-4">Aguardando o host iniciar...</p>
+                    )}
+                  </>
+                )}
+
+                {/* QUESTION */}
+                {room.state === 'question' && cq && (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-slate-500">Pergunta {room.currentIndex + 1}/{room.questionIds.length}</span>
+                      <span className={`px-3 py-1 rounded-xl font-black text-sm ${timeLeft <= 5 ? 'bg-red-50 text-red-600' : 'bg-brand-green/10 text-brand-green'}`}>{timeLeft}s</span>
+                    </div>
+                    <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-xl">
+                      <h3 className="text-lg font-bold text-slate-900 leading-relaxed">{cq.text}</h3>
+                    </div>
+                    <div className="space-y-3">
+                      {cq.options.map((opt, idx) => (
+                        <button key={idx} onClick={() => roomAnswer(idx)} disabled={answered || timeLeft <= 0}
+                          className={`w-full text-left p-4 rounded-2xl border-2 font-bold flex items-center gap-4 transition-all ${
+                            roomSelectedOption === idx ? 'border-brand-primary bg-blue-50 text-brand-primary' :
+                            answered ? 'border-slate-200/50 opacity-50' : 'border-slate-200 hover:border-brand-primary/50 text-slate-700'}`}>
+                          <span className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-black text-sm shrink-0">{String.fromCharCode(65 + idx)}</span>
+                          <span className="text-sm leading-tight">{opt}</span>
+                        </button>
+                      ))}
+                    </div>
+                    {answered && <p className="text-center text-brand-green font-black text-sm">Resposta enviada! Aguarde os demais.</p>}
+                    {isHost && (
+                      <button onClick={roomHostReveal} className="w-full py-3.5 bg-slate-900 text-white font-black rounded-2xl uppercase tracking-widest text-xs">Revelar resposta</button>
+                    )}
+                  </>
+                )}
+
+                {/* REVEAL */}
+                {room.state === 'reveal' && cq && (
+                  <>
+                    <div className="bg-brand-green/5 border-2 border-brand-green/30 p-6 rounded-[2rem]">
+                      <p className="text-[11px] font-black text-brand-green uppercase tracking-widest mb-2">Resposta correta</p>
+                      <p className="font-black text-slate-900 mb-3">{String.fromCharCode(65 + cq.correctIndex)}) {cq.options[cq.correctIndex]}</p>
+                      <p className="text-slate-500 text-sm leading-relaxed italic">{cq.explanation}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest px-2">Placar</p>
+                      {players.map((p, i) => (
+                        <div key={p.id} className={`rounded-2xl p-4 border flex items-center justify-between ${i === 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-200'}`}>
+                          <div className="flex items-center gap-3"><span className="font-black text-slate-400 w-5">{i + 1}</span><span className="font-black text-slate-900">{p.name}</span></div>
+                          <span className="font-black text-brand-primary">{p.score}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {isHost && (
+                      <button onClick={roomHostNext} className="w-full py-4 bg-brand-primary text-white font-black rounded-2xl uppercase tracking-widest text-sm">{room.currentIndex + 1 >= room.questionIds.length ? 'Ver resultado final' : 'Próxima pergunta'}</button>
+                    )}
+                    {!isHost && <p className="text-center text-slate-400 font-bold text-sm py-2">Aguardando o host...</p>}
+                  </>
+                )}
+
+                {/* FINISHED */}
+                {room.state === 'finished' && (
+                  <>
+                    <div className="bg-gradient-to-br from-amber-400 to-amber-600 rounded-[2.5rem] p-8 text-center shadow-xl">
+                      <Trophy size={48} fill="currentColor" className="text-white mx-auto mb-3" />
+                      <h2 className="text-2xl font-black text-white uppercase tracking-tight">{players[0]?.name} venceu! 🎉</h2>
+                    </div>
+                    <div className="space-y-2">
+                      {players.map((p, i) => (
+                        <div key={p.id} className={`rounded-2xl p-4 border-2 flex items-center justify-between ${i === 0 ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200'}`}>
+                          <div className="flex items-center gap-3"><span className="font-black text-slate-400 w-5">{i + 1}º</span><span className="font-black text-slate-900">{p.name}</span></div>
+                          <span className="font-black text-brand-primary text-lg">{p.score}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={leaveRoom} className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl uppercase tracking-widest text-sm">Sair da sala</button>
+                  </>
+                )}
+              </motion.div>
+            );
+          })()}
+
+          {/* AMIGOS & BATALHAS VIEW */}
+          {view === 'amigos' && (() => {
+            const uid = currentUser?.uid;
+            const friends = friendships.filter(f => f.status === 'accepted').map(f =>
+              f.requesterUid === uid ? { uid: f.addresseeUid, name: f.addresseeName } : { uid: f.requesterUid, name: f.requesterName });
+            const incoming = friendships.filter(f => f.status === 'pending' && f.addresseeUid === uid);
+            const outgoing = friendships.filter(f => f.status === 'pending' && f.requesterUid === uid);
+            const toPlay = battles.filter(b => b.opponentUid === uid && b.opponentScore == null);
+            const waiting = battles.filter(b => b.status === 'pending' && (
+              (b.challengerUid === uid && b.challengerScore != null && b.opponentScore == null) ||
+              (b.opponentUid === uid && b.opponentScore != null && b.challengerScore == null)));
+            const finished = battles.filter(b => b.status === 'finished').slice(0, 8);
+            const copy = (txt: string, msg: string) => { try { navigator.clipboard.writeText(txt); setSocialToast(msg); setTimeout(() => setSocialToast(''), 2500); } catch { /* noop */ } };
+            return (
+              <motion.div key="amigos" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-5 pb-28 px-4 pt-4">
+                <div className="flex items-center justify-between">
+                  <button onClick={() => setView('home')} className="text-slate-400 hover:text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm"><ArrowLeft size={20} /></button>
+                  <h2 className="text-xl font-black text-slate-900 uppercase tracking-tighter flex items-center gap-2"><Swords size={20} className="text-brand-primary" /> Batalhas</h2>
+                  <div className="w-10" />
+                </div>
+
+                {/* Link da batalha recém-criada */}
+                {pendingBattleLink && (
+                  <div className="bg-brand-primary/10 border-2 border-brand-primary/20 rounded-[2rem] p-5">
+                    <p className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-2">Batalha criada! Envie para o amigo</p>
+                    <div className="flex gap-2">
+                      <button onClick={() => copy(pendingBattleLink, 'Link copiado!')} className="flex-1 py-3 bg-brand-primary text-white font-black rounded-xl text-sm flex items-center justify-center gap-2"><Link size={16} /> Copiar link</button>
+                      <button onClick={() => setPendingBattleLink(null)} className="px-4 py-3 bg-white text-slate-500 font-black rounded-xl text-sm border border-slate-200">OK</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Meu código */}
+                <div className="bg-slate-900 rounded-[2rem] p-6 text-center shadow-xl">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-1">Seu código de amigo</p>
+                  <p className="text-3xl font-black text-white tracking-widest mb-4">{friendCode || '···'}</p>
+                  <div className="flex gap-2">
+                    <button onClick={() => copy(friendCode, 'Código copiado!')} className="flex-1 py-2.5 bg-white/10 text-white font-black rounded-xl text-xs border border-white/15 flex items-center justify-center gap-2"><Copy size={14} /> Código</button>
+                    <button onClick={() => copy(`${window.location.origin}${window.location.pathname}?add=${friendCode}`, 'Link de convite copiado!')} className="flex-1 py-2.5 bg-white/10 text-white font-black rounded-xl text-xs border border-white/15 flex items-center justify-center gap-2"><Link size={14} /> Link</button>
+                  </div>
+                </div>
+
+                {/* Adicionar amigo */}
+                <div className="bg-white rounded-[2rem] p-5 border border-slate-200 shadow-sm">
+                  <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Adicionar amigo por código</p>
+                  <div className="flex gap-2">
+                    <input value={addFriendInput} onChange={e => setAddFriendInput(e.target.value.toUpperCase())} placeholder="MED-XXXXX" className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-widest text-sm" />
+                    <button onClick={handleAddFriend} className="px-5 py-3 bg-brand-primary text-white font-black rounded-xl text-sm">Enviar</button>
+                  </div>
+                  {addFriendMsg && <p className="text-xs font-bold text-slate-500 mt-2">{addFriendMsg}</p>}
+                </div>
+
+                {/* Pedidos recebidos */}
+                {incoming.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest px-2">Pedidos de amizade</p>
+                    {incoming.map(f => (
+                      <div key={f.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                        <span className="font-black text-slate-900">{f.requesterName}</span>
+                        <button onClick={() => acceptFriend(f.id)} className="px-4 py-2 bg-brand-green text-white font-black rounded-xl text-xs uppercase tracking-widest">Aceitar</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Batalhas: sua vez de jogar */}
+                {toPlay.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-black text-brand-red uppercase tracking-widest px-2">Sua vez de jogar!</p>
+                    {toPlay.map(b => (
+                      <div key={b.id} className="bg-brand-red/5 rounded-2xl p-4 border-2 border-brand-red/20 shadow-sm flex items-center justify-between">
+                        <div>
+                          <p className="font-black text-slate-900">{b.challengerName} te desafiou</p>
+                          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{b.subject}</p>
+                        </div>
+                        <button onClick={() => openBattlePlay(b, 'opponent')} className="px-4 py-2 bg-brand-red text-white font-black rounded-xl text-xs uppercase tracking-widest flex items-center gap-1.5"><Swords size={14} /> Jogar</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Amigos (desafiar) */}
+                <div className="space-y-2">
+                  <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest px-2">Amigos ({friends.length})</p>
+                  {friends.length === 0 && <p className="text-sm text-slate-400 font-medium px-2">Adicione amigos pelo código para começar a batalhar.</p>}
+                  {friends.map(fr => (
+                    <div key={fr.uid} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center font-black text-brand-primary">{fr.name.charAt(0).toUpperCase()}</div>
+                        <span className="font-black text-slate-900">{fr.name}</span>
+                      </div>
+                      <button onClick={() => setChallengeFriend(fr)} className="px-4 py-2 bg-brand-primary text-white font-black rounded-xl text-xs uppercase tracking-widest flex items-center gap-1.5"><Swords size={14} /> Desafiar</button>
+                    </div>
+                  ))}
+                  {outgoing.map(f => (
+                    <div key={f.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-between opacity-70">
+                      <span className="font-bold text-slate-500">{f.addresseeName}</span>
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Convite enviado</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Aguardando amigo */}
+                {waiting.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-black text-amber-500 uppercase tracking-widest px-2">Aguardando o amigo jogar</p>
+                    {waiting.map(b => (
+                      <div key={b.id} className="bg-amber-50 rounded-2xl p-4 border border-amber-200 flex items-center justify-between">
+                        <div>
+                          <p className="font-black text-slate-900">vs {b.challengerUid === uid ? b.opponentName : b.challengerName}</p>
+                          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{b.subject} · você fez {b.challengerUid === uid ? b.challengerScore : b.opponentScore}/{b.questionIds.length}</p>
+                        </div>
+                        <button onClick={() => copy(`${window.location.origin}${window.location.pathname}?battle=${b.id}`, 'Link copiado!')} className="px-3 py-2 bg-white text-brand-primary font-black rounded-xl text-xs border border-slate-200 flex items-center gap-1.5"><Link size={13} /> Link</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Finalizadas */}
+                {finished.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest px-2">Resultados</p>
+                    {finished.map(b => {
+                      const meChallenger = b.challengerUid === uid;
+                      const myScore = meChallenger ? b.challengerScore : b.opponentScore;
+                      const opScore = meChallenger ? b.opponentScore : b.challengerScore;
+                      const opName = meChallenger ? b.opponentName : b.challengerName;
+                      const won = b.winnerUid === uid;
+                      const draw = b.winnerUid == null;
+                      return (
+                        <div key={b.id} className={`rounded-2xl p-4 border-2 flex items-center justify-between ${draw ? 'bg-slate-50 border-slate-200' : won ? 'bg-brand-green/5 border-brand-green/30' : 'bg-brand-red/5 border-brand-red/20'}`}>
+                          <div>
+                            <p className={`font-black ${draw ? 'text-slate-600' : won ? 'text-brand-green' : 'text-brand-red'}`}>{draw ? 'Empate' : won ? 'Você venceu! 🏆' : 'Você perdeu'}</p>
+                            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">vs {opName} · {b.subject}</p>
+                          </div>
+                          <span className="font-black text-slate-900 text-lg">{myScore} <span className="text-slate-300">×</span> {opScore}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Modal: escolher tópico da batalha */}
+                <AnimatePresence>
+                  {challengeFriend && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-end sm:items-center justify-center p-4" onClick={() => setChallengeFriend(null)}>
+                      <motion.div initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }} className="bg-white w-full max-w-sm rounded-[2.5rem] p-6 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <p className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-1">Desafiar {challengeFriend.name}</p>
+                        <h3 className="text-xl font-black text-slate-900 mb-4">Escolha o tópico</h3>
+                        <div className="space-y-2">
+                          {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map(s => (
+                            <button key={s} onClick={() => createAndPlayBattle(challengeFriend, s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-primary hover:bg-blue-50 font-black text-slate-700 text-sm transition-all">{s}</button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })()}
+
           {view === 'profile' && (
             <motion.div 
               key="profile"
@@ -4260,27 +4949,6 @@ export default function App() {
                   </div>
                   <ChevronRight size={20} className="text-slate-400 group-hover:text-brand-primary transition-colors" />
                 </div>
-
-                <div 
-                  onClick={() => {
-                    setView('landing');
-                    setLandingStep(1);
-                  }}
-                  className="bg-white rounded-[3rem] p-8 border border-slate-200 shadow-xl flex items-center justify-between group cursor-pointer hover:bg-slate-50 transition-all mt-4"
-                >
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-brand-primary">
-                      <BookOpen size={32} />
-                    </div>
-                    <div>
-                      <div className="text-lg font-black text-slate-900 uppercase tracking-tighter">Alterar Trilha Ativa</div>
-                      <div className="text-xs text-slate-500 font-bold uppercase tracking-widest">
-                        Mudar para {selectedTrack === 'estudante' ? 'Residência' : 'Estudante'}
-                      </div>
-                    </div>
-                  </div>
-                  <ChevronRight size={20} className="text-slate-400 group-hover:text-brand-primary transition-colors" />
-                </div>
               </div>
 
               <div className="space-y-4">
@@ -4375,32 +5043,12 @@ export default function App() {
                   ))}
                 </div>
 
-                {plan === 'premium' ? (
-                  <button 
-                    onClick={() => setShowBenefits(false)}
-                    className="w-full py-5 bg-brand-primary text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-600/30 active:scale-95"
-                  >
-                    Entendi, Tudo Ótimo!
-                  </button>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    <button 
-                      onClick={async () => {
-                        await upgradeToPremium();
-                        setShowBenefits(false);
-                      }}
-                      className="w-full py-5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-2xl font-black text-sm hover:from-amber-600 hover:to-yellow-600 transition-all uppercase tracking-[0.2em] shadow-xl shadow-amber-500/30 active:scale-95"
-                    >
-                      Liberar Acesso Premium Grátis
-                    </button>
-                    <button 
-                      onClick={() => setShowBenefits(false)}
-                      className="w-full py-3 text-slate-400 hover:text-slate-600 font-bold text-xs transition-colors"
-                    >
-                      Continuar na versão gratuita
-                    </button>
-                  </div>
-                )}
+                <button 
+                  onClick={() => setShowBenefits(false)}
+                  className="w-full py-5 bg-brand-primary text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-600/30 active:scale-95"
+                >
+                  Entendi, Tudo Ótimo!
+                </button>
               </motion.div>
             </motion.div>
           )}
@@ -4446,6 +5094,20 @@ export default function App() {
                   ))}
                 </div>
               </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Toast social / batalha (global) */}
+        <AnimatePresence>
+          {socialToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-slate-900 text-white font-black text-sm px-5 py-3 rounded-2xl shadow-2xl max-w-[90vw] text-center"
+            >
+              {socialToast}
             </motion.div>
           )}
         </AnimatePresence>
@@ -4504,6 +5166,48 @@ export default function App() {
                   className="w-full py-4 bg-slate-100 text-slate-600 font-black rounded-2xl text-sm uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
                 >
                   Recomeçar do Zero
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Sem corações Modal */}
+        <AnimatePresence>
+          {showNoHearts && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-end sm:items-center justify-center p-4"
+              onClick={() => setShowNoHearts(false)}
+            >
+              <motion.div
+                initial={{ y: 80, opacity: 0, scale: 0.95 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                exit={{ y: 80, opacity: 0 }}
+                transition={{ type: 'spring', bounce: 0.3 }}
+                className="bg-white w-full max-w-sm rounded-[3rem] p-10 shadow-2xl text-center relative overflow-hidden"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-300 via-brand-red to-red-300" />
+                <div className="w-24 h-24 bg-red-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border-2 border-red-100">
+                  <Heart size={48} className="text-brand-red" fill="currentColor" />
+                </div>
+                <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tighter mb-2">
+                  Sem corações
+                </h2>
+                <p className="text-slate-500 font-medium mb-1">
+                  Você usou seus {MAX_HEARTS} corações de hoje.
+                </p>
+                <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+                  Eles se recarregam amanhã. Seu streak continua seguro — volte para manter a ofensiva! 🔥
+                </p>
+                <button
+                  onClick={() => setShowNoHearts(false)}
+                  className="w-full py-4 bg-brand-primary text-white font-black rounded-2xl text-sm uppercase tracking-widest hover:brightness-110 transition-all active:scale-95"
+                >
+                  Entendi
                 </button>
               </motion.div>
             </motion.div>
@@ -4671,17 +5375,17 @@ export default function App() {
         }`}>
           {[
             { id: 'home', icon: <LayoutDashboard size={24} />, label: 'Início' },
-            { id: 'home-quiz', icon: <BookOpen size={24} />, label: 'Questões', onClick: () => startQuiz() },
+            { id: 'desafios', icon: <Swords size={24} />, label: 'Desafios' },
             { id: 'progress', icon: <BarChart3 size={24} />, label: 'Progresso' },
             { id: 'ranking', icon: <Trophy size={24} />, label: 'Liga' },
             { id: 'profile', icon: <User size={24} />, label: 'Perfil' }
           ].map((item) => {
-            const isActive = item.id !== 'home-quiz' && view === item.id;
+            const isActive = view === item.id || (item.id === 'desafios' && (view === 'amigos' || view === 'sala'));
             const isDark = view === 'ranking' || view === 'progress' || view === 'revision';
             return (
               <button
                 key={item.id}
-                onClick={item.onClick || (() => setView(item.id as any))}
+                onClick={() => setView(item.id as any)}
                 className={`flex flex-col items-center gap-1.5 transition-all relative ${
                   isActive ? 'text-brand-primary' : isDark ? 'text-neutral-500' : 'text-slate-400'
                 }`}

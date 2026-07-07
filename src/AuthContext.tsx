@@ -108,10 +108,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInAsGuest = () => {
-    try {
-      localStorage.removeItem('mq_user');
-      localStorage.removeItem('mq_track');
-    } catch { /* noop */ }
     setCurrentUser(GUEST_USER);
     setPlan('free');
   };
@@ -125,11 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const upgradeToPremium = async () => {
-    if (currentUser?.uid === 'guest') {
-      setPlan('premium');
-      return;
-    }
-    if (!currentUser || !db) return;
+    if (!currentUser || !db || currentUser.uid === 'guest') return;
     const ref = doc(db, 'users', currentUser.uid);
     await updateDoc(ref, { plan: 'premium' });
     setPlan('premium');
