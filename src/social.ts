@@ -5,7 +5,7 @@ import {
   doc, getDoc, setDoc, updateDoc, collection, query, where,
   getDocs, onSnapshot, serverTimestamp, arrayUnion, increment,
 } from 'firebase/firestore';
-import { db, isFirebaseConfigured } from './firebase';
+import { auth, db, isFirebaseConfigured } from './firebase';
 
 export interface Friendship {
   id: string;
@@ -33,7 +33,7 @@ export interface Battle {
   rewarded: Record<string, boolean>;
 }
 
-const ok = () => isFirebaseConfigured && !!db;
+const ok = () => isFirebaseConfigured && !!db && !!auth?.currentUser;
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O/1/I
 
 function randomCode(): string {

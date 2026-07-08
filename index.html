@@ -4,6 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Google AI Studio App</title>
+    <script>
+      // Safeguard against third-party/system scripts attempting to overwrite or hook window.fetch
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var currentFetch = originalFetch;
+          
+          Object.defineProperty(window, 'fetch', {
+            get: function() { return currentFetch; },
+            set: function(val) { currentFetch = val; },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          console.warn('[safeguard] window.fetch is read-only and non-configurable on window:', e);
+          try {
+            var proto = Object.getPrototypeOf(window);
+            if (proto) {
+              var currentFetchProto = window.fetch;
+              Object.defineProperty(proto, 'fetch', {
+                get: function() { return currentFetchProto; },
+                set: function(val) { currentFetchProto = val; },
+                configurable: true,
+                enumerable: true
+              });
+            }
+          } catch (e2) {
+            console.warn('[safeguard] window.fetch is non-configurable on prototype:', e2);
+          }
+        }
+
+        // Intercept and prevent crashes from any uncaught type errors related to "Cannot set property fetch"
+        window.addEventListener('error', function(event) {
+          if (event && event.message && event.message.indexOf('fetch') !== -1 && event.message.indexOf('getter') !== -1) {
+            console.warn('[safeguard] Intercepted and ignored fetch getter error:', event.message);
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }, true);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

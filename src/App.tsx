@@ -268,7 +268,7 @@ const ESTUDANTE_BANCA_IDS = new Set([
   'enare_2023_001','enare_2024_pr_cirmao_001','enare_2024_aa_transplant_cornea_001',
 ]);
 
-const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca || ESTUDANTE_BANCA_IDS.has(q.id));
+const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca || q.banca === 'Trilha Estudante' || q.banca === 'ENARE' || ESTUDANTE_BANCA_IDS.has(q.id));
 
 const RANKING = [
   { name: 'Dr. Ricardo M.', xp: 15420, level: 42, active: true, trend: 0 },
@@ -405,7 +405,7 @@ const SUBJECT_ICONS: Record<string, any> = {
   'Infectologia': { image: '/10154483.png', icon: Bug, color: 'bg-lime-600', ringColor: '#65A30D', textColor: 'text-white', shadow: 'shadow-lime-500/40' },
   'Urgência e Emergência': { image: 'https://cdn-icons-png.flaticon.com/512/3914/3914688.png', icon: AlertTriangle, color: 'bg-red-600', ringColor: '#DC2626', textColor: 'text-white', shadow: 'shadow-red-600/40' },
   'Medicina Intensiva': { image: 'https://cdn-icons-png.flaticon.com/512/978/978957.png', icon: Activity, color: 'bg-slate-700', ringColor: '#334155', textColor: 'text-white', shadow: 'shadow-slate-700/40' },
-  'Ortopedia': { image: '/ORTOP.png', icon: Bone, color: 'bg-stone-500', ringColor: '#78716C', textColor: 'text-white', shadow: 'shadow-stone-500/40' },
+  'Ortopedia': { image: 'https://cdn-icons-png.flaticon.com/512/11071/11071552.png', icon: Bone, color: 'bg-stone-500', ringColor: '#78716C', textColor: 'text-white', shadow: 'shadow-stone-500/40' },
   'Neonatologia': { image: 'https://cdn-icons-png.flaticon.com/512/14365/14365115.png', icon: Baby, color: 'bg-sky-400', ringColor: '#38BDF8', textColor: 'text-white', shadow: 'shadow-sky-400/40' },
   'Anestesiologia': { image: 'https://cdn-icons-png.flaticon.com/512/5793/5793712.png', icon: Thermometer, color: 'bg-gray-500', ringColor: '#6B7280', textColor: 'text-white', shadow: 'shadow-gray-500/40' },
   'Traumatologia-Ortopedia': { image: 'https://cdn-icons-png.flaticon.com/512/11071/11071552.png', icon: Bone, color: 'bg-amber-700', ringColor: '#B45309', textColor: 'text-white', shadow: 'shadow-amber-700/40' },
@@ -415,7 +415,7 @@ const SUBJECT_ICONS: Record<string, any> = {
   'Epidemiologia': { image: 'https://cdn-icons-png.flaticon.com/512/1753/1753380.png', icon: BarChart2, color: 'bg-blue-500', ringColor: '#3B82F6', textColor: 'text-white', shadow: 'shadow-blue-500/40' },
   'Urologia': { image: 'https://cdn-icons-png.flaticon.com/512/4006/4006204.png', icon: Droplets, color: 'bg-yellow-600', ringColor: '#CA8A04', textColor: 'text-white', shadow: 'shadow-yellow-600/40' },
   'Geriatria': { image: 'https://cdn-icons-png.flaticon.com/512/978/978915.png', icon: Users, color: 'bg-orange-500', ringColor: '#F97316', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
-  'Radiologia': { image: '/RADIOLOIA.png', icon: Search, color: 'bg-gray-600', ringColor: '#4B5563', textColor: 'text-white', shadow: 'shadow-gray-600/40' },
+  'Radiologia': { image: 'https://cdn-icons-png.flaticon.com/512/3213/3213264.png', icon: Search, color: 'bg-gray-600', ringColor: '#4B5563', textColor: 'text-white', shadow: 'shadow-gray-600/40' },
   'Cirurgia Vascular': { image: 'https://cdn-icons-png.flaticon.com/512/8670/8670744.png', icon: Activity, color: 'bg-red-800', ringColor: '#991B1B', textColor: 'text-white', shadow: 'shadow-red-800/40' },
   'Neurocirurgia': { image: 'https://cdn-icons-png.flaticon.com/512/9710/9710955.png', icon: Brain, color: 'bg-violet-700', ringColor: '#6D28D9', textColor: 'text-white', shadow: 'shadow-violet-700/40' }
 };
@@ -582,7 +582,16 @@ const GamePathNode = ({
           } ${iconData.color || 'bg-brand-primary'}`}>
              {iconData.image ? (
                <img 
-                 src={iconData.image} 
+                 src={iconData.image.startsWith('http') ? iconData.image : (() => {
+                   const clean = iconData.image.replace(/^\//, '');
+                   const match = clean.match(/^(\d+)\.png$/);
+                   if (match) {
+                     const id = match[1];
+                     const prefix = id.length === 7 ? id.slice(0, 4) : id.slice(0, 5);
+                     return `https://cdn-icons-png.flaticon.com/512/${prefix}/${id}.png`;
+                   }
+                   return `./${clean}`;
+                 })()} 
                  alt={subject} 
                  className={`w-12 h-12 object-contain aspect-square ${subject === 'Anatomia' ? '-translate-y-1' : ''}`} 
                  referrerPolicy="no-referrer"
@@ -1479,7 +1488,7 @@ export default function App() {
     const activeSubSubject = overrideSubSubject !== undefined ? overrideSubSubject : selectedSubSubject;
 
     // Select questions once at the start of the session
-    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
+    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS.filter(q => q.banca !== 'Trilha Estudante');
     let filtered = [...pool];
     if (revision) {
       filtered = pool.filter(q => user.missedQuestionIds.includes(q.id));
@@ -1499,7 +1508,7 @@ export default function App() {
 
     const selected = filtered.length > 0
       ? shuffle(filtered).slice(0, 10)
-      : shuffle(QUESTIONS.filter(q => q.subject === activeSubject)).slice(0, 10);
+      : shuffle(pool.filter(q => q.subject === activeSubject)).slice(0, 10);
 
     setTimeout(() => {
       setIsThinking(false);
@@ -2471,7 +2480,7 @@ export default function App() {
                   <div className="py-10 px-6 flex flex-col items-center bg-white rounded-[3rem] border border-slate-200/80 shadow-xl overflow-visible">
                     <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4">
                       {(Object.keys(HIERARCHY[selectedCycle]) as Subject[]).map((subj, idx) => {
-                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
+                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS.filter(q => q.banca !== 'Trilha Estudante');
                         const allQs = trackPool.filter(q => q.subject === subj);
                         const pool = allQs;
                         return (
@@ -2744,7 +2753,7 @@ export default function App() {
                       <div className="py-8 px-5 flex flex-col items-center bg-white rounded-[2.5rem] border border-slate-200/80 shadow-xl overflow-visible">
                         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-4">
                           {(Object.keys(HIERARCHY[selectedCycle as Cycle]) as Subject[]).map((subj, idx) => {
-                            const pool2 = QUESTIONS.filter(q => q.subject === subj);
+                            const pool2 = QUESTIONS.filter(q => q.subject === subj && q.banca !== 'Trilha Estudante');
                             return (
                               <GamePathNode
                                 key={`res-path-${subj}-${idx}`}
@@ -4503,7 +4512,7 @@ export default function App() {
               </div>
 
               {/* Batalha 1v1 */}
-              <button onClick={() => setView('amigos')} className="w-full text-left bg-slate-900 rounded-[2.5rem] p-7 shadow-xl relative overflow-hidden active:scale-[0.98] transition-transform">
+              <button onClick={() => setView('amigos')} className="w-full text-left bg-slate-900 rounded-[2.5rem] p-5 sm:p-7 shadow-xl relative overflow-hidden active:scale-[0.98] transition-transform">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full -mr-16 -mt-16" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-2xl bg-brand-primary flex items-center justify-center mb-4 shadow-lg"><Swords size={28} className="text-white" /></div>
@@ -4513,14 +4522,14 @@ export default function App() {
               </button>
 
               {/* Sala em grupo */}
-              <div className="bg-white rounded-[2.5rem] p-7 border border-slate-200 shadow-lg">
+              <div className="bg-white rounded-[2.5rem] p-5 sm:p-7 border border-slate-200 shadow-lg">
                 <div className="w-14 h-14 rounded-2xl bg-brand-green flex items-center justify-center mb-4 shadow-lg"><Users size={28} className="text-white" /></div>
                 <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Sala em grupo</h3>
                 <p className="text-slate-500 font-medium text-sm leading-snug mb-5">Crie uma sala e responda ao vivo com vários amigos, estilo Kahoot — todos na mesma pergunta, placar em tempo real.</p>
                 <button onClick={() => setRoomPickTopic(true)} className="w-full py-3.5 bg-brand-green text-white font-black rounded-2xl text-sm uppercase tracking-widest mb-3 flex items-center justify-center gap-2"><Plus size={18} /> Criar sala</button>
                 <div className="flex gap-2">
-                  <input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="Código da sala" inputMode="numeric" className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-green outline-none font-black text-slate-900 tracking-[0.3em] text-center" />
-                  <button onClick={joinGroupRoom} className="px-5 py-3 bg-slate-900 text-white font-black rounded-xl text-sm">Entrar</button>
+                  <input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="Código da sala" inputMode="numeric" className="flex-1 min-w-0 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-green outline-none font-black text-slate-900 tracking-[0.3em] text-center" />
+                  <button onClick={joinGroupRoom} className="px-5 py-3 bg-slate-900 text-white font-black rounded-xl text-sm shrink-0">Entrar</button>
                 </div>
               </div>
 
@@ -4711,8 +4720,8 @@ export default function App() {
                 <div className="bg-white rounded-[2rem] p-5 border border-slate-200 shadow-sm">
                   <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Adicionar amigo por código</p>
                   <div className="flex gap-2">
-                    <input value={addFriendInput} onChange={e => setAddFriendInput(e.target.value.toUpperCase())} placeholder="MED-XXXXX" className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-widest text-sm" />
-                    <button onClick={handleAddFriend} className="px-5 py-3 bg-brand-primary text-white font-black rounded-xl text-sm">Enviar</button>
+                    <input value={addFriendInput} onChange={e => setAddFriendInput(e.target.value.toUpperCase())} placeholder="MED-XXXXX" className="flex-1 min-w-0 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-widest text-sm" />
+                    <button onClick={handleAddFriend} className="px-5 py-3 bg-brand-primary text-white font-black rounded-xl text-sm shrink-0">Enviar</button>
                   </div>
                   {addFriendMsg && <p className="text-xs font-bold text-slate-500 mt-2">{addFriendMsg}</p>}
                 </div>
@@ -4893,7 +4902,7 @@ export default function App() {
                        <input 
                          value={tempName}
                          onChange={(e) => setTempName(e.target.value)}
-                         className="flex-1 bg-slate-50 border border-slate-200 text-slate-900 p-3 rounded-xl font-black focus:border-brand-primary outline-none"
+                         className="flex-1 min-w-0 bg-slate-50 border border-slate-200 text-slate-900 p-3 rounded-xl font-black focus:border-brand-primary outline-none"
                          autoFocus
                        />
                        <button 
@@ -4901,7 +4910,7 @@ export default function App() {
                            setUser(prev => ({ ...prev, name: tempName }));
                            setIsEditingProfile(false);
                          }}
-                         className="bg-brand-primary p-3 rounded-xl text-white shadow-lg shadow-blue-600/20"
+                         className="bg-brand-primary p-3 rounded-xl text-white shadow-lg shadow-blue-600/20 shrink-0"
                        >
                          <Check size={20} strokeWidth={3} />
                        </button>
