@@ -264,9 +264,10 @@ const HIERARCHY: Record<Cycle, Partial<Record<Subject, string[]>>> = {
 
 const QUESTIONS: Question[] = ALL_QUESTIONS_IMPORTED;
 
-// Trilha Estudante: apenas questões sem banca (conteúdo educacional próprio)
+// Trilha Estudante: apenas questões sem banca (conteúdo educacional próprio) ou com banca 'Trilha Estudante'
 // Questões de bancas (ENARE, CERMAM, UNESP, etc.) são exclusivas da Trilha Residência
-const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca);
+const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca || q.banca === 'Trilha Estudante');
+const QUESTIONS_RESIDENCIA = QUESTIONS.filter(q => q.banca && q.banca !== 'Trilha Estudante');
 
 const RANKING = [
   { name: 'Dr. Ricardo M.', xp: 15420, level: 42, active: true, trend: 0 },
@@ -1400,7 +1401,8 @@ export default function App() {
   // Cria a batalha (desafiante escolhe o tópico) e já começa a jogar.
   const createAndPlayBattle = async (friend: { uid: string; name: string }, subject: Subject) => {
     if (!currentUser) return;
-    const pool = QUESTIONS.filter(q => q.subject === subject);
+    const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+    const pool = trackPool.filter(q => q.subject === subject);
     const ids = shuffle(pool).slice(0, 10).map(q => q.id);
     if (ids.length < 3) { setSocialToast('Poucas questões nesse tópico.'); setTimeout(() => setSocialToast(''), 3000); return; }
     const me = { uid: currentUser.uid, name: currentUser.displayName || user.name || 'Você' };
@@ -1419,7 +1421,9 @@ export default function App() {
   const ROOM_SECONDS = 20;
   const createGroupRoom = async (subject: Subject) => {
     if (!currentUser) return;
-    const ids = shuffle(QUESTIONS.filter(q => q.subject === subject)).slice(0, 10).map(q => q.id);
+    const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+    const pool = trackPool.filter(q => q.subject === subject);
+    const ids = shuffle(pool).slice(0, 10).map(q => q.id);
     if (ids.length < 3) { setSocialToast('Poucas questões nesse tópico.'); setTimeout(() => setSocialToast(''), 3000); return; }
     const res = await createRoom({ uid: currentUser.uid, name: currentUser.displayName || user.name || 'Host' }, subject, ids);
     setRoomPickTopic(false);
@@ -1490,7 +1494,7 @@ export default function App() {
     const activeSubSubject = overrideSubSubject !== undefined ? overrideSubSubject : selectedSubSubject;
 
     // Select questions once at the start of the session
-    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
+    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
     let filtered = [...pool];
     if (revision) {
       filtered = pool.filter(q => user.missedQuestionIds.includes(q.id));
@@ -2482,7 +2486,7 @@ export default function App() {
                   <div className="py-10 px-6 flex flex-col items-center bg-white rounded-[3rem] border border-slate-200/80 shadow-xl overflow-visible">
                     <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4">
                       {(Object.keys(HIERARCHY[selectedCycle]) as Subject[]).map((subj, idx) => {
-                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
+                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
                         const allQs = trackPool.filter(q => q.subject === subj);
                         const pool = allQs;
                         return (
@@ -2755,7 +2759,8 @@ export default function App() {
                       <div className="py-8 px-5 flex flex-col items-center bg-white rounded-[2.5rem] border border-slate-200/80 shadow-xl overflow-visible">
                         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-4">
                           {(Object.keys(HIERARCHY[selectedCycle as Cycle]) as Subject[]).map((subj, idx) => {
-                            const pool2 = QUESTIONS.filter(q => q.subject === subj);
+                            const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+                            const pool2 = trackPool.filter(q => q.subject === subj);
                             return (
                               <GamePathNode
                                 key={`res-path-${subj}-${idx}`}
@@ -3673,7 +3678,8 @@ export default function App() {
             const weakAttempts = weakSubject ? (user.subjectAttempts[weakSubject] ?? 0) : 0;
 
             // Compute critical topics: subSubjects (or subjects) most present in missed questions
-            const missedQs = QUESTIONS.filter(q => user.missedQuestionIds.includes(q.id));
+            const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+            const missedQs = trackPool.filter(q => user.missedQuestionIds.includes(q.id));
             const topicMap: Record<string, { label: string; subject: string; count: number }> = {};
             missedQs.forEach(q => {
               const key = q.subSubject || q.subject;
@@ -4628,18 +4634,21 @@ export default function App() {
                         <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Escolha o tópico</h3>
                         <p className="text-xs text-slate-400 font-medium mb-5">10 perguntas ao vivo com a galera</p>
                         <div className="grid grid-cols-2 gap-2.5">
-                          {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map((s, i) => {
-                            const ic = SUBJECT_ICONS[s] || {};
-                            const Ic = ic.icon;
-                            return (
-                              <motion.button key={s} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03, type: 'spring', stiffness: 300, damping: 20 }} whileHover={{ y: -3 }} whileTap={{ scale: 0.94 }} onClick={() => createGroupRoom(s as Subject)} className="flex flex-col items-center gap-2 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200 hover:shadow-lg transition-colors">
-                                <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md overflow-hidden" style={{ background: ic.ringColor || '#00658a' }}>
-                                  {ic.image ? <img src={ic.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" /> : Ic ? <Ic size={20} className="text-white" /> : null}
-                                </div>
-                                <span className="text-[11px] font-black text-slate-700 text-center leading-tight">{s}</span>
-                              </motion.button>
-                            );
-                          })}
+                          {(() => {
+                            const activeTrackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+                            return ['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => activeTrackPool.some(q => q.subject === s)).map((s, i) => {
+                              const ic = SUBJECT_ICONS[s] || {};
+                              const Ic = ic.icon;
+                              return (
+                                <motion.button key={s} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03, type: 'spring', stiffness: 300, damping: 20 }} whileHover={{ y: -3 }} whileTap={{ scale: 0.94 }} onClick={() => createGroupRoom(s as Subject)} className="flex flex-col items-center gap-2 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200 hover:shadow-lg transition-colors">
+                                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md overflow-hidden" style={{ background: ic.ringColor || '#00658a' }}>
+                                    {ic.image ? <img src={ic.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" /> : Ic ? <Ic size={20} className="text-white" /> : null}
+                                  </div>
+                                  <span className="text-[11px] font-black text-slate-700 text-center leading-tight">{s}</span>
+                                </motion.button>
+                              );
+                            });
+                          })()}
                         </div>
                       </motion.div>
                     </motion.div>
@@ -4922,9 +4931,12 @@ export default function App() {
                         <p className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-1">Desafiar {challengeFriend.name}</p>
                         <h3 className="text-xl font-black text-slate-900 mb-4">Escolha o tópico</h3>
                         <div className="space-y-2">
-                          {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map(s => (
-                            <button key={s} onClick={() => createAndPlayBattle(challengeFriend, s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-primary hover:bg-cyan-50 font-black text-slate-700 text-sm transition-all">{s}</button>
-                          ))}
+                          {(() => {
+                            const activeTrackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS_RESIDENCIA;
+                            return ['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => activeTrackPool.some(q => q.subject === s)).map(s => (
+                              <button key={s} onClick={() => createAndPlayBattle(challengeFriend, s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-primary hover:bg-cyan-50 font-black text-slate-700 text-sm transition-all">{s}</button>
+                            ));
+                          })()}
                         </div>
                       </motion.div>
                     </motion.div>
