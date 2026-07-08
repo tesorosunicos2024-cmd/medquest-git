@@ -7,11 +7,23 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { QUESTIONS as ALL_QUESTIONS_IMPORTED } from "./questions";
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
+import { ENARE_EXTRA_QUESTIONS } from './enare_extra_questions';
+import { ANAT_QUESTIONS } from './estudante_basico_anat';
+import { Q_BASICO_1 } from './q_basico_1';
+import { Q_BASICO_2 } from './q_basico_2';
+import { Q_BASICO_3 } from './q_basico_3';
+import { Q_CLINICO_1 } from './q_clinico_1';
+import { Q_CLINICO_2 } from './q_clinico_2';
+import { Q_CLINICO_3 } from './q_clinico_3';
+import { Q_CLINICO_4 } from './q_clinico_4';
+import { Q_INTERNATO_1 } from './q_internato_1';
+import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
   ensureFriendCode, addFriendByCode, acceptFriend, watchFriendships,
   createBattle, getBattle, submitBattleScore, markRewarded, watchBattles,
   createRoom, findRoomByCode, joinRoom, watchRoom, updateRoom, answerRoom,
+  bumpWin, fetchWins,
   type Friendship, type Battle, type Room,
 } from './social';
 import { 
@@ -120,7 +132,7 @@ type Subject =
   | 'Urologia' | 'Geriatria' | 'Radiologia'
   | 'Cirurgia Vascular' | 'Neurocirurgia';
 
-interface Question {
+export interface Question {
   id: string;
   cycle: Cycle;
   subject: Subject;
@@ -252,23 +264,9 @@ const HIERARCHY: Record<Cycle, Partial<Record<Subject, string[]>>> = {
 
 const QUESTIONS: Question[] = ALL_QUESTIONS_IMPORTED;
 
-// Questions from residência bancas that are also available in the trilha estudante (max 50)
-const ESTUDANTE_BANCA_IDS = new Set([
-  'cermam13_01','cermam13_02','cermam13_03','cermam13_06','cermam13_08','cermam13_09',
-  'cermam13_10','cermam13_12','cermam13_14','cermam13_17','cermam13_19','cermam13_21',
-  'cermam13_27','cermam13_29','cermam13_39','cermam13_61','cermam13_75','cermam13_81',
-  'cermam13_86','cermam25_09','cermam25_19','cermam25_36','cermam25_61','cermam09_29',
-  'cermam09_47','cermam09_48','cermam12_09','cermam19_11',
-  'enare_2024_pr_masto_001','enare_2024_aa_patologia_r4_003','enare_2024_at_endores_001',
-  'enare_2024_at_hansen_001','enare_2024_at_transmedula_001','enare_2025_004',
-  'enare_2024_at_medsono_001','enare_2024_at_ecovascular_001','enare_2024_at_endodig_001',
-  'enare_2025_094','enare_2024_at_nefroled_001','enare_2023_004','enare_2023_002',
-  'enare_2024_pr_crvascular_002','enare_2024_pr_urologia_002','enare_2023_003',
-  'enare_2023_005','enare_2024_pr_geria_001','enare_2024_at_psicote_001',
-  'enare_2023_001','enare_2024_pr_cirmao_001','enare_2024_aa_transplant_cornea_001',
-]);
-
-const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca || q.banca === 'Trilha Estudante' || q.banca === 'ENARE' || ESTUDANTE_BANCA_IDS.has(q.id));
+// Trilha Estudante: apenas questões sem banca (conteúdo educacional próprio)
+// Questões de bancas (ENARE, CERMAM, UNESP, etc.) são exclusivas da Trilha Residência
+const QUESTIONS_ESTUDANTE = QUESTIONS.filter(q => !q.banca);
 
 const RANKING = [
   { name: 'Dr. Ricardo M.', xp: 15420, level: 42, active: true, trend: 0 },
@@ -294,9 +292,9 @@ function getUserLeague(xp: number): LeagueTier {
 const LEAGUE_CONFIG: Record<LeagueTier, { label: string; next: LeagueTier | null; trophyColor: string; gradFrom: string; gradVia: string; gradTo: string }> = {
   bronze:   { label: 'Liga Bronze',   next: 'prata',    trophyColor: '#CD7F32', gradFrom: 'from-amber-700',  gradVia: 'via-amber-800',  gradTo: 'to-amber-950'  },
   prata:    { label: 'Liga Prata',    next: 'ouro',     trophyColor: '#CBD5E1', gradFrom: 'from-slate-400',  gradVia: 'via-slate-600',  gradTo: 'to-slate-800'  },
-  ouro:     { label: 'Liga Ouro',     next: 'platina',  trophyColor: '#FCD34D', gradFrom: 'from-amber-500',  gradVia: 'via-blue-700',   gradTo: 'to-amber-800'  },
-  platina:  { label: 'Liga Platina',  next: 'diamante', trophyColor: '#93C5FD', gradFrom: 'from-blue-500',   gradVia: 'via-blue-700',   gradTo: 'to-blue-900'   },
-  diamante: { label: 'Liga Diamante', next: null,       trophyColor: '#67E8F9', gradFrom: 'from-cyan-500',   gradVia: 'via-blue-700',   gradTo: 'to-cyan-900'   },
+  ouro:     { label: 'Liga Ouro',     next: 'platina',  trophyColor: '#FCD34D', gradFrom: 'from-amber-500',  gradVia: 'via-cyan-700',   gradTo: 'to-amber-800'  },
+  platina:  { label: 'Liga Platina',  next: 'diamante', trophyColor: '#93C5FD', gradFrom: 'from-cyan-500',   gradVia: 'via-cyan-700',   gradTo: 'to-cyan-900'   },
+  diamante: { label: 'Liga Diamante', next: null,       trophyColor: '#67E8F9', gradFrom: 'from-cyan-500',   gradVia: 'via-cyan-700',   gradTo: 'to-cyan-900'   },
 };
 const LEAGUE_DATA: Record<LeagueTier, LeaguePlayer[]> = {
   bronze: [
@@ -371,12 +369,12 @@ const CHART_DATA: Record<string, Array<{name: string; value: number}>> = {
 // Update SUBJECT_ICONS keys to match
 const SUBJECT_ICONS: Record<string, any> = {
   // Básicos
-  'Anatomia': { image: 'https://cdn-icons-png.flaticon.com/512/2867/2867197.png', icon: Skull, color: 'bg-emerald-500', ringColor: '#10B981', textColor: 'text-white', shadow: 'shadow-emerald-500/40' },
+  'Anatomia': { image: 'https://cdn-icons-png.flaticon.com/512/2867/2867197.png', icon: Skull, color: 'bg-emerald-500', ringColor: '#12b449', textColor: 'text-white', shadow: 'shadow-emerald-500/40' },
   'Fisiologia': { image: 'https://cdn-icons-png.flaticon.com/512/4964/4964056.png', icon: Heart, color: 'bg-rose-500', ringColor: '#F43F5E', textColor: 'text-white', shadow: 'shadow-rose-500/40' },
-  'Bioquímica': { image: 'https://cdn-icons-png.flaticon.com/512/4507/4507090.png', icon: FlaskConical, color: 'bg-blue-500', ringColor: '#3B82F6', textColor: 'text-white', shadow: 'shadow-blue-500/40' },
+  'Bioquímica': { image: 'https://cdn-icons-png.flaticon.com/512/4507/4507090.png', icon: FlaskConical, color: 'bg-cyan-500', ringColor: '#00a7e1', textColor: 'text-white', shadow: 'shadow-cyan-500/40' },
   'Histologia': { image: 'https://cdn-icons-png.flaticon.com/512/4068/4068596.png', icon: Microscope, color: 'bg-indigo-500', ringColor: '#6366F1', textColor: 'text-white', shadow: 'shadow-indigo-500/40' },
   'Embriologia': { image: 'https://cdn-icons-png.flaticon.com/512/9091/9091638.png', icon: Baby, color: 'bg-pink-500', ringColor: '#EC4899', textColor: 'text-white', shadow: 'shadow-pink-500/40' },
-  'Microbiologia': { image: 'https://cdn-icons-png.flaticon.com/512/8986/8986435.png', icon: Bug, color: 'bg-amber-500', ringColor: '#F59E0B', textColor: 'text-white', shadow: 'shadow-amber-500/40' },
+  'Microbiologia': { image: 'https://cdn-icons-png.flaticon.com/512/8986/8986435.png', icon: Bug, color: 'bg-amber-500', ringColor: '#f1c100', textColor: 'text-white', shadow: 'shadow-amber-500/40' },
   'Imunologia': { image: 'https://cdn-icons-png.flaticon.com/512/15192/15192824.png', icon: Shield, color: 'bg-indigo-600', ringColor: '#4F46E5', textColor: 'text-white', shadow: 'shadow-indigo-600/40' },
   'Farmacologia': { image: 'https://cdn-icons-png.flaticon.com/512/18383/18383210.png', icon: Pill, color: 'bg-purple-500', ringColor: '#8B5CF6', textColor: 'text-white', shadow: 'shadow-purple-500/40' },
   'Patologia Geral': { icon: Microscope, color: 'bg-slate-500/20', ringColor: '#64748B', textColor: 'text-slate-500', shadow: 'shadow-slate-500/20' },
@@ -386,36 +384,36 @@ const SUBJECT_ICONS: Record<string, any> = {
   'Cardiologia Clínica': { image: '/6176500.png', icon: Heart, color: 'bg-rose-500', ringColor: '#F43F5E', textColor: 'text-white', shadow: 'shadow-rose-500/40' },
   'Cardiologia': { image: '/6176500.png', icon: Heart, color: 'bg-rose-500', ringColor: '#F43F5E', textColor: 'text-white', shadow: 'shadow-rose-500/40' },
   'Neurologia': { image: '/11666655.png', icon: Brain, color: 'bg-indigo-500', ringColor: '#6366F1', textColor: 'text-white', shadow: 'shadow-indigo-500/40' },
-  'Pediatria': { image: '/10154448.png', icon: Baby, color: 'bg-emerald-500', ringColor: '#10B981', textColor: 'text-white', shadow: 'shadow-emerald-500/40' },
+  'Pediatria': { image: '/10154448.png', icon: Baby, color: 'bg-emerald-500', ringColor: '#12b449', textColor: 'text-white', shadow: 'shadow-emerald-500/40' },
   'Ginecologia & Obstetrícia': { image: '/2885280.png', icon: Baby, color: 'bg-pink-500', ringColor: '#EC4899', textColor: 'text-white', shadow: 'shadow-pink-500/40' },
-  'Cirurgia Geral': { image: '/10154417.png', icon: Scissors, color: 'bg-orange-500', ringColor: '#F59E0B', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
-  'Clínica Cirúrgica': { image: '/10154417.png', icon: Scissors, color: 'bg-orange-500', ringColor: '#F59E0B', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
+  'Cirurgia Geral': { image: '/10154417.png', icon: Scissors, color: 'bg-orange-500', ringColor: '#f1c100', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
+  'Clínica Cirúrgica': { image: '/10154417.png', icon: Scissors, color: 'bg-orange-500', ringColor: '#f1c100', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
   'Clínica Médica': { image: '/3028573.png', icon: Heart, color: 'bg-rose-500', ringColor: '#F43F5E', textColor: 'text-white', shadow: 'shadow-rose-500/40' },
   'Medicina de Família/SUS': { image: '/12370055.png', icon: Users, color: 'bg-cyan-500', ringColor: '#06B6D4', textColor: 'text-white', shadow: 'shadow-cyan-500/40' },
   'Psiquiatria': { image: '/12024688.png', icon: Brain, color: 'bg-purple-500', ringColor: '#8B5CF6', textColor: 'text-white', shadow: 'shadow-purple-500/40' },
-  'Dermatologia': { image: '/10154433.png', icon: Droplet, color: 'bg-amber-400', ringColor: '#F59E0B', textColor: 'text-white', shadow: 'shadow-amber-500/40' },
+  'Dermatologia': { image: '/10154433.png', icon: Droplet, color: 'bg-amber-400', ringColor: '#f1c100', textColor: 'text-white', shadow: 'shadow-amber-500/40' },
   'Oftalmologia': { image: '/2007207.png', icon: Eye, color: 'bg-teal-500', ringColor: '#14B8A6', textColor: 'text-white', shadow: 'shadow-teal-500/40' },
   'Otorrinolaringologia': { image: '/9340044.png', icon: Ear, color: 'bg-violet-500', ringColor: '#8B5CF6', textColor: 'text-white', shadow: 'shadow-violet-500/40' },
   'Pneumologia': { image: '/10154419.png', icon: Wind, color: 'bg-sky-500', ringColor: '#0EA5E9', textColor: 'text-white', shadow: 'shadow-sky-500/40' },
   'Gastroenterologia': { image: '/6490965.png', icon: Activity, color: 'bg-green-600', ringColor: '#16A34A', textColor: 'text-white', shadow: 'shadow-green-500/40' },
   'Endocrinologia': { image: '/15192810.png', icon: Pill, color: 'bg-yellow-500', ringColor: '#EAB308', textColor: 'text-white', shadow: 'shadow-yellow-500/40' },
-  'Nefrologia': { image: '/12024712.png', icon: Stethoscope, color: 'bg-blue-600', ringColor: '#2563EB', textColor: 'text-white', shadow: 'shadow-blue-500/40' },
+  'Nefrologia': { image: '/12024712.png', icon: Stethoscope, color: 'bg-cyan-600', ringColor: '#00658a', textColor: 'text-white', shadow: 'shadow-cyan-500/40' },
   'Reumatologia': { image: '/12024718.png', icon: Bone, color: 'bg-slate-500', ringColor: '#64748B', textColor: 'text-white', shadow: 'shadow-slate-500/40' },
   'Hematologia': { image: '/6176756.png', icon: Droplet, color: 'bg-red-700', ringColor: '#B91C1C', textColor: 'text-white', shadow: 'shadow-red-500/40' },
   'Infectologia': { image: '/10154483.png', icon: Bug, color: 'bg-lime-600', ringColor: '#65A30D', textColor: 'text-white', shadow: 'shadow-lime-500/40' },
   'Urgência e Emergência': { image: 'https://cdn-icons-png.flaticon.com/512/3914/3914688.png', icon: AlertTriangle, color: 'bg-red-600', ringColor: '#DC2626', textColor: 'text-white', shadow: 'shadow-red-600/40' },
   'Medicina Intensiva': { image: 'https://cdn-icons-png.flaticon.com/512/978/978957.png', icon: Activity, color: 'bg-slate-700', ringColor: '#334155', textColor: 'text-white', shadow: 'shadow-slate-700/40' },
-  'Ortopedia': { image: 'https://cdn-icons-png.flaticon.com/512/11071/11071552.png', icon: Bone, color: 'bg-stone-500', ringColor: '#78716C', textColor: 'text-white', shadow: 'shadow-stone-500/40' },
+  'Ortopedia': { image: '/ORTOP.png', icon: Bone, color: 'bg-stone-500', ringColor: '#78716C', textColor: 'text-white', shadow: 'shadow-stone-500/40' },
   'Neonatologia': { image: 'https://cdn-icons-png.flaticon.com/512/14365/14365115.png', icon: Baby, color: 'bg-sky-400', ringColor: '#38BDF8', textColor: 'text-white', shadow: 'shadow-sky-400/40' },
   'Anestesiologia': { image: 'https://cdn-icons-png.flaticon.com/512/5793/5793712.png', icon: Thermometer, color: 'bg-gray-500', ringColor: '#6B7280', textColor: 'text-white', shadow: 'shadow-gray-500/40' },
   'Traumatologia-Ortopedia': { image: 'https://cdn-icons-png.flaticon.com/512/11071/11071552.png', icon: Bone, color: 'bg-amber-700', ringColor: '#B45309', textColor: 'text-white', shadow: 'shadow-amber-700/40' },
   'Patologia': { image: 'https://cdn-icons-png.flaticon.com/512/9340/9340149.png', icon: Microscope, color: 'bg-slate-600', ringColor: '#475569', textColor: 'text-white', shadow: 'shadow-slate-600/40' },
   'Parasitologia': { image: 'https://cdn-icons-png.flaticon.com/512/8099/8099004.png', icon: Bug, color: 'bg-green-700', ringColor: '#15803D', textColor: 'text-white', shadow: 'shadow-green-700/40' },
   'Semiologia': { image: 'https://cdn-icons-png.flaticon.com/512/2666/2666112.png', icon: Stethoscope, color: 'bg-cyan-500', ringColor: '#06B6D4', textColor: 'text-white', shadow: 'shadow-cyan-500/40' },
-  'Epidemiologia': { image: 'https://cdn-icons-png.flaticon.com/512/1753/1753380.png', icon: BarChart2, color: 'bg-blue-500', ringColor: '#3B82F6', textColor: 'text-white', shadow: 'shadow-blue-500/40' },
+  'Epidemiologia': { image: 'https://cdn-icons-png.flaticon.com/512/1753/1753380.png', icon: BarChart2, color: 'bg-cyan-500', ringColor: '#00a7e1', textColor: 'text-white', shadow: 'shadow-cyan-500/40' },
   'Urologia': { image: 'https://cdn-icons-png.flaticon.com/512/4006/4006204.png', icon: Droplets, color: 'bg-yellow-600', ringColor: '#CA8A04', textColor: 'text-white', shadow: 'shadow-yellow-600/40' },
   'Geriatria': { image: 'https://cdn-icons-png.flaticon.com/512/978/978915.png', icon: Users, color: 'bg-orange-500', ringColor: '#F97316', textColor: 'text-white', shadow: 'shadow-orange-500/40' },
-  'Radiologia': { image: 'https://cdn-icons-png.flaticon.com/512/3213/3213264.png', icon: Search, color: 'bg-gray-600', ringColor: '#4B5563', textColor: 'text-white', shadow: 'shadow-gray-600/40' },
+  'Radiologia': { image: '/RADIOLOIA.png', icon: Search, color: 'bg-gray-600', ringColor: '#4B5563', textColor: 'text-white', shadow: 'shadow-gray-600/40' },
   'Cirurgia Vascular': { image: 'https://cdn-icons-png.flaticon.com/512/8670/8670744.png', icon: Activity, color: 'bg-red-800', ringColor: '#991B1B', textColor: 'text-white', shadow: 'shadow-red-800/40' },
   'Neurocirurgia': { image: 'https://cdn-icons-png.flaticon.com/512/9710/9710955.png', icon: Brain, color: 'bg-violet-700', ringColor: '#6D28D9', textColor: 'text-white', shadow: 'shadow-violet-700/40' }
 };
@@ -430,16 +428,16 @@ function MedQuestLogoIcon({ size = 40 }: { size?: number }) {
           <stop offset="100%" stopColor="#0E1D4A"/>
         </linearGradient>
         <radialGradient id="mq-ambient" cx="50%" cy="42%" r="56%">
-          <stop offset="0%" stopColor="#2563EB" stopOpacity="0.38"/>
-          <stop offset="100%" stopColor="#2563EB" stopOpacity="0"/>
+          <stop offset="0%" stopColor="#00658a" stopOpacity="0.38"/>
+          <stop offset="100%" stopColor="#00658a" stopOpacity="0"/>
         </radialGradient>
         <linearGradient id="mq-qmark" x1="20%" y1="0%" x2="80%" y2="100%">
           <stop offset="0%" stopColor="#FFFFFF"/>
           <stop offset="100%" stopColor="#7DD3FC"/>
         </linearGradient>
         <radialGradient id="mq-dot" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#60A5FA"/>
-          <stop offset="100%" stopColor="#1D4ED8"/>
+          <stop offset="0%" stopColor="#7cd0ff"/>
+          <stop offset="100%" stopColor="#004c69"/>
         </radialGradient>
         <filter id="mq-qglow" x="-55%" y="-55%" width="210%" height="210%">
           <feGaussianBlur stdDeviation="3" result="b"/>
@@ -459,12 +457,12 @@ function MedQuestLogoIcon({ size = 40 }: { size?: number }) {
 
       {/* ECG line — subtle medical accent */}
       <path d="M 6,76 L 18,76 L 21,66 L 24,86 L 27,58 L 30,93 L 34,76 L 66,76 L 69,66 L 72,86 L 75,58 L 78,93 L 82,76 L 94,76"
-            fill="none" stroke="#3B82F6" strokeWidth="1.3"
+            fill="none" stroke="#00a7e1" strokeWidth="1.3"
             strokeLinecap="round" strokeLinejoin="round" opacity="0.13"/>
 
       {/* ? soft glow */}
       <path d="M 36,52 C 36,22 64,22 64,43 C 64,59 51,65 50,70"
-            fill="none" stroke="#3B82F6" strokeWidth="15"
+            fill="none" stroke="#00a7e1" strokeWidth="15"
             strokeLinecap="round" strokeLinejoin="round" opacity="0.28"/>
 
       {/* ? main stroke */}
@@ -474,7 +472,7 @@ function MedQuestLogoIcon({ size = 40 }: { size?: number }) {
             filter="url(#mq-qglow)"/>
 
       {/* Dot outer glow */}
-      <circle cx="50" cy="84" r="12" fill="#2563EB" opacity="0.22" filter="url(#mq-dotglow)"/>
+      <circle cx="50" cy="84" r="12" fill="#00658a" opacity="0.22" filter="url(#mq-dotglow)"/>
       {/* Dot body */}
       <circle cx="50" cy="84" r="7" fill="url(#mq-dot)" filter="url(#mq-qglow)"/>
       <circle cx="50" cy="84" r="7" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1"/>
@@ -505,7 +503,7 @@ function MedQuestLogo({ collapsed = false }: { collapsed?: boolean }) {
             fontWeight: 900,
             fontSize: 18,
             letterSpacing: '-0.04em',
-            color: '#2563EB',
+            color: '#00658a',
           }}>Quest</span>
         </div>
       )}
@@ -564,7 +562,7 @@ const GamePathNode = ({
               cy="48"
               r="44"
               fill="transparent"
-              stroke={iconData.ringColor || "#10B981"}
+              stroke={iconData.ringColor || "#12b449"}
               strokeWidth="8"
               strokeDasharray="276.46"
               initial={{ strokeDashoffset: 276.46 }}
@@ -582,16 +580,7 @@ const GamePathNode = ({
           } ${iconData.color || 'bg-brand-primary'}`}>
              {iconData.image ? (
                <img 
-                 src={iconData.image.startsWith('http') ? iconData.image : (() => {
-                   const clean = iconData.image.replace(/^\//, '');
-                   const match = clean.match(/^(\d+)\.png$/);
-                   if (match) {
-                     const id = match[1];
-                     const prefix = id.length === 7 ? id.slice(0, 4) : id.slice(0, 5);
-                     return `https://cdn-icons-png.flaticon.com/512/${prefix}/${id}.png`;
-                   }
-                   return `./${clean}`;
-                 })()} 
+                 src={iconData.image} 
                  alt={subject} 
                  className={`w-12 h-12 object-contain aspect-square ${subject === 'Anatomia' ? '-translate-y-1' : ''}`} 
                  referrerPolicy="no-referrer"
@@ -604,8 +593,8 @@ const GamePathNode = ({
           {/* Level Crown Badge - Duolingo Style */}
           {(() => {
             const lv = Math.floor(progress / 20); // 0–5 conforme mastery
-            const badgeBg  = lv === 0 ? '#94A3B8' : lv < 3 ? '#F59E0B' : lv < 5 ? '#3B82F6' : '#8B5CF6';
-            const badgePip = lv === 0 ? '#64748B' : lv < 3 ? '#D97706' : lv < 5 ? '#2563EB' : '#7C3AED';
+            const badgeBg  = lv === 0 ? '#94A3B8' : lv < 3 ? '#f1c100' : lv < 5 ? '#00a7e1' : '#8B5CF6';
+            const badgePip = lv === 0 ? '#64748B' : lv < 3 ? '#D97706' : lv < 5 ? '#00658a' : '#7C3AED';
             return (
               <div
                 className="absolute bottom-0 right-0 z-30 w-8 h-8 rounded-xl flex items-center justify-center shadow-lg border-2 border-white transform rotate-12 group-hover:rotate-0 transition-transform"
@@ -841,21 +830,21 @@ const BANCAS = [
 const BANCAS_PER_PAGE = 6;
 
 const MEDICAL_AVATARS = [
-  { id: 'stethoscope', emoji: '🩺', label: 'Clínica Geral',    bg: '#EFF6FF', ring: '#3B82F6' },
+  { id: 'stethoscope', emoji: '🩺', label: 'Clínica Geral',    bg: '#EFF6FF', ring: '#00a7e1' },
   { id: 'heart',       emoji: '🫀', label: 'Cardiologia',      bg: '#FEE2E2', ring: '#DC2626' },
   { id: 'brain',       emoji: '🧠', label: 'Neurologia',       bg: '#EDE9FE', ring: '#7C3AED' },
-  { id: 'lungs',       emoji: '🫁', label: 'Pneumologia',      bg: '#DBEAFE', ring: '#2563EB' },
+  { id: 'lungs',       emoji: '🫁', label: 'Pneumologia',      bg: '#DBEAFE', ring: '#00658a' },
   { id: 'bone',        emoji: '🦴', label: 'Ortopedia',        bg: '#FEF3C7', ring: '#D97706' },
   { id: 'eye',         emoji: '👁️', label: 'Oftalmologia',    bg: '#DCFCE7', ring: '#16A34A' },
   { id: 'baby',        emoji: '👶', label: 'Pediatria',        bg: '#FDF4FF', ring: '#A855F7' },
-  { id: 'pill',        emoji: '💊', label: 'Farmacologia',     bg: '#ECFDF5', ring: '#059669' },
+  { id: 'pill',        emoji: '💊', label: 'Farmacologia',     bg: '#ECFDF5', ring: '#0e9f43' },
   { id: 'scope',       emoji: '🔬', label: 'Patologia',        bg: '#FFF7ED', ring: '#EA580C' },
   { id: 'xray',        emoji: '🩻', label: 'Radiologia',       bg: '#F0F9FF', ring: '#0369A1' },
   { id: 'syringe',     emoji: '💉', label: 'Anestesiologia',   bg: '#FFF1F2', ring: '#E11D48' },
   { id: 'dna',         emoji: '🧬', label: 'Genética',         bg: '#F0FDF4', ring: '#22C55E' },
   { id: 'tooth',       emoji: '🦷', label: 'Odontologia',      bg: '#F0F9FF', ring: '#0284C7' },
   { id: 'flask',       emoji: '🧪', label: 'Pesquisa Clínica', bg: '#FDF2F8', ring: '#EC4899' },
-  { id: 'hospital',    emoji: '🏥', label: 'Saúde Pública',    bg: '#ECFDF5', ring: '#10B981' },
+  { id: 'hospital',    emoji: '🏥', label: 'Saúde Pública',    bg: '#ECFDF5', ring: '#12b449' },
   { id: 'scalpel',     emoji: '🩹', label: 'Cirurgia Geral',   bg: '#F8FAFC', ring: '#475569' },
   { id: 'kidneys',     emoji: '🫘', label: 'Nefrologia',       bg: '#FFF7ED', ring: '#C2410C' },
   { id: 'stomach',     emoji: '🫃', label: 'Gastroenterologia',bg: '#FEF9C3', ring: '#CA8A04' },
@@ -868,7 +857,7 @@ const FREE_DAILY_LIMIT = 10;
 export default function App() {
   const { currentUser, plan, loading: authLoading, signOut, saveUserProgress, loadUserProgress } = useAuth();
 
-  const [view, setView] = useState<'landing' | 'home' | 'quiz' | 'summary' | 'ranking' | 'profile' | 'progress' | 'revision' | 'residencia-onboarding' | 'amigos' | 'desafios' | 'sala'>(() => {
+  const [view, setView] = useState<'landing' | 'home' | 'quiz' | 'summary' | 'ranking' | 'profile' | 'progress' | 'revision' | 'residencia-onboarding' | 'amigos' | 'desafios' | 'sala' | 'doctordle'>(() => {
     try {
       const saved = localStorage.getItem('mq_user');
       if (saved) {
@@ -1103,6 +1092,7 @@ export default function App() {
   const [battleCorrect, setBattleCorrect] = useState(0);
   const [pendingBattleLink, setPendingBattleLink] = useState<string | null>(null);
   const [socialToast, setSocialToast] = useState<string>('');
+  const [winsMap, setWinsMap] = useState<Record<string, { name: string; wins: number }>>({});
   // Salas em grupo (Kahoot)
   const [roomId, setRoomId] = useState<string | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
@@ -1117,7 +1107,7 @@ export default function App() {
   const confettiData = useRef(
     Array.from({ length: 22 }).map((_, i) => ({
       x: 4 + (i / 22) * 92,
-      color: ['#2563EB','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899'][i % 6],
+      color: ['#00658a','#12b449','#f1c100','#ba1a1a','#8B5CF6','#EC4899'][i % 6],
       duration: 1.1 + (i % 5) * 0.18,
       delay: (i % 9) * 0.05,
       rotate: (i * 43) % 360,
@@ -1269,6 +1259,7 @@ export default function App() {
     for (const b of battles) {
       if (b.status === 'finished' && b.winnerUid === currentUser.uid && !b.rewarded?.[currentUser.uid]) {
         markRewarded(b.id, currentUser.uid);
+        bumpWin(currentUser.uid, currentUser.displayName || user.name || 'Você'); // placar de vitórias
         setUser(prev => ({ ...prev, xp: prev.xp + BATTLE_XP_REWARD, hearts: prev.hearts + 1 }));
         setSocialToast(`🏆 Você venceu a batalha! +${BATTLE_XP_REWARD} XP e +1 coração`);
         setTimeout(() => setSocialToast(''), 4000);
@@ -1276,6 +1267,16 @@ export default function App() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battles, currentUser]);
+
+  // Carrega o ranking de vitórias (eu + amigos) ao abrir Desafios/Amigos.
+  useEffect(() => {
+    if (!currentUser || (view !== 'desafios' && view !== 'amigos')) return;
+    const friendUids = friendships
+      .filter(f => f.status === 'accepted')
+      .map(f => (f.requesterUid === currentUser.uid ? f.addresseeUid : f.requesterUid));
+    fetchWins([currentUser.uid, ...friendUids]).then(setWinsMap);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, view, friendships, battles]);
 
   // Deep-links: ?battle=<id> abre uma batalha para jogar; ?add=<code> pré-preenche adicionar amigo.
   useEffect(() => {
@@ -1481,6 +1482,7 @@ export default function App() {
   };
 
   const startQuiz = (revision: boolean = false, overrideSubject?: Subject, overrideSubSubject?: string | null) => {
+    if (!selectedTrack) { setLandingStep(1); setView('landing'); return; }
     setIsThinking(true);
     setIsRevisionMode(revision);
     setBattleCtx(null);
@@ -1488,7 +1490,7 @@ export default function App() {
     const activeSubSubject = overrideSubSubject !== undefined ? overrideSubSubject : selectedSubSubject;
 
     // Select questions once at the start of the session
-    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS.filter(q => q.banca !== 'Trilha Estudante');
+    const pool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
     let filtered = [...pool];
     if (revision) {
       filtered = pool.filter(q => user.missedQuestionIds.includes(q.id));
@@ -1527,7 +1529,7 @@ export default function App() {
   };
 
   const handleOptionSelect = (index: number) => {
-    if (isFeedbackVisible) return;
+    if (isFeedbackVisible || !selectedTrack || currentQuestionIndex >= activeQuestions.length) return;
     // Block free users who hit the daily limit (não bloqueia reforço nem batalha)
     if (!isRetryPhase && !battleCtx && plan === 'free' && user.dailyQuestionsUsed >= FREE_DAILY_LIMIT) return;
     setSelectedOption(index);
@@ -1682,7 +1684,7 @@ export default function App() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[#040B1A] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -1755,26 +1757,26 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gradient-to-b from-blue-950 via-slate-900 to-blue-950 z-[100] flex flex-col items-center justify-center gap-12"
+              className="fixed inset-0 bg-gradient-to-b from-cyan-950 via-slate-900 to-cyan-950 z-[100] flex flex-col items-center justify-center gap-12"
             >
               {/* Pulse rings + icon */}
               <div className="relative flex items-center justify-center">
                 <motion.div
                   animate={{ scale: [1, 1.5, 1], opacity: [0.25, 0, 0.25] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute w-40 h-40 rounded-full bg-blue-500/20"
+                  className="absolute w-40 h-40 rounded-full bg-cyan-500/20"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.3, 1], opacity: [0.35, 0.05, 0.35] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                  className="absolute w-28 h-28 rounded-full bg-blue-500/30"
+                  className="absolute w-28 h-28 rounded-full bg-cyan-500/30"
                 />
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                  className="absolute w-20 h-20 rounded-full border-2 border-dashed border-blue-400/30"
+                  className="absolute w-20 h-20 rounded-full border-2 border-dashed border-cyan-400/30"
                 />
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-[1.75rem] flex items-center justify-center text-white shadow-2xl shadow-blue-500/50 z-10">
+                <div className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-[1.75rem] flex items-center justify-center text-white shadow-2xl shadow-cyan-500/50 z-10">
                   <Zap size={36} fill="currentColor" />
                 </div>
               </div>
@@ -1799,7 +1801,7 @@ export default function App() {
                     <motion.div
                       key={i}
                       animate={{ width: i === loadingTextIdx ? 24 : 6 }}
-                      className={`h-1.5 rounded-full transition-colors duration-300 ${i === loadingTextIdx ? 'bg-blue-400' : 'bg-blue-800'}`}
+                      className={`h-1.5 rounded-full transition-colors duration-300 ${i === loadingTextIdx ? 'bg-cyan-400' : 'bg-cyan-800'}`}
                     />
                   ))}
                 </div>
@@ -1823,7 +1825,7 @@ export default function App() {
                 /* ── STEP 0: captura de nome ── */
                 <div className="flex flex-col items-center gap-8 py-4">
                   <div className="flex flex-col items-center gap-5 text-center">
-                    <div className="w-24 h-24 bg-blue-50 rounded-[2rem] flex items-center justify-center shadow-inner border border-blue-100">
+                    <div className="w-24 h-24 bg-cyan-50 rounded-[2rem] flex items-center justify-center shadow-inner border border-cyan-100">
                       <Stethoscope size={44} className="text-brand-primary" />
                     </div>
                     <div>
@@ -1870,7 +1872,7 @@ export default function App() {
                     disabled={!nameInput.trim()}
                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-all
                       ${nameInput.trim()
-                        ? 'bg-brand-primary text-white shadow-xl shadow-blue-500/25 hover:scale-[1.02]'
+                        ? 'bg-brand-primary text-white shadow-xl shadow-cyan-500/25 hover:scale-[1.02]'
                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
                   >
@@ -1905,7 +1907,7 @@ export default function App() {
                       className="w-full bg-white p-10 rounded-[3rem] border border-slate-200/80 shadow-2xl cursor-pointer group transition-all relative overflow-hidden flex flex-col"
                     >
                       <div className="flex justify-between items-start mb-12">
-                        <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-brand-primary border border-blue-150 shadow-inner">
+                        <div className="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center text-brand-primary border border-cyan-150 shadow-inner">
                           <BookOpen size={36} />
                         </div>
                         <div className="text-right">
@@ -1924,7 +1926,7 @@ export default function App() {
                         <div className="space-y-4 pt-4">
                           {['XP DIÁRIO & STREAKS','RANKING DA TURMA','FLASHCARDS COM IA','RESUMOS DO CICLO CLÍNICO'].map(item => (
                             <div key={item} className="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                              <CheckCircle2 size={18} className="text-brand-primary fill-blue-50" strokeWidth={2.5} />
+                              <CheckCircle2 size={18} className="text-brand-primary fill-cyan-50" strokeWidth={2.5} />
                               {item}
                             </div>
                           ))}
@@ -1942,7 +1944,7 @@ export default function App() {
                         Mais Popular
                       </div>
                       <div className="flex justify-between items-start mb-12 relative z-10">
-                        <div className="w-16 h-16 bg-brand-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+                        <div className="w-16 h-16 bg-brand-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-cyan-500/20">
                           <Zap size={36} fill="currentColor" />
                         </div>
                         <div className="text-right">
@@ -2023,7 +2025,7 @@ export default function App() {
                 <div className="flex-1 overflow-y-auto px-4 pt-5 pb-4">
                   {/* Hero */}
                   <div className="flex items-start gap-3 mb-5">
-                    <div className="w-11 h-11 rounded-2xl bg-brand-primary flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
+                    <div className="w-11 h-11 rounded-2xl bg-brand-primary flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
                       <Zap size={22} fill="currentColor" className="text-white" />
                     </div>
                     <div>
@@ -2075,7 +2077,7 @@ export default function App() {
                           key={uf}
                           onClick={() => { setBancaUfFilter(key); setBancaPage(0); }}
                           className={`shrink-0 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all
-                            ${active ? 'bg-brand-primary text-white shadow-md shadow-blue-500/20' : 'bg-white text-slate-500 border border-slate-200'}`}
+                            ${active ? 'bg-brand-primary text-white shadow-md shadow-cyan-500/20' : 'bg-white text-slate-500 border border-slate-200'}`}
                         >
                           {uf}
                         </button>
@@ -2087,7 +2089,7 @@ export default function App() {
                   <div className="flex items-center gap-2 mb-3">
                     <Hospital size={14} className="text-brand-primary" />
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Residência Médica</span>
-                    <span className="ml-auto text-[10px] font-black text-brand-primary bg-blue-50 px-2 py-0.5 rounded-full">
+                    <span className="ml-auto text-[10px] font-black text-brand-primary bg-cyan-50 px-2 py-0.5 rounded-full">
                       {filtered.length} instituições
                     </span>
                   </div>
@@ -2098,7 +2100,7 @@ export default function App() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setSelectedBanca(selectedBanca === 'todas' ? null : 'todas')}
                       className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left mb-2
-                        ${selectedBanca === 'todas' ? 'bg-blue-50 border-brand-primary shadow-md shadow-blue-500/10' : 'bg-white border-transparent shadow-sm'}`}
+                        ${selectedBanca === 'todas' ? 'bg-cyan-50 border-brand-primary shadow-md shadow-cyan-500/10' : 'bg-white border-transparent shadow-sm'}`}
                     >
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors
                         ${selectedBanca === 'todas' ? 'bg-brand-primary text-white' : 'bg-slate-100 text-slate-400'}`}>
@@ -2132,7 +2134,7 @@ export default function App() {
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setSelectedBanca(isSel ? null : banca.id)}
                           className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left
-                            ${isSel ? 'bg-blue-50 border-brand-primary shadow-md shadow-blue-500/10' : 'bg-white border-transparent shadow-sm'}`}
+                            ${isSel ? 'bg-cyan-50 border-brand-primary shadow-md shadow-cyan-500/10' : 'bg-white border-transparent shadow-sm'}`}
                         >
                           <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors
                             ${isSel ? 'bg-brand-primary text-white' : 'bg-slate-100 text-slate-400'}`}>
@@ -2185,7 +2187,7 @@ export default function App() {
                     disabled={!selectedBanca}
                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2
                       ${selectedBanca
-                        ? 'bg-brand-primary text-white shadow-xl shadow-blue-500/25'
+                        ? 'bg-brand-primary text-white shadow-xl shadow-cyan-500/25'
                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
                   >
@@ -2230,7 +2232,7 @@ export default function App() {
                       { icon: Trophy, title: 'Gamificação Social', desc: 'Estude com amigos, suba nas ligas e ganhe prêmios.' }
                     ].map((benefit, i) => (
                       <div key={i} className="flex gap-4">
-                        <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-brand-primary shrink-0">
+                        <div className="w-12 h-12 bg-cyan-50 rounded-2xl flex items-center justify-center text-brand-primary shrink-0">
                           <benefit.icon size={24} fill={i === 0 ? "currentColor" : i === 2 ? "currentColor" : "none"} />
                         </div>
                         <div>
@@ -2242,7 +2244,7 @@ export default function App() {
                   </div>
                   <button 
                     onClick={() => setShowBenefits(false)}
-                    className="w-full mt-10 py-5 bg-brand-primary text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 uppercase tracking-widest hover:scale-105 transition-all text-center flex items-center justify-center"
+                    className="w-full mt-10 py-5 bg-brand-primary text-white font-black rounded-2xl shadow-xl shadow-cyan-500/20 uppercase tracking-widest hover:scale-105 transition-all text-center flex items-center justify-center"
                   >
                     Entendi!
                   </button>
@@ -2302,7 +2304,7 @@ export default function App() {
                       <Heart size={13} className="text-red-500 fill-red-500" />
                       <span className="text-xs font-black text-red-700">{user.hearts} vidas</span>
                     </div>
-                    <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
+                    <div className="flex items-center gap-1.5 bg-cyan-50 px-3 py-1.5 rounded-xl border border-cyan-200">
                       <Zap size={13} className="text-brand-primary fill-brand-primary" />
                       <span className="text-xs font-black text-brand-primary">{user.xp.toLocaleString()} XP</span>
                     </div>
@@ -2346,9 +2348,9 @@ export default function App() {
                   {(() => {
                     // Plano de 7 dias — sequência fixa, começa no dia que o usuário iniciou
                     const PLAN: { emoji: string; shortLabel: string; label: string; subject: Subject; cycle: Cycle; tip: string; color: string }[] = [
-                      { emoji: '🏥', shortLabel: 'Clínica M.',   label: 'Clínica Médica',       subject: 'Clínica Médica',           cycle: 'Ciclo Clínico', tip: 'A matéria com maior peso nas provas de residência do Brasil.',        color: '#2563EB' },
+                      { emoji: '🏥', shortLabel: 'Clínica M.',   label: 'Clínica Médica',       subject: 'Clínica Médica',           cycle: 'Ciclo Clínico', tip: 'A matéria com maior peso nas provas de residência do Brasil.',        color: '#00658a' },
                       { emoji: '🔬', shortLabel: 'Clínica C.',   label: 'Clínica Cirúrgica',    subject: 'Clínica Cirúrgica',        cycle: 'Ciclo Clínico', tip: 'Urgências, trauma e procedimentos cirúrgicos essenciais.',            color: '#DC2626' },
-                      { emoji: '🩺', shortLabel: 'Família',      label: 'Família & SUS',        subject: 'Medicina de Família/SUS',  cycle: 'Ciclo Clínico', tip: 'Atenção primária e políticas de saúde pública. Muito cobrado!',      color: '#059669' },
+                      { emoji: '🩺', shortLabel: 'Família',      label: 'Família & SUS',        subject: 'Medicina de Família/SUS',  cycle: 'Ciclo Clínico', tip: 'Atenção primária e políticas de saúde pública. Muito cobrado!',      color: '#0e9f43' },
                       { emoji: '👶', shortLabel: 'Pediatria',    label: 'Pediatria',            subject: 'Pediatria',                cycle: 'Ciclo Clínico', tip: 'Do neonato à adolescência. Alta frequência nas principais bancas.',  color: '#7C3AED' },
                       { emoji: '🤰', shortLabel: 'Gineco',       label: 'Gineco & Obstetrícia', subject: 'Ginecologia & Obstetrícia',cycle: 'Ciclo Clínico', tip: 'Pré-natal, parto, puerpério e ginecologia geral.',                  color: '#DB2777' },
                       { emoji: '📖', shortLabel: 'Anatomia',     label: 'Base Anatômica',       subject: 'Anatomia',                 cycle: 'Ciclo Básico',  tip: 'Estruturas fundamentais que sustentam todas as especialidades.',     color: '#6366F1' },
@@ -2480,7 +2482,7 @@ export default function App() {
                   <div className="py-10 px-6 flex flex-col items-center bg-white rounded-[3rem] border border-slate-200/80 shadow-xl overflow-visible">
                     <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4">
                       {(Object.keys(HIERARCHY[selectedCycle]) as Subject[]).map((subj, idx) => {
-                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS.filter(q => q.banca !== 'Trilha Estudante');
+                        const trackPool = selectedTrack === 'estudante' ? QUESTIONS_ESTUDANTE : QUESTIONS;
                         const allQs = trackPool.filter(q => q.subject === subj);
                         const pool = allQs;
                         return (
@@ -2530,7 +2532,7 @@ export default function App() {
                   {/* Daily Missions */}
                   {(() => {
                     const missions = [
-                      { id: 'q10',    icon: '🎯', label: 'Acerte 10 questões hoje',         done: user.dailyGoalDone, total: 10,  xp: 50,  color: '#2563EB', bg: '#EFF6FF' },
+                      { id: 'q10',    icon: '🎯', label: 'Acerte 10 questões hoje',         done: user.dailyGoalDone, total: 10,  xp: 50,  color: '#00658a', bg: '#EFF6FF' },
                       { id: 'streak', icon: '🔥', label: 'Mantenha seu streak ativo',        done: user.streak > 0 ? 1 : 0, total: 1, xp: 30, color: '#EA580C', bg: '#FFF7ED' },
                       { id: 'rev',    icon: '🧠', label: 'Revise 1 tópico com o Dr. Will',   done: 0, total: 1,  xp: 40,  color: '#7C3AED', bg: '#F5F3FF' },
                     ];
@@ -2645,7 +2647,7 @@ export default function App() {
                     {/* Banca Header — dark premium */}
                     <div className="relative rounded-[2rem] overflow-hidden shadow-2xl" style={{ background: '#0D1628' }}>
                       {/* blue radial glow top-right */}
-                      <div className="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+                      <div className="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,101,138,0.18) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
                       {/* faint bottom-left accent */}
                       <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
 
@@ -2654,15 +2656,15 @@ export default function App() {
                         <div className="flex items-start justify-between mb-5">
                           <div className="flex items-center gap-3">
                             <div
-                              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-blue-500/30"
-                              style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%)', boxShadow: '0 4px 20px rgba(37,99,235,0.45)' }}
+                              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-cyan-500/30"
+                              style={{ background: 'linear-gradient(135deg, #00658a 0%, #00384e 100%)', boxShadow: '0 4px 20px rgba(0,101,138,0.45)' }}
                             >
                               <span className="text-white font-black text-[11px] tracking-tight leading-none select-none">
                                 {bancaShort.slice(0, 3).toUpperCase()}
                               </span>
                             </div>
                             <div>
-                              <p className="text-[9px] font-black uppercase tracking-[0.25em] leading-none mb-1" style={{ color: '#60A5FA' }}>Banca-alvo</p>
+                              <p className="text-[9px] font-black uppercase tracking-[0.25em] leading-none mb-1" style={{ color: '#7cd0ff' }}>Banca-alvo</p>
                               <h3 className="text-xl font-black text-white tracking-tight leading-none">
                                 {bancaShort}{bancaUF ? <span className="font-bold text-base" style={{ color: 'rgba(255,255,255,0.35)' }}> · {bancaUF}</span> : ''}
                               </h3>
@@ -2683,7 +2685,7 @@ export default function App() {
                         {/* Stats strip */}
                         <div className="grid grid-cols-3 gap-2 mb-5">
                           {[
-                            { label: 'Simulados', value: '0',                      icon: BookOpen,   color: '#60A5FA' },
+                            { label: 'Simulados', value: '0',                      icon: BookOpen,   color: '#7cd0ff' },
                             { label: 'Aproveit.',  value: `${avgMastery}%`,         icon: Target,     color: '#34D399' },
                             { label: 'Questões',   value: String(totalAttempts),    icon: CheckCircle2, color: '#A78BFA' },
                           ].map(s => (
@@ -2700,7 +2702,7 @@ export default function App() {
                           whileTap={{ scale: 0.97 }}
                           onClick={() => { const sb = BANCAS.find(b => b.id === selectedBanca)?.short; setQuizBancaFilter(sb && QUESTIONS.some(q => q.banca === sb) ? sb : null); startQuiz(false, selectedSubject, null); }}
                           className="group w-full relative overflow-hidden rounded-2xl py-4 flex items-center justify-between px-5"
-                          style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', boxShadow: '0 8px 32px rgba(37,99,235,0.40)' }}
+                          style={{ background: 'linear-gradient(135deg, #00658a 0%, #004c69 100%)', boxShadow: '0 8px 32px rgba(0,101,138,0.40)' }}
                         >
                           <motion.div
                             initial={{ x: '-100%' }}
@@ -2753,7 +2755,7 @@ export default function App() {
                       <div className="py-8 px-5 flex flex-col items-center bg-white rounded-[2.5rem] border border-slate-200/80 shadow-xl overflow-visible">
                         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-4">
                           {(Object.keys(HIERARCHY[selectedCycle as Cycle]) as Subject[]).map((subj, idx) => {
-                            const pool2 = QUESTIONS.filter(q => q.subject === subj && q.banca !== 'Trilha Estudante');
+                            const pool2 = QUESTIONS.filter(q => q.subject === subj);
                             return (
                               <GamePathNode
                                 key={`res-path-${subj}-${idx}`}
@@ -2775,10 +2777,10 @@ export default function App() {
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-1">Modos de Estudo</p>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { icon: BookOpen, label: 'Questões Avulsas', desc: 'Pratique no seu ritmo', color: '#2563EB', bg: '#EFF6FF', action: startQuiz },
+                          { icon: BookOpen, label: 'Questões Avulsas', desc: 'Pratique no seu ritmo', color: '#00658a', bg: '#EFF6FF', action: startQuiz },
                           { icon: RotateCcw, label: 'Revisão de Erros', desc: `${user.missedQuestionIds.length} questões pendentes`, color: '#DC2626', bg: '#FEF2F2', action: () => startQuiz(true) },
                           { icon: TrendingUp, label: 'Pontos Fracos', desc: 'Análise Dr. Will IA', color: '#7C3AED', bg: '#F5F3FF', action: () => setView('revision') },
-                          { icon: BarChart2, label: 'Meu Desempenho', desc: 'Veja sua evolução', color: '#059669', bg: '#ECFDF5', action: () => setView('progress') },
+                          { icon: BarChart2, label: 'Meu Desempenho', desc: 'Veja sua evolução', color: '#0e9f43', bg: '#ECFDF5', action: () => setView('progress') },
                         ].map(mode => (
                           <button
                             key={mode.label}
@@ -2798,12 +2800,12 @@ export default function App() {
                     {/* ── ROTEIRO SEMANAL ── */}
                     {(() => {
                       const RES_PLAN: { emoji: string; shortLabel: string; label: string; subject: Subject; tip: string; color: string }[] = [
-                        { emoji: '🏥', shortLabel: 'Clínica M.',  label: 'Clínica Médica',       subject: 'Clínica Médica',           tip: 'O eixo central da residência. Maior peso em todas as bancas.',         color: '#2563EB' },
+                        { emoji: '🏥', shortLabel: 'Clínica M.',  label: 'Clínica Médica',       subject: 'Clínica Médica',           tip: 'O eixo central da residência. Maior peso em todas as bancas.',         color: '#00658a' },
                         { emoji: '🔬', shortLabel: 'Cirurgia',   label: 'Clínica Cirúrgica',    subject: 'Clínica Cirúrgica',        tip: 'Urgências, trauma e semiologia cirúrgica. Alta cobrança.',             color: '#DC2626' },
                         { emoji: '👶', shortLabel: 'Pediatria',  label: 'Pediatria',            subject: 'Pediatria',                tip: 'Do RN ao adolescente. Muito frequente nas provas de residência.',       color: '#7C3AED' },
                         { emoji: '🤰', shortLabel: 'Gineco',     label: 'Gineco & Obstetrícia', subject: 'Ginecologia & Obstetrícia',tip: 'Pré-natal, parto, puerpério e ginecologia geral.',                     color: '#DB2777' },
-                        { emoji: '🩺', shortLabel: 'Família',    label: 'Medicina de Família',  subject: 'Medicina de Família/SUS',  tip: 'SUS, atenção básica e políticas de saúde. Muito cobrado!',             color: '#059669' },
-                        { emoji: '❤️', shortLabel: 'Cardio',     label: 'Cardiologia',          subject: 'Cardiologia',              tip: 'Síndromes coronarianas, IC e arritmias. Alto peso nas bancas.',         color: '#EF4444' },
+                        { emoji: '🩺', shortLabel: 'Família',    label: 'Medicina de Família',  subject: 'Medicina de Família/SUS',  tip: 'SUS, atenção básica e políticas de saúde. Muito cobrado!',             color: '#0e9f43' },
+                        { emoji: '❤️', shortLabel: 'Cardio',     label: 'Cardiologia',          subject: 'Cardiologia',              tip: 'Síndromes coronarianas, IC e arritmias. Alto peso nas bancas.',         color: '#ba1a1a' },
                         { emoji: '🧠', shortLabel: 'Neuro',      label: 'Neurologia',           subject: 'Neurologia',               tip: 'AVC, epilepsia e emergências neurológicas.',                           color: '#6366F1' },
                       ];
                       const startDate    = new Date(user.planStartDate + 'T00:00:00');
@@ -2912,7 +2914,7 @@ export default function App() {
                         <div className="bg-white rounded-[2rem] border border-slate-100 shadow-lg p-5">
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 bg-blue-50 rounded-xl flex items-center justify-center">
+                              <div className="w-7 h-7 bg-cyan-50 rounded-xl flex items-center justify-center">
                                 <BarChart3 size={14} className="text-brand-primary" />
                               </div>
                               <div>
@@ -2920,7 +2922,7 @@ export default function App() {
                                 <p className="text-[9px] text-slate-400 font-medium mt-0.5">Domínio por especialidade</p>
                               </div>
                             </div>
-                            <span className="text-[9px] font-black text-brand-primary bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-blue-100">{bancaShort}</span>
+                            <span className="text-[9px] font-black text-brand-primary bg-cyan-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-cyan-100">{bancaShort}</span>
                           </div>
 
                           <div className="flex flex-col gap-3">
@@ -2930,8 +2932,8 @@ export default function App() {
                               const barColor =
                                 attempts === 0 ? '#CBD5E1'
                                 : mastery >= 70 ? '#22C55E'
-                                : mastery >= 40 ? '#F59E0B'
-                                : '#EF4444';
+                                : mastery >= 40 ? '#f1c100'
+                                : '#ba1a1a';
                               const statusLabel =
                                 attempts === 0 ? 'Não iniciado'
                                 : mastery >= 70 ? 'Dominado ✓'
@@ -2983,8 +2985,8 @@ export default function App() {
                           <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-slate-100">
                             {[
                               { color: '#22C55E', label: 'Dominado (70%+)' },
-                              { color: '#F59E0B', label: 'Em progresso' },
-                              { color: '#EF4444', label: 'Atenção' },
+                              { color: '#f1c100', label: 'Em progresso' },
+                              { color: '#ba1a1a', label: 'Atenção' },
                               { color: '#CBD5E1', label: 'Não iniciado' },
                             ].map(leg => (
                               <div key={leg.label} className="flex items-center gap-1">
@@ -3048,26 +3050,26 @@ export default function App() {
 
                     {/* ── RELATÓRIO DA SEMANA ── */}
                     <div className="relative rounded-[2rem] overflow-hidden" style={{ background: '#0D1628' }}>
-                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.16) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,101,138,0.16) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
                       <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
                       <div className="relative z-10 p-5">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: 'rgba(37,99,235,0.25)' }}>
-                              <TrendingUp size={14} style={{ color: '#60A5FA' }} />
+                            <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: 'rgba(0,101,138,0.25)' }}>
+                              <TrendingUp size={14} style={{ color: '#7cd0ff' }} />
                             </div>
                             <div>
                               <p className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: '#93C5FD' }}>Relatório da Semana</p>
                               <p className="text-[9px] font-medium mt-0.5" style={{ color: 'rgba(255,255,255,0.28)' }}>Seu resumo de evolução</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full" style={{ background: 'rgba(37,99,235,0.2)', border: '1px solid rgba(37,99,235,0.3)' }}>
-                            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#60A5FA' }}>Premium</span>
+                          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full" style={{ background: 'rgba(0,101,138,0.2)', border: '1px solid rgba(0,101,138,0.3)' }}>
+                            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#7cd0ff' }}>Premium</span>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-2.5">
                           {[
-                            { label: 'Questões respondidas', value: String(totalAttempts), icon: '📝', color: '#60A5FA' },
+                            { label: 'Questões respondidas', value: String(totalAttempts), icon: '📝', color: '#7cd0ff' },
                             { label: 'Aproveitamento geral', value: `${avgMastery}%`,      icon: '🎯', color: '#34D399' },
                             { label: 'XP conquistado',       value: user.xp.toLocaleString(), icon: '⚡', color: '#FBBF24' },
                             { label: 'Sequência atual',      value: `${user.streak} dias`, icon: '🔥', color: '#F87171' },
@@ -3113,7 +3115,7 @@ export default function App() {
                   </button>
                   <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
                     <motion.div
-                      className="h-full bg-brand-primary rounded-full shadow-[0_0_15px_rgba(37,99,235,0.2)]"
+                      className="h-full bg-brand-primary rounded-full shadow-[0_0_15px_rgba(0,101,138,0.2)]"
                       animate={{ width: `${(currentQuestionIndex / activeQuestions.length) * 100}%` }}
                     />
                   </div>
@@ -3235,7 +3237,7 @@ export default function App() {
                         optionStyle = "border-slate-200/50 opacity-40";
                       }
                     } else if (selectedOption === idx) {
-                      optionStyle = "border-brand-primary bg-blue-50 text-brand-primary font-bold shadow-md";
+                      optionStyle = "border-brand-primary bg-cyan-50 text-brand-primary font-bold shadow-md";
                     }
 
                     return (
@@ -3274,81 +3276,48 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Card de explicação em destaque (momento de aprendizado) */}
-              {isFeedbackVisible && (() => {
-                const cq = activeQuestions[currentQuestionIndex];
-                const acertou = selectedOption === cq.correctIndex;
-                return (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`rounded-[2.5rem] border-2 p-6 md:p-8 shadow-xl ${acertou ? 'bg-brand-green/5 border-brand-green/30' : 'bg-brand-red/5 border-brand-red/30'}`}
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      {acertou ? <CheckCircle2 size={26} className="text-brand-green shrink-0" /> : <XCircle size={26} className="text-brand-red shrink-0" />}
-                      <span className={`text-xl font-black uppercase tracking-tight ${acertou ? 'text-brand-green' : 'text-brand-red'}`}>
-                        {selectedOption === -1 ? 'Tempo esgotado' : acertou ? 'Você acertou!' : 'Resposta incorreta'}
-                      </span>
-                    </div>
-                    {!acertou && (
-                      <p className="text-sm font-bold text-slate-500 mb-5">
-                        Resposta correta:{' '}
-                        <span className="text-brand-green">{String.fromCharCode(65 + cq.correctIndex)}) {cq.options[cq.correctIndex]}</span>
-                      </p>
-                    )}
-                    <div className="flex items-start gap-3">
-                      <div className="bg-brand-primary/10 p-2 rounded-xl text-brand-primary shrink-0 mt-0.5">
-                        <Zap size={18} fill="currentColor" />
-                      </div>
-                      <div>
-                        <p className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-1.5">Entenda</p>
-                        <p className="text-slate-700 text-base md:text-lg leading-relaxed">
-                          {cq.explanation || 'Sem explicação disponível para esta questão.'}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })()}
-
-              {/* Action Bar */}
-              <div 
-                onClick={isFeedbackVisible ? nextQuestion : undefined}
-                className={`fixed bottom-0 left-0 right-0 p-6 md:p-8 transition-all duration-500 transform translate-y-0 z-50 border-t border-slate-100 ${
-                isFeedbackVisible ? 
-                (selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'bg-brand-green cursor-pointer' : 'bg-brand-red cursor-pointer') : 
+              {/* Action Bar — com a explicação embutida (sem precisar rolar) */}
+              <div
+                className={`fixed bottom-0 left-0 right-0 p-5 md:p-6 transition-all duration-500 transform translate-y-0 z-50 border-t border-slate-100 ${
+                isFeedbackVisible ?
+                (selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'bg-brand-green' : 'bg-brand-red') :
                 'bg-white/80 backdrop-blur-xl'
               }`}>
-                <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-                  {isFeedbackVisible ? (
+                <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  {isFeedbackVisible ? (() => {
+                    const cq = activeQuestions[currentQuestionIndex];
+                    const acertou = selectedOption === cq.correctIndex;
+                    return (
                     <>
-                      <div className="flex items-start gap-4 text-white">
-                        <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-md shrink-0">
-                          {selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 
-                            <CheckCircle2 size={32} className="text-white" /> : 
-                            <XCircle size={32} className="text-white" />
-                          }
+                      <div className="flex items-start gap-3 text-white flex-1 min-w-0">
+                        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md shrink-0">
+                          {acertou ? <CheckCircle2 size={26} className="text-white" /> : <XCircle size={26} className="text-white" />}
                         </div>
-                        <div className="max-w-xl">
-                          <h4 className="font-black text-xl tracking-tight leading-none mb-1">
-                            {selectedOption === activeQuestions[currentQuestionIndex].correctIndex ? 'Resposta Correta!' : 'Resposta Errada!'}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-black text-lg tracking-tight leading-none mb-1.5">
+                            {selectedOption === -1 ? 'Tempo esgotado' : acertou ? 'Resposta Correta!' : 'Resposta Errada!'}
                           </h4>
-                          <p className="text-white/80 text-[11px] font-black uppercase tracking-widest mt-1 animate-pulse">
-                            Veja a explicação acima · toque para continuar
-                          </p>
+                          {!acertou && (
+                            <p className="text-white text-xs font-bold mb-1.5">
+                              Correta: {String.fromCharCode(65 + cq.correctIndex)}) {cq.options[cq.correctIndex]}
+                            </p>
+                          )}
+                          <div className="max-h-28 overflow-y-auto pr-1 hide-scrollbar" onClick={(e) => e.stopPropagation()}>
+                            <p className="text-white/95 text-sm leading-relaxed font-medium">
+                              {cq.explanation || 'Sem explicação disponível para esta questão.'}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          nextQuestion();
-                        }}
-                        className="w-full md:w-auto px-12 py-4 bg-white text-slate-900 font-black rounded-2xl shadow-lg transition-all hover:scale-105 active:scale-95 text-lg"
+                      <button
+                        onClick={(e) => { e.stopPropagation(); nextQuestion(); }}
+                        className="w-full md:w-auto px-12 py-4 bg-white text-slate-900 font-black rounded-2xl shadow-lg transition-all hover:scale-105 active:scale-95 text-lg shrink-0"
                       >
                         PRÓXIMA
                       </button>
                     </>
-                  ) : (
+                    );
+                  })() : (
                     <div className="w-full flex items-center justify-center p-2">
                        <p className="text-slate-400 font-bold flex items-center gap-2 animate-pulse">
                          <Zap size={18} className="text-brand-primary" />
@@ -3398,7 +3367,7 @@ export default function App() {
                   <p className="text-slate-500 mb-6">Carregando resultados...</p>
                   <button
                     onClick={() => setView('home')}
-                    className="px-8 py-3 bg-blue-600 text-white rounded-xl font-black"
+                    className="px-8 py-3 bg-cyan-600 text-white rounded-xl font-black"
                   >
                     Voltar para Home
                   </button>
@@ -3406,7 +3375,7 @@ export default function App() {
               ) : null}
 
               {/* Header Section */}
-              <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-900 rounded-[3rem] p-10 text-white text-center relative overflow-hidden shadow-2xl shadow-blue-500/30">
+              <div className="bg-gradient-to-br from-cyan-500 via-cyan-600 to-cyan-900 rounded-[3rem] p-10 text-white text-center relative overflow-hidden shadow-2xl shadow-cyan-500/30">
                 {/* decorative blobs */}
                 <div className="absolute top-0 right-0 w-56 h-56 bg-white/5 rounded-full -mr-28 -mt-28 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full -ml-20 -mb-20 pointer-events-none" />
@@ -3452,7 +3421,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-blue-200/80 font-medium mb-8 leading-relaxed max-w-sm mx-auto"
+                  className="text-cyan-200/80 font-medium mb-8 leading-relaxed max-w-sm mx-auto"
                 >
                   {sessionResults.correct === sessionResults.total && sessionResults.total > 0
                     ? `${sessionResults.correct} de ${sessionResults.total} acertos em ${selectedSubject}.`
@@ -3549,7 +3518,7 @@ export default function App() {
 
               {/* Theme Performance */}
               {(() => {
-                const themeColors = ['bg-brand-primary', 'bg-blue-400', 'bg-brand-green', 'bg-amber-400', 'bg-purple-400', 'bg-rose-400'];
+                const themeColors = ['bg-brand-primary', 'bg-cyan-400', 'bg-brand-green', 'bg-amber-400', 'bg-purple-400', 'bg-rose-400'];
                 const bySubject: Record<string, { correct: number; total: number }> = {};
                 sessionHistory.forEach((h: { questionId: string; selectedIndex: number }) => {
                   const q = activeQuestions.find((q: Question) => q.id === h.questionId);
@@ -3670,7 +3639,7 @@ export default function App() {
               <div className="flex flex-col gap-3 mt-2">
                 <button
                   onClick={() => setView('home')}
-                  className="w-full py-5 bg-brand-primary text-white font-black rounded-2xl shadow-xl shadow-blue-600/20 hover:scale-[1.02] active:scale-95 transition-all text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3"
+                  className="w-full py-5 bg-brand-primary text-white font-black rounded-2xl shadow-xl shadow-cyan-600/20 hover:scale-[1.02] active:scale-95 transition-all text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3"
                 >
                   <Zap size={18} fill="currentColor" />
                   Continuar
@@ -3759,7 +3728,7 @@ export default function App() {
                       <div className="mb-6">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Aproveitamento atual</span>
-                          <span className="text-[11px] font-black" style={{ color: weakMastery < 40 ? '#EF4444' : weakMastery < 70 ? '#F59E0B' : '#22C55E' }}>{weakMastery}%</span>
+                          <span className="text-[11px] font-black" style={{ color: weakMastery < 40 ? '#ba1a1a' : weakMastery < 70 ? '#f1c100' : '#22C55E' }}>{weakMastery}%</span>
                         </div>
                         <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                           <motion.div
@@ -3767,7 +3736,7 @@ export default function App() {
                             animate={{ width: `${weakMastery}%` }}
                             transition={{ duration: 1 }}
                             className="h-full rounded-full"
-                            style={{ background: weakMastery < 40 ? '#EF4444' : weakMastery < 70 ? '#F59E0B' : '#22C55E' }}
+                            style={{ background: weakMastery < 40 ? '#ba1a1a' : weakMastery < 70 ? '#f1c100' : '#22C55E' }}
                           />
                         </div>
                       </div>
@@ -3798,7 +3767,7 @@ export default function App() {
                 {performanceRows.length > 0 && (
                   <div className="bg-[#1a1a18] p-6 rounded-[2.5rem] border border-white/5 shadow-2xl flex flex-col gap-4">
                     <div className="flex items-center gap-3 mb-1">
-                      <div className="bg-blue-500/10 p-2 rounded-lg text-blue-400">
+                      <div className="bg-cyan-500/10 p-2 rounded-lg text-cyan-400">
                         <BarChart2 size={16} />
                       </div>
                       <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Seu Desempenho por Matéria</span>
@@ -3808,7 +3777,7 @@ export default function App() {
                         <div key={row.subj}>
                           <div className="flex justify-between items-center mb-1.5">
                             <span className="text-xs font-bold text-slate-300 truncate">{row.subj}</span>
-                            <span className="text-[10px] font-black shrink-0 ml-2" style={{ color: row.mastery < 40 ? '#EF4444' : row.mastery < 70 ? '#F59E0B' : '#22C55E' }}>{row.mastery}%</span>
+                            <span className="text-[10px] font-black shrink-0 ml-2" style={{ color: row.mastery < 40 ? '#ba1a1a' : row.mastery < 70 ? '#f1c100' : '#22C55E' }}>{row.mastery}%</span>
                           </div>
                           <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                             <motion.div
@@ -3816,7 +3785,7 @@ export default function App() {
                               animate={{ width: `${row.mastery}%` }}
                               transition={{ duration: 0.8 }}
                               className="h-full rounded-full"
-                              style={{ background: row.mastery < 40 ? '#EF4444' : row.mastery < 70 ? '#F59E0B' : '#22C55E' }}
+                              style={{ background: row.mastery < 40 ? '#ba1a1a' : row.mastery < 70 ? '#f1c100' : '#22C55E' }}
                             />
                           </div>
                           <span className="text-[9px] text-neutral-600 font-bold">{row.attempts} questão{row.attempts !== 1 ? 'ões' : ''} respondida{row.attempts !== 1 ? 's' : ''}</span>
@@ -3872,7 +3841,7 @@ export default function App() {
                         {user.missedQuestionIds.length === 0 ? 'Sem erros pendentes' : `Gerar Simulado (${user.missedQuestionIds.length})`}
                       </button>
                       {user.missedQuestionIds.length > 0 && (
-                        <p className="text-[9px] font-black text-blue-400/50 uppercase tracking-widest mt-3 text-center">
+                        <p className="text-[9px] font-black text-cyan-400/50 uppercase tracking-widest mt-3 text-center">
                           {user.missedQuestionIds.length} questão{user.missedQuestionIds.length !== 1 ? 'ões' : ''} disponível{user.missedQuestionIds.length !== 1 ? 'ais' : ''}
                         </p>
                       )}
@@ -3890,7 +3859,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col gap-0 pb-4 min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-blue-950"
+              className="flex flex-col gap-0 pb-4 min-h-screen bg-gradient-to-b from-cyan-950 via-slate-900 to-cyan-950"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6">
@@ -3900,7 +3869,7 @@ export default function App() {
                 <h2 className="text-lg font-black text-white/90 uppercase tracking-[0.1em]">Copa médica</h2>
                 <button 
                   onClick={() => setShowAddFriend(true)}
-                  className="w-10 h-10 flex items-center justify-center bg-blue-600 rounded-full text-white shadow-lg shadow-blue-600/20 active:scale-90"
+                  className="w-10 h-10 flex items-center justify-center bg-cyan-600 rounded-full text-white shadow-lg shadow-cyan-600/20 active:scale-90"
                 >
                   <UserPlus size={20} />
                 </button>
@@ -3921,7 +3890,7 @@ export default function App() {
                       onClick={() => setActiveLeague(league.id)}
                       className={`flex-1 min-w-[64px] flex items-center justify-center gap-1.5 py-3 rounded-xl transition-all whitespace-nowrap ${
                         activeLeague === league.id
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-600/30 border border-blue-400/20'
+                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-700 text-white shadow-lg shadow-cyan-600/30 border border-cyan-400/20'
                         : 'text-white/40 hover:text-white/60'
                       }`}
                     >
@@ -3973,11 +3942,11 @@ export default function App() {
                     {/* 2nd place */}
                     <div className="flex flex-col items-center flex-1 max-w-[100px]">
                       <div className="relative mb-3">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 flex items-center justify-center text-white font-bold text-base border-4 border-blue-900 shadow-xl shadow-blue-900/50">{second.initials}</div>
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 flex items-center justify-center text-white font-bold text-base border-4 border-cyan-900 shadow-xl shadow-cyan-900/50">{second.initials}</div>
                       </div>
                       <span className="text-[10px] font-bold text-white/60 mb-1 leading-none">{second.name.split(' ').slice(0,2).join(' ')}</span>
-                      <span className="text-[11px] font-black text-blue-300 mb-2 leading-none">{second.xp.toLocaleString()}</span>
-                      <div className="w-full h-28 bg-gradient-to-t from-blue-700/70 to-blue-500/40 rounded-t-2xl flex items-center justify-center text-3xl font-black text-white/50 border-t border-x border-blue-500/20">2</div>
+                      <span className="text-[11px] font-black text-cyan-300 mb-2 leading-none">{second.xp.toLocaleString()}</span>
+                      <div className="w-full h-28 bg-gradient-to-t from-cyan-700/70 to-cyan-500/40 rounded-t-2xl flex items-center justify-center text-3xl font-black text-white/50 border-t border-x border-cyan-500/20">2</div>
                     </div>
 
                     {/* 1st place */}
@@ -3989,28 +3958,28 @@ export default function App() {
                           </motion.div>
                         </div>
                         <div className="absolute inset-0 rounded-full bg-amber-400/30 blur-xl scale-125" />
-                        <div className="w-18 h-18 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-white font-bold text-xl border-4 border-amber-400 shadow-[0_0_40px_rgba(245,158,11,0.6)] relative z-10">{first.initials}</div>
+                        <div className="w-18 h-18 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-white font-bold text-xl border-4 border-amber-400 shadow-[0_0_40px_rgba(241,193,0,0.6)] relative z-10">{first.initials}</div>
                       </div>
                       <span className="text-[11px] font-bold text-white mb-1 leading-none">{first.name.split(' ').slice(0,2).join(' ')}</span>
-                      <span className="text-[12px] font-black text-blue-300 mb-2 leading-none">{first.xp.toLocaleString()}</span>
-                      <div className="w-full h-40 bg-gradient-to-t from-blue-700 to-blue-400 rounded-t-2xl flex items-center justify-center text-5xl font-black text-white/70 shadow-[0_-15px_40px_rgba(37,99,235,0.5)] border-t border-x border-blue-400/30">1</div>
+                      <span className="text-[12px] font-black text-cyan-300 mb-2 leading-none">{first.xp.toLocaleString()}</span>
+                      <div className="w-full h-40 bg-gradient-to-t from-cyan-700 to-cyan-400 rounded-t-2xl flex items-center justify-center text-5xl font-black text-white/70 shadow-[0_-15px_40px_rgba(0,101,138,0.5)] border-t border-x border-cyan-400/30">1</div>
                     </div>
 
                     {/* 3rd place */}
                     <div className="flex flex-col items-center flex-1 max-w-[100px]">
                       <div className="relative mb-3">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-300 to-orange-400 flex items-center justify-center text-white font-bold text-base border-4 border-blue-900 shadow-xl shadow-blue-900/50">{third.initials}</div>
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-300 to-orange-400 flex items-center justify-center text-white font-bold text-base border-4 border-cyan-900 shadow-xl shadow-cyan-900/50">{third.initials}</div>
                       </div>
                       <span className="text-[10px] font-bold text-white/60 mb-1 leading-none">{third.name.split(' ').slice(0,2).join(' ')}</span>
-                      <span className="text-[11px] font-black text-blue-300 mb-2 leading-none">{third.xp.toLocaleString()}</span>
-                      <div className="w-full h-24 bg-gradient-to-t from-blue-700/50 to-blue-500/20 rounded-t-2xl flex items-center justify-center text-3xl font-black text-white/30 border-t border-x border-blue-500/10">3</div>
+                      <span className="text-[11px] font-black text-cyan-300 mb-2 leading-none">{third.xp.toLocaleString()}</span>
+                      <div className="w-full h-24 bg-gradient-to-t from-cyan-700/50 to-cyan-500/20 rounded-t-2xl flex items-center justify-center text-3xl font-black text-white/30 border-t border-x border-cyan-500/10">3</div>
                     </div>
                   </motion.div>
                 );
               })()}
 
               {/* Player List Container */}
-              <div className="bg-blue-950/60 backdrop-blur-sm rounded-t-[3.5rem] flex-1 px-4 pt-10 pb-4 border-t border-blue-800/30">
+              <div className="bg-cyan-950/60 backdrop-blur-sm rounded-t-[3.5rem] flex-1 px-4 pt-10 pb-4 border-t border-cyan-800/30">
                 {rankingTab === 'friends' && user.friends.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-20 px-10 text-center gap-8">
                     <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center text-white/20">
@@ -4019,12 +3988,12 @@ export default function App() {
                     <div className="space-y-3">
                       <h4 className="text-xl font-black text-white uppercase tracking-tight">Estude em grupo</h4>
                       <p className="text-neutral-500 text-xs font-medium max-w-[240px] mx-auto leading-relaxed">
-                        Conecte-se com colegas para <span className="text-blue-400 font-bold">dominar o pódio juntos!</span>
+                        Conecte-se com colegas para <span className="text-cyan-400 font-bold">dominar o pódio juntos!</span>
                       </p>
                     </div>
                     <button
                       onClick={() => setShowAddFriend(true)}
-                      className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-blue-600/20 active:scale-95"
+                      className="px-10 py-4 bg-cyan-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-cyan-600/20 active:scale-95"
                     >
                       Buscar Amigos
                     </button>
@@ -4047,17 +4016,17 @@ export default function App() {
                           key={player.name}
                           className={`flex items-center gap-4 p-4 rounded-[2rem] border transition-all ${
                             player.currentUser 
-                            ? 'bg-blue-600/10 border-blue-500/30 shadow-[0_8px_30px_rgba(37,99,235,0.1)]' 
+                            ? 'bg-cyan-600/10 border-cyan-500/30 shadow-[0_8px_30px_rgba(0,101,138,0.1)]' 
                             : 'bg-white/5 border-transparent'
                           }`}
                         >
-                          <div className={`w-6 font-black text-sm text-center ${player.currentUser ? 'text-blue-400' : 'text-neutral-600'}`}>
+                          <div className={`w-6 font-black text-sm text-center ${player.currentUser ? 'text-cyan-400' : 'text-neutral-600'}`}>
                             {absoluteRank}
                           </div>
                           
                           <div className="relative shrink-0">
                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm text-white shadow-lg ${
-                              player.currentUser ? 'bg-blue-600' : 'bg-[#1e1e1c]'
+                              player.currentUser ? 'bg-cyan-600' : 'bg-[#1e1e1c]'
                             }`}>
                               {player.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
@@ -4067,8 +4036,8 @@ export default function App() {
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <h4 className={`text-[13px] font-black uppercase tracking-tight truncate ${player.currentUser ? 'text-blue-400' : 'text-white/90'}`}>
-                              {player.name} {player.currentUser && <span className="text-[10px] text-blue-400 lowercase">(você)</span>}
+                            <h4 className={`text-[13px] font-black uppercase tracking-tight truncate ${player.currentUser ? 'text-cyan-400' : 'text-white/90'}`}>
+                              {player.name} {player.currentUser && <span className="text-[10px] text-cyan-400 lowercase">(você)</span>}
                             </h4>
                             <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Nív. {player.level} • Mestre</p>
                           </div>
@@ -4121,7 +4090,7 @@ export default function App() {
                             initial={{ width: 0 }}
                             whileInView={{ width: '70%' }}
                             transition={{ duration: 1, ease: 'easeOut' }}
-                            className="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.6)]"
+                            className="h-full bg-cyan-600 shadow-[0_0_15px_rgba(0,101,138,0.6)]"
                           />
                        </div>
                     </div>
@@ -4150,13 +4119,13 @@ export default function App() {
               className="flex flex-col gap-10 pb-32"
             >
               {/* Progress Hero */}
-              <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-900 rounded-[3rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/30 mt-4">
+              <div className="bg-gradient-to-br from-cyan-500 via-cyan-600 to-cyan-900 rounded-[3rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-cyan-500/30 mt-4">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="relative z-10 mb-8">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-blue-200 text-[10px] font-black uppercase tracking-widest">Dashboard</p>
+                    <p className="text-cyan-200 text-[10px] font-black uppercase tracking-widest">Dashboard</p>
                     <div className="flex bg-white/10 border border-white/20 p-1 rounded-xl shrink-0 shadow-inner">
                       {(['7D', '30D', 'Total'] as const).map((f) => (
                         <button
@@ -4164,7 +4133,7 @@ export default function App() {
                           onClick={() => setProgressFilter(f.toLowerCase() as any)}
                           className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
                             progressFilter === f.toLowerCase()
-                              ? 'bg-white text-blue-700 shadow-lg'
+                              ? 'bg-white text-cyan-700 shadow-lg'
                               : 'text-white/50 hover:text-white/80'
                           }`}
                         >
@@ -4182,9 +4151,9 @@ export default function App() {
                     { label: 'Streak', val: `${user.streak}d`, icon: Flame }
                   ].map((card) => (
                     <div key={card.label} className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 pb-4 text-center border border-white/15 hover:bg-white/20 transition-all">
-                      <card.icon size={18} className="text-blue-200 mx-auto mb-2" />
+                      <card.icon size={18} className="text-cyan-200 mx-auto mb-2" />
                       <div className="text-xl font-black text-white tracking-tighter leading-none">{card.val}</div>
-                      <div className="text-[9px] font-black text-blue-200/70 uppercase tracking-wider mt-2 leading-tight break-words">{card.label}</div>
+                      <div className="text-[9px] font-black text-cyan-200/70 uppercase tracking-wider mt-2 leading-tight break-words">{card.label}</div>
                     </div>
                   ))}
                 </div>
@@ -4193,7 +4162,7 @@ export default function App() {
               {/* Activity Heatmap */}
               <div className="space-y-6">
                 <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-widest px-4">Atividade — últimos 28 dias</h4>
-                <div className="bg-gradient-to-br from-blue-950 to-slate-900 rounded-[2.5rem] sm:rounded-[3rem] p-4 sm:p-10 border border-blue-800/40 shadow-2xl shadow-blue-900/20 relative overflow-visible" onMouseLeave={() => setHoveredCell(null)}>
+                <div className="bg-gradient-to-br from-cyan-950 to-slate-900 rounded-[2.5rem] sm:rounded-[3rem] p-4 sm:p-10 border border-cyan-800/40 shadow-2xl shadow-cyan-900/20 relative overflow-visible" onMouseLeave={() => setHoveredCell(null)}>
                   <div className="relative">
                     {/* Tooltip Overlay */}
                     <AnimatePresence>
@@ -4233,14 +4202,14 @@ export default function App() {
                             onClick={() => setHoveredCell({ ...data, x, y, col })}
                             whileHover={{ scale: 1.1, zIndex: 30 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`aspect-square rounded-lg ${getIntensity(data.count)} shadow-sm cursor-pointer transition-colors border border-transparent hover:border-blue-500/50`}
+                            className={`aspect-square rounded-lg ${getIntensity(data.count)} shadow-sm cursor-pointer transition-colors border border-transparent hover:border-cyan-500/50`}
                           />
                         );
                       })}
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-7 gap-1.5 sm:gap-3 text-[10px] font-black text-blue-400/50 text-center uppercase tracking-widest">
+                  <div className="grid grid-cols-7 gap-1.5 sm:gap-3 text-[10px] font-black text-cyan-400/50 text-center uppercase tracking-widest">
                     {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((day, idx) => {
                       const fullDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
                       return (
@@ -4252,10 +4221,10 @@ export default function App() {
                     })}
                   </div>
 
-                  <div className="flex justify-end items-center mt-8 text-[10px] font-black text-blue-400/50 uppercase tracking-widest gap-4">
+                  <div className="flex justify-end items-center mt-8 text-[10px] font-black text-cyan-400/50 uppercase tracking-widest gap-4">
                     <span>Vazio</span>
                     <div className="flex gap-2">
-                       {['bg-slate-800', 'bg-blue-600/30', 'bg-blue-600/60', 'bg-blue-600/80', 'bg-blue-600'].map(c => (
+                       {['bg-slate-800', 'bg-cyan-600/30', 'bg-cyan-600/60', 'bg-cyan-600/80', 'bg-cyan-600'].map(c => (
                           <div key={c} className={`w-3 h-3 rounded-full ${c}`} />
                        ))}
                     </div>
@@ -4277,7 +4246,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-blue-950 to-slate-900 rounded-[3rem] p-8 sm:p-10 border border-blue-800/40 shadow-2xl shadow-blue-900/20 overflow-hidden transition-all duration-300">
+                <div className="bg-gradient-to-br from-cyan-950 to-slate-900 rounded-[3rem] p-8 sm:p-10 border border-cyan-800/40 shadow-2xl shadow-cyan-900/20 overflow-hidden transition-all duration-300">
                   <div className="flex justify-center mb-12">
                     <div className="inline-flex p-1 bg-white/5 rounded-2xl border border-white/5 self-center">
                       {(['Barras', 'Linha'] as const).map(t => (
@@ -4285,7 +4254,7 @@ export default function App() {
                           key={t}
                           onClick={() => setChartType(t === 'Barras' ? 'bar' : 'line')}
                           className={`px-6 sm:px-8 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 ${
-                            chartType === (t === 'Barras' ? 'bar' : 'line') ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'text-neutral-500 hover:text-neutral-300'
+                            chartType === (t === 'Barras' ? 'bar' : 'line') ? 'bg-cyan-600 text-white shadow-xl shadow-cyan-600/20' : 'text-neutral-500 hover:text-neutral-300'
                           }`}
                         >
                           {t}
@@ -4327,7 +4296,7 @@ export default function App() {
                                 return (
                                   <div className="bg-[#1a1a18] border border-white/10 px-4 py-3 rounded-2xl shadow-2xl text-center">
                                     <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest leading-none mb-1">{payload[0].payload.name}</p>
-                                    <p className="text-xl font-black text-white">{payload[0].value}% <span className="text-[10px] text-blue-400 font-black ml-1 uppercase">acerto</span></p>
+                                    <p className="text-xl font-black text-white">{payload[0].value}% <span className="text-[10px] text-cyan-400 font-black ml-1 uppercase">acerto</span></p>
                                   </div>
                                 );
                               }
@@ -4398,12 +4367,12 @@ export default function App() {
                   {/* Legend */}
                   <div className="flex justify-center gap-6 sm:gap-10 px-2 mb-12">
                     <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-lg bg-blue-500 shadow-xl shadow-blue-500/30" />
-                      <span className="text-[10px] font-black text-blue-400/60 uppercase tracking-widest">Taxa de acerto</span>
+                      <div className="w-5 h-5 rounded-lg bg-cyan-500 shadow-xl shadow-cyan-500/30" />
+                      <span className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest">Taxa de acerto</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-lg border-2 border-blue-400/30 border-dashed" />
-                      <span className="text-[10px] font-black text-blue-400/60 uppercase tracking-widest">Meta (80%)</span>
+                      <div className="w-5 h-5 rounded-lg border-2 border-cyan-400/30 border-dashed" />
+                      <span className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest">Meta (80%)</span>
                     </div>
                   </div>
 
@@ -4426,11 +4395,11 @@ export default function App() {
               {/* Specialty Mastery */}
               <div className="space-y-6">
                 <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-widest px-4">Domínio por especialidade</h4>
-                <div className="bg-gradient-to-br from-blue-950 to-slate-900 rounded-[3rem] p-8 sm:p-10 border border-blue-800/40 space-y-10 shadow-2xl shadow-blue-900/20">
+                <div className="bg-gradient-to-br from-cyan-950 to-slate-900 rounded-[3rem] p-8 sm:p-10 border border-cyan-800/40 space-y-10 shadow-2xl shadow-cyan-900/20">
                   {[
                     { name: 'Cardiologia', mastery: 85, delta: 8, color: 'bg-brand-red' },
                     { name: 'Clínica Médica', mastery: 78, delta: 5, color: 'bg-brand-green' },
-                    { name: 'Neurologia', mastery: 61, delta: 12, color: 'bg-blue-600' },
+                    { name: 'Neurologia', mastery: 61, delta: 12, color: 'bg-cyan-600' },
                     { name: 'Cirurgia', mastery: 38, delta: -3, color: 'bg-brand-primary' }
                   ].map((spec) => (
                     <div key={spec.name} className="space-y-4">
@@ -4460,23 +4429,23 @@ export default function App() {
               </div>
 
               {/* Insight Card */}
-              <div className="bg-gradient-to-br from-blue-950 to-slate-900 p-8 sm:p-10 rounded-[3rem] border border-blue-800/40 shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-110 transition-transform" />
+              <div className="bg-gradient-to-br from-cyan-950 to-slate-900 p-8 sm:p-10 rounded-[3rem] border border-cyan-800/40 shadow-2xl shadow-cyan-900/20 relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-110 transition-transform" />
                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-blue-500/20 p-3 rounded-xl text-blue-400">
+                    <div className="bg-cyan-500/20 p-3 rounded-xl text-cyan-400">
                       <Zap size={24} fill="currentColor" />
                     </div>
                     <h4 className="text-sm font-black text-white uppercase tracking-widest">Insight do app</h4>
                  </div>
-                 <p className="text-blue-200/70 text-sm font-medium leading-relaxed tracking-tight">
-                   Você estuda bem <span className="text-blue-300 font-bold">Cardiologia</span> mas evita <span className="text-blue-300 font-bold">Cirurgia</span> há 9 dias. Em provas de residência USP, Cirurgia vale 25% do total. Sugerimos 10 min de Cirurgia amanhã.
+                 <p className="text-cyan-200/70 text-sm font-medium leading-relaxed tracking-tight">
+                   Você estuda bem <span className="text-cyan-300 font-bold">Cardiologia</span> mas evita <span className="text-cyan-300 font-bold">Cirurgia</span> há 9 dias. Em provas de residência USP, Cirurgia vale 25% do total. Sugerimos 10 min de Cirurgia amanhã.
                  </p>
               </div>
 
               {/* Weekly Streak Bubbles */}
               <div className="space-y-4">
                 <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-[0.2em] px-4">Comprometimento Semanal</h4>
-                <div className="bg-gradient-to-br from-blue-950 to-slate-900 p-6 rounded-[2.5rem] border border-blue-800/40 shadow-2xl shadow-blue-900/20 overflow-hidden">
+                <div className="bg-gradient-to-br from-cyan-950 to-slate-900 p-6 rounded-[2.5rem] border border-cyan-800/40 shadow-2xl shadow-cyan-900/20 overflow-hidden">
                   <div className="flex justify-between items-center gap-1 min-w-0 overflow-x-auto hide-scrollbar py-2">
                     {['Seg', 'Ter', 'Qua', 'Qui', 'Hoje', 'Sáb', 'Dom'].map((day, i) => {
                       const isDone = i < 4;
@@ -4484,14 +4453,14 @@ export default function App() {
                       return (
                         <div key={day} className="flex flex-col items-center gap-2 min-w-[42px] sm:min-w-[60px] shrink-0">
                           <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center border-2 transition-all shadow-md ${
-                            isToday ? 'bg-blue-500/20 border-blue-400 text-blue-300 scale-110 shadow-blue-500/20' :
-                            isDone ? 'bg-blue-600 border-blue-500 text-white shadow-blue-600/30' :
+                            isToday ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 scale-110 shadow-cyan-500/20' :
+                            isDone ? 'bg-cyan-600 border-cyan-500 text-white shadow-cyan-600/30' :
                             'bg-white/5 border-white/10 text-white/20'
                           }`}>
                             {isDone ? <Check size={20} strokeWidth={4} /> : isToday ? <Flame size={20} fill="currentColor" /> : <div className="w-1.5 h-1.5 rounded-full bg-white/20" />}
                           </div>
-                          <span className={`text-[10px] font-black uppercase tracking-tighter ${isToday ? 'text-blue-300' : isDone ? 'text-blue-400/70' : 'text-white/20'}`}>
-                            {day === 'Hoje' ? <span className="bg-blue-500/20 px-1.5 py-0.5 rounded text-blue-300">Hoje</span> : day}
+                          <span className={`text-[10px] font-black uppercase tracking-tighter ${isToday ? 'text-cyan-300' : isDone ? 'text-cyan-400/70' : 'text-white/20'}`}>
+                            {day === 'Hoje' ? <span className="bg-cyan-500/20 px-1.5 py-0.5 rounded text-cyan-300">Hoje</span> : day}
                           </span>
                         </div>
                       );
@@ -4503,53 +4472,182 @@ export default function App() {
           )}
 
           {/* DESAFIOS HUB */}
-          {view === 'desafios' && (
-            <motion.div key="desafios" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-5 pb-28 px-4 pt-4">
-              <div className="flex items-center justify-between">
-                <button onClick={() => setView('home')} className="text-slate-400 hover:text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm"><ArrowLeft size={20} /></button>
-                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tighter flex items-center gap-2"><Swords size={20} className="text-brand-primary" /> Desafios</h2>
-                <div className="w-10" />
-              </div>
+          {view === 'desafios' && (() => {
+            const uid = currentUser?.uid;
+            const friendList = friendships.filter(f => f.status === 'accepted').map(f =>
+              f.requesterUid === uid ? { uid: f.addresseeUid, name: f.addresseeName } : { uid: f.requesterUid, name: f.requesterName });
+            const myWins = battles.filter(b => b.status === 'finished' && b.winnerUid === uid).length;
+            const totalDone = battles.filter(b => b.status === 'finished').length;
+            const pendingChallenges = battles.filter(b => b.opponentUid === uid && b.opponentScore == null).length;
+            const ranking = [
+              { uid: uid || 'me', name: 'Você', wins: Math.max(myWins, winsMap[uid || '']?.wins || 0), me: true },
+              ...friendList.map(fr => ({ uid: fr.uid, name: winsMap[fr.uid]?.name || fr.name, wins: winsMap[fr.uid]?.wins || 0, me: false })),
+            ].sort((a, b) => b.wins - a.wins);
+            const medal = ['#f1c100', '#9ca3af', '#b45309'];
+            return (
+              <motion.div key="desafios" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-5 pb-28 px-4 pt-4">
 
-              {/* Batalha 1v1 */}
-              <button onClick={() => setView('amigos')} className="w-full text-left bg-slate-900 rounded-[2.5rem] p-5 sm:p-7 shadow-xl relative overflow-hidden active:scale-[0.98] transition-transform">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full -mr-16 -mt-16" />
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-brand-primary flex items-center justify-center mb-4 shadow-lg"><Swords size={28} className="text-white" /></div>
-                  <h3 className="text-2xl font-black text-white tracking-tight mb-1">Batalha com amigo</h3>
-                  <p className="text-white/60 font-medium text-sm leading-snug">Desafie um amigo 1×1 no tópico que escolher. Quem acerta mais ganha XP e 1 coração.</p>
-                </div>
-              </button>
-
-              {/* Sala em grupo */}
-              <div className="bg-white rounded-[2.5rem] p-5 sm:p-7 border border-slate-200 shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-brand-green flex items-center justify-center mb-4 shadow-lg"><Users size={28} className="text-white" /></div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Sala em grupo</h3>
-                <p className="text-slate-500 font-medium text-sm leading-snug mb-5">Crie uma sala e responda ao vivo com vários amigos, estilo Kahoot — todos na mesma pergunta, placar em tempo real.</p>
-                <button onClick={() => setRoomPickTopic(true)} className="w-full py-3.5 bg-brand-green text-white font-black rounded-2xl text-sm uppercase tracking-widest mb-3 flex items-center justify-center gap-2"><Plus size={18} /> Criar sala</button>
-                <div className="flex gap-2">
-                  <input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="Código da sala" inputMode="numeric" className="flex-1 min-w-0 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-green outline-none font-black text-slate-900 tracking-[0.3em] text-center" />
-                  <button onClick={joinGroupRoom} className="px-5 py-3 bg-slate-900 text-white font-black rounded-xl text-sm shrink-0">Entrar</button>
-                </div>
-              </div>
-
-              {/* Modal escolher tópico da sala */}
-              <AnimatePresence>
-                {roomPickTopic && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-end sm:items-center justify-center p-4" onClick={() => setRoomPickTopic(false)}>
-                    <motion.div initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }} className="bg-white w-full max-w-sm rounded-[2.5rem] p-6 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                      <h3 className="text-xl font-black text-slate-900 mb-4">Tópico da sala</h3>
-                      <div className="space-y-2">
-                        {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map(s => (
-                          <button key={s} onClick={() => createGroupRoom(s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-green hover:bg-brand-green/5 font-black text-slate-700 text-sm transition-all">{s}</button>
-                        ))}
+                {/* Hero + painel de estatísticas */}
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl" style={{ background: '#0D1628' }}>
+                  <div className="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,167,225,0.22) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+                  <div className="absolute bottom-0 left-0 w-52 h-52 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(241,193,0,0.12) 0%, transparent 70%)', transform: 'translate(-30%,30%)' }} />
+                  <div className="relative z-10 p-6">
+                    <div className="flex items-center justify-between mb-5">
+                      <button onClick={() => setView('home')} className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/10 border border-white/10 text-white/70 hover:text-white transition-colors">
+                        <ArrowLeft size={18} />
+                      </button>
+                      <span className="text-[9px] font-black uppercase tracking-[0.25em] px-3 py-1.5 rounded-full" style={{ color: '#7cd0ff', background: 'rgba(0,167,225,0.15)', border: '1px solid rgba(0,167,225,0.25)' }}>Modo Competitivo</span>
+                    </div>
+                    <div className="flex items-center gap-3 mb-5">
+                      <motion.div animate={{ rotate: [0, -12, 12, -8, 0] }} transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 3 }} className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)', boxShadow: '0 4px 20px rgba(0,167,225,0.5)' }}>
+                        <Swords size={24} className="text-white" />
+                      </motion.div>
+                      <div>
+                        <h2 className="text-3xl font-black text-white tracking-tighter leading-none">Desafios</h2>
+                        <p className="text-[11px] font-bold mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Compita e aprenda com os colegas</p>
                       </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { label: 'Vitórias', value: myWins, color: '#f1c100', icon: Trophy },
+                        { label: 'Batalhas', value: totalDone, color: '#7cd0ff', icon: Swords },
+                        { label: 'Te chamaram', value: pendingChallenges, color: '#12b449', icon: Users },
+                      ].map((s, i) => (
+                        <motion.div key={s.label} initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 + i * 0.08 }} className="rounded-2xl px-2 py-3 text-center border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.07)' }}>
+                          <s.icon size={15} className="mx-auto mb-1" style={{ color: s.color }} />
+                          <p className="text-2xl font-black text-white leading-none">{s.value}</p>
+                          <p className="text-[9px] font-bold uppercase tracking-widest mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{s.label}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card A — Batalha 1x1 */}
+                <button onClick={() => setView('amigos')} className="group relative w-full text-left rounded-[2rem] overflow-hidden shadow-xl active:scale-[0.98] transition-transform" style={{ background: 'linear-gradient(135deg,#00658a 0%,#0D1628 70%)' }}>
+                  <div className="absolute top-0 right-0 w-56 h-56 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,167,225,0.3) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
+                  <motion.div initial={{ x: '-120%' }} animate={{ x: '220%' }} transition={{ duration: 3, repeat: Infinity, ease: 'linear' }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent skew-x-12 pointer-events-none" />
+                  <div className="relative z-10 p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)', boxShadow: '0 6px 20px rgba(0,167,225,0.5)' }}>
+                        <Swords size={26} className="text-white" />
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 rounded-full text-white" style={{ background: 'rgba(255,255,255,0.12)' }}>1 vs 1</span>
+                    </div>
+                    <h3 className="text-2xl font-black text-white tracking-tight mb-1.5">Batalha com amigo</h3>
+                    <p className="text-sm leading-snug mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>Desafie um amigo no tópico que escolher. Quem acerta mais leva <span className="text-white font-bold">XP + 1 coração</span>.</p>
+                    <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest" style={{ color: '#7cd0ff' }}>
+                      Jogar agora <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </button>
+
+                {/* Card B — Sala em grupo */}
+                <div className="bg-white rounded-[2rem] p-6 border border-slate-200/80 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,101,138,0.12) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }} className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)', boxShadow: '0 6px 20px rgba(0,101,138,0.45)' }}>
+                        <Users size={26} className="text-white" />
+                      </motion.div>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 rounded-full text-brand-primary inline-flex items-center gap-1.5" style={{ background: 'rgba(0,101,138,0.1)' }}>
+                        <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-brand-primary" /> Ao vivo
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1.5">Sala em grupo</h3>
+                    <p className="text-sm text-slate-500 leading-snug mb-5">Responda ao vivo com vários amigos, estilo <span className="text-slate-900 font-bold">Kahoot</span> — todos na mesma pergunta e placar em tempo real.</p>
+                    <motion.button whileTap={{ scale: 0.97 }} onClick={() => setRoomPickTopic(true)} className="group relative w-full overflow-hidden py-4 rounded-2xl flex items-center justify-center gap-2 text-white font-black uppercase tracking-widest text-sm mb-4" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)', boxShadow: '0 8px 24px rgba(0,101,138,0.35)' }}>
+                      <motion.div initial={{ x: '-120%' }} animate={{ x: '220%' }} transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                      <Plus size={18} className="relative z-10" /> <span className="relative z-10">Criar sala</span>
+                    </motion.button>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="h-px flex-1 bg-slate-200" />
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">ou entre em uma sala</span>
+                      <div className="h-px flex-1 bg-slate-200" />
+                    </div>
+                    <div className="flex gap-2">
+                      <input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" inputMode="numeric" className="flex-1 px-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-[0.4em] text-center text-lg bg-slate-50 transition-colors" />
+                      <button onClick={joinGroupRoom} className="px-6 rounded-2xl bg-slate-900 text-white font-black text-sm active:scale-95 transition-transform">Entrar</button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card C — Diagnóstico (Doctordle) */}
+                <button onClick={() => setView('doctordle')} className="group relative w-full text-left rounded-[2rem] overflow-hidden shadow-xl active:scale-[0.98] transition-transform" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 70%)' }}>
+                  <div className="absolute top-0 right-0 w-56 h-56 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,167,225,0.35) 0%, transparent 70%)', transform: 'translate(35%,-35%)' }} />
+                  <motion.div initial={{ x: '-120%' }} animate={{ x: '220%' }} transition={{ duration: 3, repeat: Infinity, ease: 'linear' }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent skew-x-12 pointer-events-none" />
+                  <div className="relative z-10 p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#00c2ff 0%,#00a7e1 100%)', boxShadow: '0 6px 20px rgba(0,167,225,0.5)' }}>
+                        <Brain size={26} className="text-white" />
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 rounded-full text-white" style={{ background: 'rgba(255,255,255,0.12)' }}>Diagnóstico</span>
+                    </div>
+                    <h3 className="text-2xl font-black text-white tracking-tight mb-1.5">🩺 Diagnóstico</h3>
+                    <p className="text-sm leading-snug mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>Descubra o diagnóstico em até 6 tentativas. A cada erro, uma <span className="text-white font-bold">nova pista clínica</span> é revelada. Estilo Doctordle.</p>
+                    <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest" style={{ color: '#7cd0ff' }}>
+                      Começar <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </button>
+
+                {/* Ranking de vitórias */}
+                <div className="bg-white rounded-[2rem] p-5 border border-slate-200/80 shadow-xl">
+                  <div className="flex items-center justify-between mb-4 px-1">
+                    <div className="flex items-center gap-2">
+                      <Trophy size={18} style={{ color: '#f1c100' }} fill="currentColor" />
+                      <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">Ranking de vitórias</h3>
+                    </div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{ranking.length} {ranking.length === 1 ? 'jogador' : 'jogadores'}</span>
+                  </div>
+                  {ranking.length <= 1 && (
+                    <p className="text-xs text-slate-400 font-medium px-1 pb-2">Adicione amigos e vença batalhas para subir no ranking. 🏆</p>
+                  )}
+                  <div className="space-y-1.5">
+                    {ranking.map((p, i) => (
+                      <motion.div key={p.uid} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+                        className={`flex items-center gap-3 py-2.5 px-3 rounded-2xl ${p.me ? 'bg-brand-primary/5 border border-brand-primary/20' : ''}`}>
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shrink-0" style={i < 3 ? { background: medal[i], color: '#fff' } : { background: '#f1f5f9', color: '#94a3b8' }}>{i + 1}</div>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black shrink-0 text-white" style={{ background: p.me ? '#00658a' : '#64748b' }}>{(p.name || '?').charAt(0).toUpperCase()}</div>
+                        <span className="font-black text-slate-900 flex-1 truncate">{p.name}{p.me && <span className="text-[10px] text-brand-primary ml-2 uppercase tracking-widest">você</span>}</span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className="font-black text-lg text-slate-900">{p.wins}</span>
+                          <Trophy size={14} style={{ color: '#f1c100' }} fill="currentColor" />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Modal escolher tópico da sala */}
+                <AnimatePresence>
+                  {roomPickTopic && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-end sm:items-center justify-center p-4" onClick={() => setRoomPickTopic(false)}>
+                      <motion.div initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }} className="bg-white w-full max-w-sm rounded-[2.5rem] p-6 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.25em] mb-1">Sala em grupo</p>
+                        <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Escolha o tópico</h3>
+                        <p className="text-xs text-slate-400 font-medium mb-5">10 perguntas ao vivo com a galera</p>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map((s, i) => {
+                            const ic = SUBJECT_ICONS[s] || {};
+                            const Ic = ic.icon;
+                            return (
+                              <motion.button key={s} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03, type: 'spring', stiffness: 300, damping: 20 }} whileHover={{ y: -3 }} whileTap={{ scale: 0.94 }} onClick={() => createGroupRoom(s as Subject)} className="flex flex-col items-center gap-2 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200 hover:shadow-lg transition-colors">
+                                <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md overflow-hidden" style={{ background: ic.ringColor || '#00658a' }}>
+                                  {ic.image ? <img src={ic.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" /> : Ic ? <Ic size={20} className="text-white" /> : null}
+                                </div>
+                                <span className="text-[11px] font-black text-slate-700 text-center leading-tight">{s}</span>
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })()}
 
           {/* SALA (KAHOOT) */}
           {view === 'sala' && (() => {
@@ -4614,7 +4712,7 @@ export default function App() {
                       {cq.options.map((opt, idx) => (
                         <button key={idx} onClick={() => roomAnswer(idx)} disabled={answered || timeLeft <= 0}
                           className={`w-full text-left p-4 rounded-2xl border-2 font-bold flex items-center gap-4 transition-all ${
-                            roomSelectedOption === idx ? 'border-brand-primary bg-blue-50 text-brand-primary' :
+                            roomSelectedOption === idx ? 'border-brand-primary bg-cyan-50 text-brand-primary' :
                             answered ? 'border-slate-200/50 opacity-50' : 'border-slate-200 hover:border-brand-primary/50 text-slate-700'}`}>
                           <span className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-black text-sm shrink-0">{String.fromCharCode(65 + idx)}</span>
                           <span className="text-sm leading-tight">{opt}</span>
@@ -4720,8 +4818,8 @@ export default function App() {
                 <div className="bg-white rounded-[2rem] p-5 border border-slate-200 shadow-sm">
                   <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Adicionar amigo por código</p>
                   <div className="flex gap-2">
-                    <input value={addFriendInput} onChange={e => setAddFriendInput(e.target.value.toUpperCase())} placeholder="MED-XXXXX" className="flex-1 min-w-0 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-widest text-sm" />
-                    <button onClick={handleAddFriend} className="px-5 py-3 bg-brand-primary text-white font-black rounded-xl text-sm shrink-0">Enviar</button>
+                    <input value={addFriendInput} onChange={e => setAddFriendInput(e.target.value.toUpperCase())} placeholder="MED-XXXXX" className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-primary outline-none font-black text-slate-900 tracking-widest text-sm" />
+                    <button onClick={handleAddFriend} className="px-5 py-3 bg-brand-primary text-white font-black rounded-xl text-sm">Enviar</button>
                   </div>
                   {addFriendMsg && <p className="text-xs font-bold text-slate-500 mt-2">{addFriendMsg}</p>}
                 </div>
@@ -4762,7 +4860,7 @@ export default function App() {
                   {friends.map(fr => (
                     <div key={fr.uid} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center font-black text-brand-primary">{fr.name.charAt(0).toUpperCase()}</div>
+                        <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center font-black text-brand-primary">{fr.name.charAt(0).toUpperCase()}</div>
                         <span className="font-black text-slate-900">{fr.name}</span>
                       </div>
                       <button onClick={() => setChallengeFriend(fr)} className="px-4 py-2 bg-brand-primary text-white font-black rounded-xl text-xs uppercase tracking-widest flex items-center gap-1.5"><Swords size={14} /> Desafiar</button>
@@ -4825,7 +4923,7 @@ export default function App() {
                         <h3 className="text-xl font-black text-slate-900 mb-4">Escolha o tópico</h3>
                         <div className="space-y-2">
                           {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map(s => (
-                            <button key={s} onClick={() => createAndPlayBattle(challengeFriend, s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-primary hover:bg-blue-50 font-black text-slate-700 text-sm transition-all">{s}</button>
+                            <button key={s} onClick={() => createAndPlayBattle(challengeFriend, s as Subject)} className="w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-brand-primary hover:bg-cyan-50 font-black text-slate-700 text-sm transition-all">{s}</button>
                           ))}
                         </div>
                       </motion.div>
@@ -4835,6 +4933,10 @@ export default function App() {
               </motion.div>
             );
           })()}
+
+          {view === 'doctordle' && (
+            <DoctordleMode onExit={() => setView('desafios')} />
+          )}
 
           {view === 'profile' && (
             <motion.div 
@@ -4869,7 +4971,7 @@ export default function App() {
                   {isEditingProfile ? (
                     <button 
                       onClick={() => fileInputRef.current?.click()}
-                      className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl shadow-blue-600/20 border-2 border-white hover:scale-110 transition-all"
+                      className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl shadow-cyan-600/20 border-2 border-white hover:scale-110 transition-all"
                     >
                       <Camera size={20} />
                     </button>
@@ -4902,7 +5004,7 @@ export default function App() {
                        <input 
                          value={tempName}
                          onChange={(e) => setTempName(e.target.value)}
-                         className="flex-1 min-w-0 bg-slate-50 border border-slate-200 text-slate-900 p-3 rounded-xl font-black focus:border-brand-primary outline-none"
+                         className="flex-1 bg-slate-50 border border-slate-200 text-slate-900 p-3 rounded-xl font-black focus:border-brand-primary outline-none"
                          autoFocus
                        />
                        <button 
@@ -4910,7 +5012,7 @@ export default function App() {
                            setUser(prev => ({ ...prev, name: tempName }));
                            setIsEditingProfile(false);
                          }}
-                         className="bg-brand-primary p-3 rounded-xl text-white shadow-lg shadow-blue-600/20 shrink-0"
+                         className="bg-brand-primary p-3 rounded-xl text-white shadow-lg shadow-cyan-600/20"
                        >
                          <Check size={20} strokeWidth={3} />
                        </button>
@@ -4943,7 +5045,7 @@ export default function App() {
                 <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-[0.2em] px-4">Assinatura e Plano</h4>
                 <div className="bg-white rounded-[3rem] p-8 border border-slate-200 shadow-xl flex items-center justify-between group cursor-pointer hover:bg-slate-50 transition-all">
                   <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-brand-primary">
+                    <div className="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center text-brand-primary">
                       <Award size={32} />
                     </div>
                     <div>
@@ -5020,7 +5122,7 @@ export default function App() {
                 </button>
 
                 <div className="text-center mb-10">
-                  <div className="w-20 h-20 bg-blue-50 rounded-[2.5rem] flex items-center justify-center text-brand-primary shadow-inner mx-auto mb-6">
+                  <div className="w-20 h-20 bg-cyan-50 rounded-[2.5rem] flex items-center justify-center text-brand-primary shadow-inner mx-auto mb-6">
                     <Zap size={40} fill="currentColor" />
                   </div>
                   <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">Vantagens MedQuest</h3>
@@ -5054,7 +5156,7 @@ export default function App() {
 
                 <button 
                   onClick={() => setShowBenefits(false)}
-                  className="w-full py-5 bg-brand-primary text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all uppercase tracking-[0.2em] shadow-xl shadow-blue-600/30 active:scale-95"
+                  className="w-full py-5 bg-brand-primary text-white rounded-2xl font-black text-sm hover:bg-cyan-700 transition-all uppercase tracking-[0.2em] shadow-xl shadow-cyan-600/30 active:scale-95"
                 >
                   Entendi, Tudo Ótimo!
                 </button>
@@ -5237,11 +5339,11 @@ export default function App() {
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-gradient-to-b from-blue-950 via-slate-900 to-blue-950 w-full max-w-sm rounded-[3rem] p-8 shadow-2xl border border-blue-800/30 overflow-hidden relative my-auto"
+                className="bg-gradient-to-b from-cyan-950 via-slate-900 to-cyan-950 w-full max-w-sm rounded-[3rem] p-8 shadow-2xl border border-cyan-800/30 overflow-hidden relative my-auto"
                 onClick={e => e.stopPropagation()}
               >
                 {/* decorative blob */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-cyan-500/10 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
 
                 <button
                   onClick={() => setShowAddFriend(false)}
@@ -5252,37 +5354,37 @@ export default function App() {
 
                 {/* Header */}
                 <div className="flex flex-col items-center text-center gap-4 mb-8 relative z-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-[2rem] flex items-center justify-center text-white shadow-2xl shadow-blue-500/40 relative">
+                  <div className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-[2rem] flex items-center justify-center text-white shadow-2xl shadow-cyan-500/40 relative">
                     <UserPlus size={34} strokeWidth={2} />
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-brand-green rounded-full border-2 border-blue-950 shadow-lg"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-brand-green rounded-full border-2 border-cyan-950 shadow-lg"
                     />
                   </div>
                   <div>
                     <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Fazer Conexões</h3>
-                    <p className="text-blue-300/60 text-sm font-medium mt-1">Busque sua turma e cresça junto.</p>
+                    <p className="text-cyan-300/60 text-sm font-medium mt-1">Busque sua turma e cresça junto.</p>
                   </div>
                 </div>
 
                 {/* Invite link */}
-                <div className="mb-5 bg-white/5 p-5 rounded-[2rem] border border-blue-800/30 relative z-10">
-                  <span className="text-[10px] font-black text-blue-400/50 uppercase tracking-[0.2em] block mb-3">Link de Convite</span>
+                <div className="mb-5 bg-white/5 p-5 rounded-[2rem] border border-cyan-800/30 relative z-10">
+                  <span className="text-[10px] font-black text-cyan-400/50 uppercase tracking-[0.2em] block mb-3">Link de Convite</span>
                   <button
                     onClick={copyInviteLink}
-                    className="w-full p-4 bg-white/5 border border-blue-700/30 rounded-[1.5rem] flex items-center justify-between group hover:bg-white/10 hover:border-blue-500/50 transition-all active:scale-95"
+                    className="w-full p-4 bg-white/5 border border-cyan-700/30 rounded-[1.5rem] flex items-center justify-between group hover:bg-white/10 hover:border-cyan-500/50 transition-all active:scale-95"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400">
+                      <div className="w-10 h-10 bg-cyan-600/20 rounded-xl flex items-center justify-center text-cyan-400">
                         <Link size={20} />
                       </div>
                       <div className="text-left">
-                        <p className="text-[10px] font-black text-blue-400/50 uppercase tracking-widest leading-none mb-1">Copiar Link</p>
-                        <p className="text-xs font-black text-blue-300 truncate max-w-[130px]">medquest.app/invite/{user.name.toLowerCase().replace(/\s+/g, '-') || 'usuario'}</p>
+                        <p className="text-[10px] font-black text-cyan-400/50 uppercase tracking-widest leading-none mb-1">Copiar Link</p>
+                        <p className="text-xs font-black text-cyan-300 truncate max-w-[130px]">medquest.app/invite/{user.name.toLowerCase().replace(/\s+/g, '-') || 'usuario'}</p>
                       </div>
                     </div>
-                    <div className="bg-blue-600/20 p-2.5 rounded-xl text-blue-400 group-hover:bg-blue-500/30 group-hover:text-blue-300 transition-all">
+                    <div className="bg-cyan-600/20 p-2.5 rounded-xl text-cyan-400 group-hover:bg-cyan-500/30 group-hover:text-cyan-300 transition-all">
                       <Copy size={16} />
                     </div>
                   </button>
@@ -5290,20 +5392,20 @@ export default function App() {
 
                 {/* Divider */}
                 <div className="flex items-center gap-4 mb-4 relative z-10">
-                  <div className="h-px bg-blue-800/30 flex-1" />
-                  <span className="text-[10px] font-black text-blue-400/40 uppercase tracking-widest">Ou pesquisar</span>
-                  <div className="h-px bg-blue-800/30 flex-1" />
+                  <div className="h-px bg-cyan-800/30 flex-1" />
+                  <span className="text-[10px] font-black text-cyan-400/40 uppercase tracking-widest">Ou pesquisar</span>
+                  <div className="h-px bg-cyan-800/30 flex-1" />
                 </div>
 
                 {/* Search */}
                 <div className="relative mb-5 z-10">
-                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-400/40" size={18} />
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-cyan-400/40" size={18} />
                   <input
                     type="text"
                     placeholder="Nome ou usuário..."
                     value={friendSearch}
                     onChange={(e) => setFriendSearch(e.target.value)}
-                    className="w-full pl-13 pr-6 py-4 bg-white/5 border border-blue-800/40 rounded-[1.5rem] focus:border-blue-500/60 focus:outline-none font-bold text-white transition-all placeholder:text-blue-400/30"
+                    className="w-full pl-13 pr-6 py-4 bg-white/5 border border-cyan-800/40 rounded-[1.5rem] focus:border-cyan-500/60 focus:outline-none font-bold text-white transition-all placeholder:text-cyan-400/30"
                   />
                 </div>
 
@@ -5311,13 +5413,13 @@ export default function App() {
                 <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1 relative z-10">
                   {friendSearch.length >= 3 ? (
                     RANKING.filter(u => !u.currentUser && u.name.toLowerCase().includes(friendSearch.toLowerCase())).map((u, i) => (
-                      <div key={i} className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-blue-800/20 hover:border-blue-600/40 transition-all">
-                        <div className="w-11 h-11 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-300 font-black text-base">
+                      <div key={i} className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-cyan-800/20 hover:border-cyan-600/40 transition-all">
+                        <div className="w-11 h-11 bg-cyan-600/20 rounded-xl flex items-center justify-center text-cyan-300 font-black text-base">
                           {u.name[0]}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h5 className="font-black text-white text-sm uppercase tracking-tight truncate">{u.name}</h5>
-                          <p className="text-[10px] text-blue-400/50 font-bold uppercase tracking-widest">Nível {u.level} • Mestre</p>
+                          <p className="text-[10px] text-cyan-400/50 font-bold uppercase tracking-widest">Nível {u.level} • Mestre</p>
                         </div>
                         <button
                           onClick={() => {
@@ -5331,7 +5433,7 @@ export default function App() {
                           className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${
                             user.friends.includes(u.name)
                             ? 'bg-brand-green/15 text-brand-green cursor-default border border-brand-green/20'
-                            : 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20 active:scale-95'
+                            : 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-600/20 active:scale-95'
                           }`}
                         >
                           {user.friends.includes(u.name) ? 'Amigo' : 'Seguir'}
@@ -5339,13 +5441,13 @@ export default function App() {
                       </div>
                     ))
                   ) : friendSearch.length > 0 ? (
-                    <div className="py-8 text-center bg-white/3 rounded-[2rem] border border-dashed border-blue-800/30">
-                       <p className="text-[10px] font-black text-blue-400/40 uppercase tracking-widest">Continue digitando...</p>
+                    <div className="py-8 text-center bg-white/3 rounded-[2rem] border border-dashed border-cyan-800/30">
+                       <p className="text-[10px] font-black text-cyan-400/40 uppercase tracking-widest">Continue digitando...</p>
                     </div>
                   ) : (
-                    <div className="py-10 text-center bg-white/3 rounded-[2rem] border border-dashed border-blue-800/20">
-                       <Users size={28} className="text-blue-400/20 mx-auto mb-3" />
-                       <p className="text-[10px] font-black text-blue-400/30 uppercase tracking-[0.15rem]">Sugestões em breve</p>
+                    <div className="py-10 text-center bg-white/3 rounded-[2rem] border border-dashed border-cyan-800/20">
+                       <Users size={28} className="text-cyan-400/20 mx-auto mb-3" />
+                       <p className="text-[10px] font-black text-cyan-400/30 uppercase tracking-[0.15rem]">Sugestões em breve</p>
                     </div>
                   )}
                 </div>

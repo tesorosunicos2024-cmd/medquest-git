@@ -27,13 +27,13 @@ function trimAppQuestions() {
     return;
   }
 
-  // Find the closing bracket '];' of this array block before ESTUDANTE_BANCA_IDS
+  // Find the closing bracket '];' of this array block before QUESTIONS_ESTUDANTE
   for (let i = startIndex; i < lines.length; i++) {
     if (lines[i].trim().endsWith('];')) {
-      // Look ahead up to 5 lines for ESTUDANTE_BANCA_IDS
+      // Look ahead up to 5 lines for QUESTIONS_ESTUDANTE
       let found = false;
       for (let j = 1; j <= 5; j++) {
-        if (lines[i + j] && lines[i + j].includes('ESTUDANTE_BANCA_IDS')) {
+        if (lines[i + j] && lines[i + j].includes('QUESTIONS_ESTUDANTE')) {
           found = true;
           break;
         }

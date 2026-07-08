@@ -62,7 +62,7 @@ export async function signOutUser(): Promise<void> {
 export async function loadProgress<T = Record<string, unknown>>(
   uid: string
 ): Promise<Partial<T> | null> {
-  if (!isFirebaseConfigured || !db || !auth?.currentUser || uid === 'guest') return null;
+  if (!isFirebaseConfigured || !db) return null;
   try {
     const snap = await getDoc(doc(db, 'users', uid));
     return snap.exists() ? (snap.data() as Partial<T>) : null;
@@ -77,7 +77,7 @@ export async function saveProgress(
   uid: string,
   data: Record<string, unknown>
 ): Promise<void> {
-  if (!isFirebaseConfigured || !db || !auth?.currentUser || uid === 'guest') return;
+  if (!isFirebaseConfigured || !db) return;
   try {
     await setDoc(
       doc(db, 'users', uid),

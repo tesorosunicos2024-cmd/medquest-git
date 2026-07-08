@@ -5,7 +5,7 @@ import {
   doc, getDoc, setDoc, updateDoc, collection, query, where,
   getDocs, onSnapshot, serverTimestamp, arrayUnion, increment,
 } from 'firebase/firestore';
-import { auth, db, isFirebaseConfigured } from './firebase';
+import { db, isFirebaseConfigured } from './firebase';
 
 export interface Friendship {
   id: string;
@@ -33,7 +33,7 @@ export interface Battle {
   rewarded: Record<string, boolean>;
 }
 
-const ok = () => isFirebaseConfigured && !!db && !!auth?.currentUser;
+const ok = () => isFirebaseConfigured && !!db;
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O/1/I
 
 function randomCode(): string {
@@ -195,6 +195,29 @@ export function watchBattles(uid: string, cb: (list: Battle[]) => void): () => v
   return onSnapshot(q, (snap) => {
     cb(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Battle, 'id'>) })));
   }, () => cb([]));
+}
+
+// ── Placar de vitórias (ranking entre amigos) ────────────────────────────────
+
+/** Incrementa em 1 o total de vitórias do usuário (placar público). */
+export async function bumpWin(uid: string, name: string): Promise<void> {
+  if (!ok()) return;
+  await setDoc(doc(db!, 'battleStats', uid), { name, wins: increment(1) }, { merge: true });
+}
+
+/** Busca o total de vitórias de um conjunto de usuários (uid -> {name, wins}). */
+export async function fetchWins(uids: string[]): Promise<Record<string, { name: string; wins: number }>> {
+  if (!ok() || uids.length === 0) return {};
+  const out: Record<string, { name: string; wins: number }> = {};
+  await Promise.all(uids.map(async (u) => {
+    try {
+      const s = await getDoc(doc(db!, 'battleStats', u));
+      out[u] = s.exists()
+        ? { name: (s.data().name as string) || '', wins: (s.data().wins as number) || 0 }
+        : { name: '', wins: 0 };
+    } catch { out[u] = { name: '', wins: 0 }; }
+  }));
+  return out;
 }
 
 // ── Salas em grupo (estilo Kahoot) ───────────────────────────────────────────
