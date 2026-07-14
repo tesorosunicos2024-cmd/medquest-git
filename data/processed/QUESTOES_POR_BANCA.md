@@ -122,23 +122,10 @@
 - **Geriatria**: 1 questões
 - **Otorrinolaringologia**: 1 questões
 
-## UNKNOWN (17 questões)
+## Trilha Estudante (Sem Banca) (9060 questões)
 
-- **Clínica Cirúrgica**: 2 questões
-- **Medicina de Família/SUS**: 1 questões
-- **Anatomia**: 1 questões
-- **Fisiologia**: 1 questões
-- **Bioquímica**: 1 questões
-- **Histologia**: 1 questões
-- **Embriologia**: 1 questões
-- **Microbiologia**: 1 questões
-- **Imunologia**: 1 questões
-- **Genética**: 1 questões
-- **Farmacologia**: 1 questões
-- **Endocrinologia**: 1 questões
-- **Pediatria**: 1 questões
-- **Ginecologia & Obstetrícia**: 1 questões
-- **Cardiologia**: 1 questões
-- **Gastroenterologia**: 1 questões
+- **Ciclo Básico (Anatomia / Fisiologia / Bioquímica / etc.)**: 2885 questões
+- **Ciclo Clínico (Clínica Médica / Cirurgia / Pediatria / GO / etc.)**: 4745 questões
+- **Internato (Urgência / Emergência / Ambulatório / etc.)**: 1430 questões
 
-**TOTAL: 5878 questões**
+**TOTAL EM TEMPO DE EXECUÇÃO: 11562 questões**

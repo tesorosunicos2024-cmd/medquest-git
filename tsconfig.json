@@ -1,5 +1,5 @@
 {
-  "exclude": ["medquest", "node_modules"],
+  "exclude": ["medquest", "node_modules", "scripts"],
   "compilerOptions": {
     "target": "ES2022",
     "experimentalDecorators": true,

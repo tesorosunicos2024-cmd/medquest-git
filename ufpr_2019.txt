@@ -1,0 +1,715 @@
+CLÍNICA MÉDICA
+
+01 - Paciente masculino de 42 anos, etilista importante há 20 anos, procura unidade de saúde para avaliação clínica de rotina. Nega doenças conhecidas e uso de medicamentos. No interrogatório sistemático, queixa-se de diminuição da sensibilidade de extremidades e dores musculares esparsas. Ao exame físico, apresenta-se consciente, porém desatento, orientado, emagrecido, com discreta icterícia (1+/4+), com eritema palmar e ginecomastia bilateral. Apresenta ainda marcha com base alargada e atrofia muscular bilateral generalizada moderada. Diante desse caso clínico, assinale a alternativa correta.
+a) O paciente apresenta dados compatíveis com pelagra (deficiência de niacina ou vitamina B3), sendo indicada a reposição de tiazidas.
+b) Trata-se de escorbuto por carência de vitamina C, caracterizado por sangramentos de gengivas e dores ósseas intensas.
+c) A queixa do paciente é indicativa de beribéri seco (polioneuropatia) e molhado (insuficiência cardíaca de alto débito), sendo indicado o tratamento com reposição de riboflavina (vitamina B2).
+►d) O arroz é um alimento rico em tiamina, que é a vitamina deficiente nesse caso, e que serve como coenzima importante na via de glicólise anaeróbica e no ciclo do ácido cítrico.
+e) O paciente apresenta deficiência de cobalamina (vitamina B12), que é absorvida na porção terminal do jejuno mediante a ação conjunta do fator intrínseco produzido pelas células parietais gástricas.
+
+02 - No hemograma do paciente do caso anterior, qual o valor de RDW (Red Cell Distribution Width) esperado para o seu padrão de anemia?
+a) RDW 10,5%.
+b) RDW 11,5%.
+c) RDW 12,5%.
+d) RDW 13,0%.
+►e) RDW 13,5%.
+
+03 - A encefalopatia de Wernicke é uma síndrome neuropsiquiátrica aguda caracterizada por nistagmo, oftalmoplegia, ataxia e alteração do estado mental, secundária à deficiência de qual das seguintes vitaminas?
+►a) B1.
+b) B2.
+c) B3.
+d) B6.
+e) B12.
+
+04 - Paciente feminina, 24 anos, professora de escola primária, procura atendimento médico por quadro de asma moderada. Atualmente faz uso de medicação de resgate em média 3 a 4 vezes ao dia (salbutamol aerossol, 100 µg/jato, 2 jatos por vez), queixa-se de despertares noturnos por asma duas vezes na última semana e de limitações nas suas atividades físicas de rotina, as quais ela percebeu nos últimos trinta dias. Conforme diretrizes recentes da GINA (Global Initiative for Asthma), qual o tratamento de manutenção regular de escolha para essa paciente iniciar neste momento?
+a) Formoterol associado com budesonida para uso intermitente somente quando apresentar sintomas de asma.
+b) Formoterol via oral e corticoide inalatório se persistirem os sintomas de asma após 15 dias de uso regular de broncodilatador.
+c) Corticoide oral em dose baixa (prednisolona 10 mg/dia) de uso regular contínuo por tempo indeterminado.
+►d) Budesonida via inalatória em dose baixa ou outro corticoide inalatório de uso regular contínuo associado ao broncodilatador de resgate.
+e) Montelucaste de sódio via oral em dose baixa de uso regular contínuo associado ao broncodilatador de resgate.
+
+05 - Dentre os efeitos colaterais dos diuréticos tiazídicos de uso continuado, qual dos abaixo relacionados NÃO condiz com a classe desses medicamentos?
+a) Fotossensibilidade cutânea.
+►b) Hiponatremia.
+c) Hipocalcemia.
+d) Hiperuricemia.
+e) Hipopotassemia.
+* Questão anulada, portanto todos os candidatos serão pontuados.
+
+06 - Paciente masculino de 56 anos, obeso, tabagista ativo (30 anos-maço), diabético compensado com metformina e hipertenso em uso de clortalidona, procura o pronto atendimento com queixa de dor retroesternal, do tipo aperto, irradiada para mandíbula e MSE com início há 40 minutos enquanto assistia televisão. Refere que a dor é moderada (nota 6/10) e vem acompanhada de náusea e sudorese fria. Apresenta-se lúcido, orientado, eupneico em ar ambiente, FC 88 bpm, PA 148/92 mmHg, FR 14 irpm, saturação de 98% em ar ambiente. Exame segmentar do tórax normal. ECG realizado nos primeiros 10 minutos mostra ritmo sinusal com inversão simétrica de onda T em derivações D1, aVL, V5 e V6, sem infra ou supradesnível de segmento ST. Qual é a principal hipótese diagnóstica?
+a) Angina estável.
+b) Infarto agudo do miocárdio com supradesnível de segmento ST.
+►c) Síndrome coronariana aguda.
+d) Tromboembolismo pulmonar.
+e) Dissecção aguda de aorta.
+
+07 - Qual das arritmias cardíacas abaixo está mais frequentemente associada com a morte súbita cardíaca em pacientes com infarto agudo do miocárdio nas primeiras horas de evolução?
+a) Taquicardia paroxística supraventricular.
+b) Fibrilação atrial de alta resposta ventricular.
+c) Bradicardia sinusal.
+►d) fibrilação ventricular.
+e) Bloqueio atrioventricular total.
+
+08 - A erradicação da bactéria Helicobacter pylori em pacientes com diagnóstico de úlcera péptica tem demonstrado importante benefício na redução de recorrência ulcerosa. A erradicação deve ser confirmada preferencialmente 4 semanas após o término do tratamento antibiótico proposto. Qual dos exames abaixo NÃO deve ser utilizado para a confirmação da erradicação bacteriana por ter baixa acurácia nessa situação?
+a) Histologia de material de biópsia gástrica.
+b) Teste rápido de urease por endoscopia.
+c) Pesquisa de antígeno fecal para H. pylori.
+d) Teste da ureia respiratória com carbono marcado.
+►e) Sorologia IgG/IgM para H. pylori.
+
+09 - Paciente masculino, 19 anos, estudante de Agronomia, refere febre, odinofagia, mialgia difusa importante e cefaleia iniciadas há sete dias. Relata que foi ao pronto atendimento no 3.º dia de sintomas, sendo prescrito amoxicilina 500 mg de 8/8 horas devido a provável quadro de amigdalite bacteriana. O paciente iniciou o antibiótico no mesmo dia, porém refere que no dia de ontem (5.º dia de uso da amoxicilina) percebeu o aparecimento de manchas vermelhas por todo o corpo e coceira intensa. Atualmente, queixa-se também de fadiga intensa, náusea e dor em quadrante superior direito do abdome. Ao exame físico, apresenta-se corado, febril (temp. axilar 38,5 ºC), anictérico, com exantema maculopapular difuso, com linfonodomegalias cervicais bilaterais dolorosas à palpação, amígdalas hiperemiadas com exsudato esbranquiçado bilateral, hepatometria 13 cm dolorosa à palpação profunda e espaço de Traube ocupado à percussão abdominal. Qual é a hipótese diagnóstica mais provável?
+a) Citomegalovirose.
+b) Farmacodermia induzida pela amoxicilina.
+c) Hepatite viral aguda (hepatite A).
+►d) Mononucleose infecciosa.
+e) Amigdalite estreptocócica.
+
+10 - No hemograma do paciente do caso anterior, qual o achado laboratorial esperado que corrobore a hipótese diagnóstica aventada?
+a) Neutrofilia proeminente com desvio à esquerda.
+b) Anemia megaloblástica acentuada.
+►c) Linfocitose importante com presença de linfócitos atípicos.
+d) Eosinofilia proeminente.
+e) Pancitopenia moderada.
+
+11 - A esplenomegalia maciça é um achado clínico incomum que estreita de forma importante o diagnóstico diferencial de várias patologias de origem hematológica, infecciosa ou congestiva. Dentre as causas abaixo relacionadas, qual NÃO é considerada etiologia de esplenomegalia maciça por geralmente cursar com esplenomegalia discreta ou moderada?
+a) Esquistossomose mansônica com hipertensão portal.
+b) Leucemia mieloide crônica.
+►c) Mononucleose infecciosa.
+d) Mielofibrose primária.
+e) Leucemia de células pilosas.
+
+12 - Em relação aos exames de triagem do diabete mellitus tipo 2 em indivíduos assintomáticos, assinale a alternativa INCORRETA.
+a) O rastreamento deve ser considerado em adultos de qualquer idade que estejam com sobrepeso ou obesidade (IMC ≥ 25 kg/m2) e que apresentem um ou mais fatores de risco adicionais para diabetes.
+►b) Para indivíduos sem fatores de risco, o rastreamento deve começar a partir de 40 anos de idade.
+c) Se os testes de rastreamento forem normais, o rastreamento deve ser repetido em intervalos mínimos de 3 anos.
+d) Glicemia de jejum, hemoglobina glicosilada (A1C) e teste de tolerância oral à glicose (com 75 g de dextrosol) são testes apropriados para o rastreamento de diabete mellitus.
+e) Mulheres com diagnóstico prévio de diabete mellitus gestacional devem realizar testes de rastreamento para diabetes a longo prazo, pelo menos a cada 3 anos.
+
+13 - Paciente masculino de 78 anos, previamente hígido, portador de fibrilação atrial crônica decorrente de hipertensão arterial sistêmica de longa data, em uso regular de enalapril 10 mg ao dia e varfarina sódica 5 mg ao dia, procura o pronto atendimento para mostrar exames de rotina solicitados pelo seu médico assistente. O paciente refere estar se sentindo muito bem, nega sintomas respiratórios ou gastrointestinais, nega sangramentos, equimoses ou hematomas de surgimento recente. Nega o uso de outras medicações além das prescritas. Ao exame físico, apresenta-se em bom estado geral, ecorado, hidratado, consciente, orientado, FC 68 bpm (irregular), PA 134/80 mmHg. Exame da pele sem lesões purpúricas, equimoses ou petéquias. Exame neurológico normal, sem déficits focais. Exame do abdome sem anormalidades. O exame de Relação Normatizada Internacional (RNI) do tempo de protrombina trazido pelo paciente é de 8,5 (RNI terapêutico de escolha para o paciente é de 2,0 a 3,0). Diante do quadro descrito e de diretrizes internacionais recentes de tratamento de alteração de RNI por uso de varfarina, qual a conduta a ser adotada?
+►a) Suspender temporariamente a varfarina e monitorar o RNI até que retorne ao nível terapêutico, reiniciando o anticoagulante com ajuste de dose se necessário, não sendo recomendada a administração de vitamina K por via oral ou parenteral.
+b) Suspender temporariamente a varfarina, administrar vitamina K por via oral em dose baixa (1 a 2,5 mg) e monitorar o RNI até que retorne ao nível terapêutico.
+c) Suspender temporariamente a varfarina, administrar vitamina K por via subcutânea em dose baixa (1 a 2,5 mg) e monitorar o RNI até que retorne ao nível terapêutico.
+d) Internar o paciente em enfermaria de Clínica Médica, suspender a varfarina e administrar plasma fresco congelado (10 a 15 mL/kg) para correção imediata do RNI pelo risco iminente de sangramento grave.
+e) Internar o paciente em Unidade de Terapia Intensiva, suspender a varfarina e administrar concentrado de complexo protrombínico por via endovenosa para correção imediata do RNI pelo risco iminente de sangramento grave.
+
+14 - A pustulose exantemática generalizada aguda é uma erupção cutânea severa caracterizada pelo desenvolvimento abrupto de numerosas pústulas não foliculares sobre áreas de eritema difuso e edema, acompanhada de febre e neutrofia proeminente no hemograma. Qual das seguintes classes de medicamentos é a mais frequentemente associada com o desenvolvimento dessa reação adversa?
+a) Anticonvulsivantes.
+b) Antifúngicos azólicos.
+►c) Antibióticos betalactâmicos.
+d) Anti-inflamatórios não esteroidais.
+e) Estatinas.
+
+15 - São manifestações clínico-laboratoriais esperadas na insuficiência adrenal primária (doença de Addison), EXCETO:
+a) hiperpigmentação de pele e mucosas.
+b) hiponatremia.
+c) hiperpotassemia.
+►d) hipertensão arterial sistêmica.
+e) eosinofilia.
+
+16 - Dentre os pares de nervos cranianos, qual o mais frequentemente acometido no início do quadro de hipertensão intracraniana, manifestando-se por paresia ou paralisia do músculo reto lateral do olho ipsilateral à lesão?
+a) III par (nervo oculomotor).
+b) IV par (nervo troclear).
+c) V par (nervo trigêmeo).
+►d) VI par (nervo abducente).
+e) VII par (nervo facial).
+
+17 - Qual dos seguintes achados na análise do líquido cefalorraquidiano (LCR) de paciente com suspeita de meningite infecciosa é mais indicativo de etiologia bacteriana aguda?
+a) Predomínio linfocítico na celularidade.
+►b) Relação entre glicose do LCR e glicose plasmática < 0,4.
+c) Níveis normais ou discretamente elevados de lactato no LCR.
+d) Proteínas totais normais ou discretamente reduzidas no LCR.
+e) Ausência de bactérias na bacterioscopia pelo método de Gram.
+
+18 - Em relação ao manejo da crise asmática na emergência, assinale a alternativa INCORRETA.
+a) A gravidade da crise de asma deve ser avaliada com base nos sinais clínicos de esforço respiratório, na capacidade de falar frases completas e na saturação de oxigênio em ar ambiente.
+►b) O uso de corticoides por via sistêmica (oral ou endovenosa) está indicado somente nos casos de crise asmática classificada como muito grave ou refratária ao tratamento inicial.
+c) O uso de brometo de ipratrópio associado ao beta-2-agonista de curta duração na nebulização inicial reduz as taxas de internação hospitalar em crises moderadas a graves.
+d) A monitorização da saturação de oxigênio deve ser realizada de forma contínua ou frequente, com meta de manter a saturação entre 93 e 95% em adultos.
+e) O sulfato de magnésio por via endovenosa em dose única pode ser considerado em pacientes com resposta inadequada ao tratamento broncodilatador inicial intensivo.
+
+19 - Paciente feminina, 28 anos, previamente hígida, procura atendimento médico por queixa de dispneia de início súbito associada a dor torácica pleurítica à direita há duas horas. Nega febre, tosse ou outras queixas. Refere uso de anticoncepcional oral combinado há cinco anos. Nega cirurgias recentes ou imobilizações. Apresenta FC 112 bpm, PA 118/78 mmHg, FR 22 irpm, saturação de 94% em ar ambiente. Exame físico segmentar normal, exceto por taquicardia e taquipneia. Conforme o escore de Wells para probabilidade diagnóstica de tromboembolismo pulmonar (TEP), essa paciente deve ser classificada em qual categoria de probabilidade e qual o próximo passo na investigação diagnóstica?
+a) Probabilidade baixa; solicitar D-dímero.
+►b) Probabilidade intermediária; solicitar D-dímero.
+c) Probabilidade alta; solicitar angiotomografia de tórax.
+d) Probabilidade intermediária; solicitar angiotomografia de tórax diretamente.
+e) Probabilidade alta; iniciar anticoagulação empírica e solicitar cintilografia pulmonar.
+
+20 - Em relação ao tratamento da crise de gota aguda, assinale a alternativa correta.
+a) O alopurinol deve ser iniciado imediatamente na dose máxima permitida para acelerar a redução dos níveis de ácido úrico sérico.
+b) Se o paciente já estiver em uso regular de alopurinol no momento do início da crise aguda, o medicamento deve ser suspenso temporariamente até a resolução completa da dor.
+►c) Anti-inflamatórios não esteroidais (AINEs), colchicina ou corticoides sistêmicos são opções terapêuticas eficazes para o controle da dor na crise aguda.
+d) A colchicina deve ser administrada em doses elevadas até que o paciente apresente diarreia, que é o marcador clínico de eficácia terapêutica do medicamento.
+e) O uso de corticoides intra-articulares está contraindicado na crise de gota aguda pelo risco de infecção secundária da articulação acometida.
+
+CIRURGIA GERAL
+
+21 - Infecção do sítio cirúrgico (ISC) constitui uma das principais causas de infecção associada à assistência à saúde em pacientes cirúrgicos. Em relação à classificação da ISC, aquela que envolve apenas a pele e o tecido subcutâneo da incisão é denominada:
+►a) ISC incisional superficial.
+b) ISC incisional profunda.
+c) ISC de órgão ou espaço.
+d) ISC de tecidos moles.
+e) ISC cutânea pura.
+
+22 - Sobre a resposta metabólica ao trauma e ao estresse cirúrgico, é INCORRETO afirmar:
+a) Ocorre liberação de hormônios contra-reguladores, como cortisol, glucagon e catecolaminas, que promovem um estado hipermetabólico e catabólico.
+b) A resistência à insulina é uma característica marcante da resposta ao trauma, levando a hiperglicemia proporcional à gravidade da lesão.
+c) A quebra de proteínas do músculo esquelético é estimulada para fornecer aminoácidos para a gliconeogênese hepática e síntese de proteínas de fase aguda.
+►d) A taxa metabólica basal sofre uma redução significativa nas primeiras 48 horas após o trauma como mecanismo de defesa e conservação de energia.
+e) A retenção de água e sódio ocorre devido à ativação do sistema renina-angiotensina-aldosterona e liberação do hormônio antidiurético (ADH).
+
+23 - No que diz respeito ao diagnóstico e manejo do esôfago de Barrett, assinale a alternativa correta.
+a) O diagnóstico histológico de certeza é dado pela presença de metaplasia escamosa no esôfago distal na biópsia realizada por endoscopia digestiva alta.
+b) O tratamento cirúrgico antirrefluxo (fundoplicatura) promove a regressão completa da metaplasia intestinal em mais de 90% dos casos a longo prazo.
+►c) O rastreamento endoscópico regular está indicado para pacientes com esôfago de Barrett sem displasia a cada 3 a 5 anos para detecção precoce de adenocarcinoma.
+d) A presença de displasia de alto grau na biópsia é indicação absoluta de esofagectomia subtotal em todos os pacientes, independentemente do risco cirúrgico.
+e) O esôfago de Barrett é uma condição benigna que não apresenta relação com o desenvolvimento de neoplasia maligna esofágica.
+
+24 - Paciente masculino de 62 anos, com diagnóstico recente de adenocarcinoma de cólon sigmoide, realiza tomografia computadorizada de abdome de estadiamento que demonstra duas lesões hepáticas sólidas, medindo 2 cm e 3 cm, localizadas respectivamente nos segmentos II e VIII, sem outras metástases a distância. Em relação ao tratamento das metástases hepáticas de origem colorretal, assinale a alternativa correta.
+a) A presença de metástases hepáticas bilaterais contraindica formalmente qualquer tentativa de ressecção cirúrgica curativa.
+►b) A ressecção cirúrgica das metástases hepáticas associada à quimioterapia sistêmica oferece chance de sobrevida a longo prazo e cura para pacientes selecionados.
+c) A radioterapia estereotática corporal (SBRT) é superior à ressecção cirúrgica no controle local de metástases hepáticas ressecáveis.
+d) O transplante hepático é o tratamento de escolha para pacientes com metástases hepáticas bilaterais de câncer colorretal.
+e) Pacientes com metástases hepáticas bilaterais devem receber apenas tratamento paliativo exclusivo com quimioterapia sistêmica de suporte.
+
+25 - A dor abdominal de forte intensidade, de início súbito, desproporcional aos achados do exame físico abdominal (abdome flácido e sem sinais de irritação peritoneal), em paciente idoso com fibrilação atrial crônica, sugere fortemente o diagnóstico de:
+a) Colecistite aguda calculosa.
+►b) Isquemia mesentérica aguda.
+c) Perfuração de úlcera péptica gástrica.
+d) Pancreatite aguda biliar.
+e) Obstrução intestinal por brida.
+
+26 - No trauma abdominal penetrante por arma branca na transição toracoabdominal, a laparoscopia diagnóstica tem indicação prioritária para avaliar a integridade de qual das seguintes estruturas, mesmo em paciente hemodinamicamente estável e sem peritonite?
+a) Fígado.
+b) Baço.
+►c) Diafragma.
+d) Estômago.
+e) Cólon transverso.
+
+27 - Em relação aos tumores císticos do pâncreas, qual das seguintes neoplasias apresenta maior potencial de transformação maligna e necessita de vigilância estrita ou tratamento cirúrgico na dependência de critérios de gravidade?
+a) Cistoadenoma seroso.
+►b) Neoplasia mucinosa papilar intraductal (IPMN).
+c) Cisto linfoepitelial.
+d) Pseudocisto pancreático pós-pancreatite.
+e) Cisto congênito simples do pâncreas.
+
+28 - No tratamento cirúrgico das hérnias inguinais, a técnica que utiliza abordagem anterior com colocação de tela livre de tensão, fixada sobre o ligamento inguinal e aponeurose do músculo oblíquo externo, amplamente utilizada na prática clínica, é denominada técnica de:
+a) Bassini.
+b) McVay.
+c) Shouldice.
+►d) Lichtenstein.
+e) Stoppa.
+
+29 - O sinal de Cullen e o sinal de Grey-Turner são achados semiológicos raros que se caracterizam por equimose na região periumbilical e nos flancos, respectivamente. Esses sinais sugerem a ocorrência de hemorragia retroperitoneal e estão classicamente associados a quadros graves de:
+a) Apendicite aguda perfurada.
+b) Colecistite aguda gangrenosa.
+►c) Pancreatite aguda necro-hemorrágica.
+d) Ruptura de gravidez ectópica.
+e) Perfuração de divertículo de Meckel.
+
+30 - Qual é a principal causa de obstrução intestinal mecânica em adultos que não apresentam histórico de cirurgias abdominais prévias (abdome virgem)?
+►a) Hérnia da parede abdominal (encarcerada ou estrangulada).
+b) Bridas ou aderências peritoneais secundárias a peritonite prévia subclínica.
+c) Neoplasia maligna de cólon esquerdo.
+d) Fitobezoar por ingesta inadequada de fibras.
+e) Volvo de cólon sigmoide.
+
+31 - O tumor maligno primário mais comum do fígado em adultos é o:
+►a) Hepatocarcinoma.
+b) Colangiocarcinoma intra-hepático.
+c) Angiossarcoma hepático.
+d) Hepatoblastoma.
+e) Cistoadenocarcinoma mucinoso.
+
+32 - Em relação ao trauma esplênico, assinale a alternativa correta.
+a) O tratamento cirúrgico com esplenectomia total é obrigatório em todos os pacientes que apresentam lesão esplênica evidenciada na tomografia de abdome, independentemente do grau da lesão.
+►b) O tratamento não operatório (conservador) é a conduta de escolha para pacientes hemodinamicamente estáveis, sem sinais de peritonite e com lesões esplênicas graus I, II ou III.
+c) A embolização por angiografia está contraindicada no trauma esplênico pelo risco de infarto esplênico total e abscesso secundário.
+d) A vacinação contra germes encapsulados (pneumococo, meningococo e hemófilos) deve ser realizada imediatamente antes da cirurgia nos casos de esplenectomia de urgência.
+e) O baço é o órgão menos frequentemente lesado no trauma abdominal fechado (contuso).
+
+33 - No que diz respeito à cicatrização das feridas, qual é a principal célula responsável pela síntese de colágeno e contração da ferida na fase proliferativa tardia e de remodelação?
+a) Neutrófilo.
+b) Macrófago.
+►c) Miofibroblasto.
+d) Queratinócito.
+e) Linfócito T Helper.
+
+34 - No atendimento inicial ao paciente politraumatizado, conforme os princípios do ATLS (Advanced Trauma Life Support), a conduta prioritária e imediata na suspeita clínica de pneumotórax hipertensivo em paciente com hipotensão e insuficiência respiratória grave é a realização de:
+a) Radiografia de tórax no leito para confirmação diagnóstica.
+b) Intubação orotraqueal e início de ventilação mecânica com pressão positiva.
+►c) Toracocentese de agulha no segundo espaço intercostal na linha hemiclavicular.
+d) Drenagem torácica fechada com dreno de grosso calibre no quinto espaço intercostal na linha axilar média.
+e) Pericardiocentese de alívio por via subxifoide.
+
+35 - Qual é a principal complicação pós-operatória tardia em pacientes submetidos a gastrectomia total com reconstrução em Y de Roux por adenocarcinoma gástrico?
+a) Síndrome de dumping precoce e tardia grave.
+b) Esofagite de refluxo alcalino severa.
+►c) Anemia megaloblástica por deficiência de vitamina B12 e anemia ferropriva.
+d) Fístula da anastomose esofagojejunal com abscesso mediastinal.
+e) Diarreia pós-vagotomia refratária ao tratamento clínico.
+
+36 - Em relação aos pólipos colorretais, qual das seguintes características histológicas apresenta o maior risco de malignização a longo prazo?
+a) Pólipo hiperplásico pequeno em reto.
+b) Adenoma tubular sem displasia.
+c) Adenoma túbulo-viloso com displasia de baixo grau.
+►d) Adenoma viloso com displasia de alto grau.
+e) Pólipo inflamatório pseudotumoral em colite ulcerativa.
+
+37 - A tríade de Charcot (febre com calafrios, icterícia e dor em hipocôndrio direito) e a pêntade de Reynolds (tríade de Charcot associada a hipotensão e alteração do estado mental) são quadros clínicos característicos de:
+a) Colecistite aguda calculosa grave com perfuração livre.
+b) Pancreatite aguda biliar grave com necrose infectada.
+►c) Colangite aguda bacteriana por coledocolitíase obstrutiva.
+d) Abscesso hepático piogênico solitário.
+e) Hepatite medicamentosa fulminante por paracetamol.
+
+38 - Na classificação de Nyhus para hérnias da região inguinal, a hérnia inguinal direta é classificada como tipo:
+a) I.
+b) II.
+►c) IIIa.
+d) IIIb.
+e) IV.
+
+39 - Qual das seguintes complicações é a indicação mais comum de tratamento cirúrgico de urgência na doença diverticular do cólon?
+a) Hemorragia digestiva baixa maciça recorrente.
+b) Fístula colovesical sintomática crônica.
+►c) Peritonite purulenta ou fecal por perfuração livre (Hinchey III ou IV).
+d) Estenose colônica fibrosa com suboclusão intestinal recorrente.
+e) Abscesso pericólico volumoso passível de drenagem percutânea (Hinchey II).
+
+40 - No trauma torácico fechado, a presença de movimento paradoxal de um segmento da parede torácica durante a respiração (tórax instável) ocorre classicamente devido à fratura de:
+a) Esterno associada a fratura clavicular bilateral.
+b) Três ou mais costelas consecutivas em um único ponto de fratura por costela.
+►c) Duas ou mais costelas consecutivas, cada uma fraturada em dois ou mais pontos diferentes.
+d) Escápula associada a múltiplas fraturas costais posteriores.
+e) Cartilagens costais bilaterais com luxação condroesternal ampla.
+
+GINECOLOGIA E OBSTETRÍCIA
+
+41 - Paciente de 28 semanas de gestação, em pré-natal de alto risco devido a hipertensão arterial crônica e histórico de pré-eclâmpsia grave em gestação anterior, apresenta-se com queixa de cefaleia holocraniana de forte intensidade e escotomas visuais há um dia. Exame físico: PA 165/110 mmHg, reflexos osteotendíneos vivos, dinâmica uterina ausente, BCF 144 bpm. Exames laboratoriais demonstram proteinúria significativa, plaquetopenia (85.000/mm3), elevação de enzimas hepáticas (TGO 120 U/L) e LDH de 850 U/L. Diante do diagnóstico de pré-eclâmpsia sobreposta grave, qual é a conduta imediata para prevenção de crises convulsivas maternas?
+a) Administração de fenobarbital por via endovenosa.
+b) Administração de diazepam por via retal ou endovenosa.
+►c) Administração de sulfato de magnésio por via endovenosa (esquema de Zuspan ou Pritchard).
+d) Administração de fenitoína por via endovenosa com monitorização eletrocardiográfica.
+e) Administração de hidrato de cloral por via oral para sedação leve.
+
+42 - Paciente puérpera, de 10 dias de pós-parto normal, procura o pronto atendimento com febre (38,8 ºC), calafrios e dor abdominal em baixo ventre há dois dias. Refere loquiação com odor fétido e aumento da quantidade de sangramento vaginal. Ao exame físico, apresenta-se em regular estado geral, taquicárdica (FC 108 bpm), útero amolecido, doloroso à palpação profunda e palpável na cicatriz umbilical. Qual é a principal hipótese diagnóstica e o tratamento de escolha indicado para o caso?
+a) Infecção do trato urinário (pielonefrite); ciprofloxacino via oral por 14 dias.
+b) Mastite puerperal bilateral; cefalexina via oral associada a compressas frias e esvaziamento das mamas.
+►c) Endometrite puerperal; internação hospitalar e antibioticoterapia endovenosa com clindamicina e gentamicina.
+d) Tromboflebite pélvica séptica; internação hospitalar, uso de heparina plena e antibioticoterapia de largo espectro.
+e) Restos placentários infectados; realização imediata de curetagem uterina sob anestesia geral, sem necessidade de antibióticos prévios.
+
+43 - Em relação às indicações e segurança da operação cesariana a pedido da paciente em gestantes de risco habitual, assinale a alternativa correta.
+a) A cesariana a pedido pode ser realizada a partir de 37 semanas completas de gestação para conveniência da paciente e equipe médica.
+b) O médico assistente é obrigado a realizar a cesariana a pedido em qualquer idade gestacional, sob pena de infração ética por cerceamento da autonomia da paciente.
+►c) A cesariana a pedido só deve ser realizada a partir de 39 semanas completas de gestação para reduzir o risco de morbidade respiratória neonatal iatrogênica.
+d) O parto cesáreo apresenta menores taxas de infecção puerperal e menor tempo de internação hospitalar quando comparado ao parto vaginal planejado.
+e) O consentimento informado por escrito não é necessário em casos de cesariana a pedido, bastando o registro verbal em prontuário médico.
+
+44 - Em relação às complicações perinatais em gestantes com diabete mellitus gestacional ou pré-gestacional com mau controle metabólico, assinale a alternativa INCORRETA.
+a) A macrossomia fetal (peso ao nascimento > 4.000 g) está relacionada à hiperglicemia materna que induz hiperinsulinemia fetal e acúmulo excessivo de gordura corporal.
+b) A hipoglicemia neonatal nas primeiras horas de vida ocorre devido à persistência do estado de hiperinsulinemia fetal após a interrupção do aporte contínuo de glicose materna através da placenta.
+►c) A síndrome do desconforto respiratório do recém-nascido (doença da membrana hialina) apresenta incidência significativamente reduzida em filhos de mães diabéticas pelo efeito estimulante da insulina sobre a maturação pulmonar fetal.
+d) A policitemia neonatal e a hiperbilirrubinemia secundária ocorrem pelo estímulo à eritropoese fetal decorrente da hipóxia tecidual crônica induzida pelo consumo aumentado de oxigênio pelo feto macrossômico.
+e) A cardiomiopatia hipertrófica fetal, afetando principalmente o septo interventricular, é uma complicação reversível associada ao mau controle glicêmico materno no terceiro trimestre.
+
+45 - Na avaliação Doppler da restrição de crescimento fetal (RCF) secundária à insuficiência placentária grave, qual dos seguintes achados vasculares fetais indica deterioração iminente da contratilidade miocárdica e risco iminente de óbito fetal, sendo indicação de resolução imediata do parto em fetos viáveis?
+a) Centralização fetal caracterizada por vasodilatação da artéria cerebral média (relação cerebroplacentária < 1,0).
+b) Presença de incisuras protodiastólicas bilaterais nas artérias uterinas maternas.
+c) Aumento do índice de pulsatilidade da artéria umbilical acima do percentil 95 para a idade gestacional.
+►d) Presença de onda A reversa (fluxo reverso durante a sístole atrial) na avaliação Doppler do ducto venoso.
+e) Fluxo diastólico zero persistente na artéria umbilical na ausência de outras alterações.
+
+46 - Paciente de 26 anos, puérpera de 30 dias de parto vaginal, em aleitamento materno exclusivo, procura a unidade de saúde para iniciar método contraceptivo. Nega comorbidades ou uso de tabaco. Qual dos seguintes métodos contraceptivos hormonais está contraindicado neste momento pelo risco de redução da produção láctea ou interferência na composição do leite materno?
+a) Minipílula de progestagênio isolado (desogestrel 75 µg).
+b) Implante subcutâneo liberador de etonogestrel.
+►c) Anticoncepcional hormonal combinado oral (etinilestradiol + levonorgestrel).
+d) Injeção trimestral de acetato de medroxiprogesterona de depósito.
+e) Sistema intrauterino liberador de levonorgestrel (SIU-LNG).
+
+47 - Sobre a fisiologia do ciclo menstrual humano, assinale a alternativa correta.
+a) O pico de hormônio luteinizante (LH), que induz a ovulação em até 36 horas, é desencadeado pelo mecanismo de feedback negativo exercido pelos elevados níveis de progesterona no final da fase folicular.
+►b) O recrutamento da coorte de folículos antrais no início de cada ciclo ocorre sob estímulo direto do aumento discreto do hormônio folículo estimulante (FSH) na fase de transição lúteo-folicular do ciclo anterior.
+c) As células da teca ovariana possuem receptores para FSH e são responsáveis pela conversão de androgênios em estrogênios pela ação da enzima aromatase.
+d) A fase lútea do ciclo menstrual apresenta duração altamente variável de acordo com o comprimento total do ciclo de cada mulher, variando de 7 a 21 dias.
+e) O oócito primário permanece bloqueado na metáfase da segunda divisão meiótica desde a vida fetal até o momento da ovulação.
+
+48 - Casal procura o ambulatório com queixa de incapacidade de engravidar após 12 meses de tentativas regulares sem uso de métodos contraceptivos. A mulher tem 38 anos de idade e apresenta ciclos menstruais regulares de 28 dias. Nega comorbidades ou cirurgias pélvicas prévias. O homem tem 40 anos, hígido, nega antecedentes relevantes. Considerando a idade da mulher, qual a conduta imediata recomendada para o caso?
+a) Orientar o casal a manter tentativas espontâneas por mais 12 meses, uma vez que o diagnóstico de infertilidade necessita de pelo menos dois anos de tentativas em mulheres acima de 35 anos.
+►b) Iniciar imediatamente a investigação básica de infertilidade do casal com exames hormonais de reserva ovariana, histerossalpingografia e espermograma.
+c) Encaminhar o casal diretamente para tratamento de fertilização in vitro (FIV), dispensando exames diagnósticos prévios pela idade avançada da paciente.
+d) Prescrever indutores de ovulação (citrato de clomifeno) para a paciente de forma empírica por 6 ciclos antes de iniciar qualquer investigação complementar.
+e) Solicitar cariótipo de banda G para ambos os cônjuges e pesquisa de mutações para trombofilias hereditárias como exames iniciais de triagem.
+
+49 - Em relação ao diagnóstico e tratamento da dismenorreia primária na adolescência, assinale a alternativa INCORRETA.
+a) A dismenorreia primária caracteriza-se por dor em cólica no baixo ventre associada ao fluxo menstrual, na ausência de patologia pélvica identificável.
+b) A fisiopatologia da dor está relacionada à produção endometrial excessiva de prostaglandinas F2-alfa sob estímulo da progesterona na fase lútea, promovendo hiperatividade uterina e isquemia miometrial.
+c) Anti-inflamatórios não esteroidais (AINEs) de uso intermitente no início do fluxo menstrual são a primeira linha de tratamento farmacológico para a dismenorreia primária.
+►d) O uso de análogos do GnRH (hormônio liberador de gonadotrofinas) de forma contínua é o tratamento de escolha inicial na falha terapêutica aos AINEs.
+e) Anticoncepcionais hormonais combinados orais ou progestagênios isolados de uso contínuo são opções eficazes que reduzem a dor por promoverem anovulação e atrofia endometrial.
+
+50 - A incontinência urinária de esforço (IUE) na mulher caracteriza-se pela perda involuntária de urina coincidente com aumento da pressão intra-abdominal (tosse, espirro, riso ou esforço físico). Qual é o tratamento cirúrgico considerado padrão-ouro atual na falha do tratamento conservador (fisioterapia pélvica) para mulheres com IUE por hipermobilidade vesical ou deficiência esfincteriana intrínseca?
+a) Cirurgia de Kelly-Kennedy (plicatura da fáscia pubocervical por via vaginal).
+b) Colpopexia retropúbica de Burch (fixação da fáscia vaginal ao ligamento de Cooper por via laparotômica ou laparoscópica).
+►c) Colocação de fita suburetral livre de tensão por via retropúbica (TVT) ou transobturatória (TOT) – slings sintéticos de uretra média.
+d) Histerectomia vaginal com colpoplastia anterior e posterior.
+e) Injeção periuretral de agentes abauladores sintéticos sob controle cistoscópico.
+
+51 - Em relação ao rastreamento e conduta nas lesões precursoras do câncer de colo uterino em mulheres jovens (abaixo de 25 anos), assinale a alternativa correta.
+►a) O rastreamento citopatológico de rotina no Brasil deve ser iniciado somente a partir dos 25 anos de idade em mulheres que já iniciaram atividade sexual.
+b) O achado de células escamosas atípicas de significado indeterminado (ASC-US) na citologia em paciente de 20 anos exige a realização imediata de colposcopia.
+c) A lesão intraepitelial escamosa de alto grau (HSIL) na citologia em paciente de 18 anos autoriza a realização imediata de conização do colo uterino pelo método de excisão da zona de transformação (EZT), dispensando biópsia prévia.
+d) O teste de DNA-HPV de alto risco deve ser utilizado como método de rastreamento primário de rotina em mulheres de 20 a 24 anos.
+e) A colposcopia imediata está indicada para todas as pacientes de qualquer idade que apresentem citologia compatível com lesão intraepitelial escamosa de baixo grau (LSIL).
+
+52 - Paciente de 56 anos, na pós-menopausa há seis anos, sem terapia de reposição hormonal, refere sensação de peso vaginal e abaulamento vulvar de início progressivo há um ano. Ao exame físico ginecológico em posição de esforço (manobra de Valsalva), constata-se a descida do colo uterino e fundo de saco vaginal além do hímen em cerca de 4 cm (prolapso uterino estádio IV na classificação POP-Q). Qual a melhor conduta cirúrgica reconstrutiva indicada para essa paciente que deseja preservar a função vaginal ativa?
+a) Colpocleise total pelo método de Le Fort (obliteração vaginal).
+►b) Histerectomia vaginal associada a fixação do cúpula vaginal ao ligamento sacroespinhoso ou promontório sacral (sacropromontofixação) e colpoplastia anterior e posterior.
+c) Amputação parcial do colo uterino pelo método de Manchester.
+d) Histerectomia subtotal por via laparoscópica com fixação do colo uterino à parede abdominal anterior.
+e) Colpoplastia anterior isolada com uso de tela sintética de polipropileno sem fixação apical.
+
+53 - Qual das seguintes infecções sexualmente transmissíveis (ISTs) caracteriza-se clinicamente pela presença de corrimento vaginal abundante, amarelo-esverdeado, bolhoso e de odor fétido, associado a colpite difusa (“colo em morango” ou aspecto tigróide na colposcopia com teste de Schiller tigrado)?
+a) Candidíase vulvovaginal.
+b) Vaginose bacteriana por Gardnerella vaginalis.
+►c) Tricomoníase vaginal por Trichomonas vaginalis.
+d) Infecção por Chlamydia trachomatis.
+e) Gonorréia por Neisseria gonorrhoeae.
+
+54 - A amenorreia secundária caracteriza-se pela ausência de menstruação por pelo menos 3 meses em mulheres com ciclos previamente regulares, ou por 6 meses em mulheres com ciclos irregulares. Na investigação diagnóstica, após exclusão de gravidez, o teste positivo de estrogênio associado a progesterona (indução de sangramento por privação hormonal) e o teste negativo de estrogênio associado a progesterona (ausência de sangramento) sugerem, respectivamente:
+a) Causa ovariana (hipogonadismo hipergonadotrófico) e causa hipofisária (adenoma secretor de prolactina).
+b) Causa hipotalâmica (amenorreia funcional por estresse) e causa ovariana (falência ovariana prematura).
+►c) Causa central/ovariana (integridade do trato de saída) e causa uterina/vaginal (anormalidade anatômica do trato de saída, como síndrome de Asherman).
+d) Causa uterina (sinéquias uterinas) e causa central (hipogonadismo hipogonadotrófico).
+e) Síndrome dos ovários policísticos e hiperprolactinemia tumoral.
+
+55 - Em relação ao diagnóstico e tratamento da doença inflamatória pélvica (DIP) aguda na emergência, conforme as diretrizes do Ministério da Saúde do Brasil, assinale a alternativa INCORRETA.
+a) A DIP é uma síndrome clínica decorrente da ascensão de microrganismos do trato genital inferior (principalmente Chlamydia trachomatis e Neisseria gonorrhoeae) para o trato genital superior.
+b) Os critérios maiores para o diagnóstico clínico incluem dor no hipogástrio, dor à palpação dos anexos e dor à mobilização do colo uterino no toque vaginal.
+c) O tratamento ambulatorial com ceftriaxona intramuscular em dose única associada a doxiciclina oral por 14 dias e metronidazol oral por 14 dias está indicado para casos leves a moderados (estádios I e II de Monif).
+►d) A internação hospitalar para tratamento endovenoso com clindamicina e gentamicina é mandatória apenas nos casos de DIP com abscesso tubo-ovariano roto (estádio IV de Monif), devendo os abscessos íntegros ser tratados ambulatorialmente.
+e) Dispositivos intrauterinos (DIU) não precisam ser removidos imediatamente no início do tratamento da DIP leve a moderada, devendo a remoção ser considerada se não houver melhora clínica após 48 a 72 horas de antibioticoterapia adequada.
+
+56 - A insuficiência ovariana prematura (IOP), anteriormente denominada falência ovariana prematura, caracteriza-se pela perda da atividade folicular ovariana antes dos 40 anos de idade, cursando com amenorreia, hipoestrogenismo e níveis elevados de gonadotrofinas. Qual é o critério laboratorial recomendado para a confirmação diagnóstica da IOP?
+a) Dosagem de FSH acima de 20 mUI/mL em coleta única realizada em qualquer fase do ciclo.
+►b) Dosagem de FSH acima de 40 mUI/mL (ou > 25 mUI/mL dependendo do guideline) em duas ocasiões separadas por um intervalo mínimo de 4 a 6 semanas.
+c) Dosagem de LH acima de 40 mUI/mL associada a níveis de estradiol acima de 100 pg/mL.
+d) Dosagem de hormônio antimülleriano (AMH) indetectável associada a dosagem de inibina B elevada.
+e) Dosagem de progesterona plasmática inferior a 3 ng/mL realizada no 21.º dia do ciclo menstrual.
+
+57 - Paciente de 28 anos, nuligesta, com diagnóstico de infecção cervical aguda por Chlamydia trachomatis, vem à consulta de retorno. Nega sintomas de infecção pélvica alta ou comorbidades. Qual é o tratamento de escolha preconizado para a erradicação bacteriana nesta paciente e qual a conduta em relação ao seu parceiro sexual regular atual?
+►a) Doxiciclina 100 mg por via oral de 12/12 horas por 7 dias para a paciente; o parceiro deve ser tratado empiricamente com o mesmo esquema de doxiciclina ou azitromicina 1 g VO dose única, mesmo se assintomático.
+b) Azitromicina 1 g por via oral em dose única para a paciente; o parceiro deve ser tratado somente se apresentar sintomas uretrais e tiver teste diagnóstico positivo para clamídia.
+c) Ceftriaxona 500 mg intramuscular em dose única para a paciente; o parceiro deve realizar sorologia para clamídia antes de iniciar qualquer tratamento.
+d) Ciprofloxacino 500 mg por via oral de 12/12 horas por 3 dias para a paciente e parceiro.
+e) Metronidazol 250 mg por via oral de 8/8 horas por 7 dias para a paciente e o parceiro deve usar preservativo por 30 dias.
+
+58 - Em relação ao atendimento médico de emergência e seguimento clínico de mulheres vítimas de violência sexual aguda (atendimento nas primeiras 72 horas após a agressão), assinale a alternativa INCORRETA.
+a) A anticoncepção de emergência com levonorgestrel 1,5 mg por via oral em dose única deve ser oferecida imediatamente para mulheres com risco de gravidez decorrente da agressão.
+b) A profilaxia química pós-exposição ao HIV (PEP) com uso de antirretrovirais por 28 dias deve ser iniciada preferencialmente nas primeiras 4 horas após a agressão, com limite de eficácia de até 72 horas.
+c) A profilaxia de infecções sexualmente transmissíveis não virais deve ser realizada na admissão com ceftriaxona intramuscular (para gonococo), azitromicina oral (para clamídia) e metronidazol oral ou penicilina benzatina.
+►d) A coleta de vestígios forenses e o exame físico detalhado da genitália só devem ser realizados mediante a apresentação de Boletim de Ocorrência policial ou autorização por escrito de autoridade judicial.
+e) A vacinação contra a hepatite B (esquema de 3 doses se não vacinada anteriormente) e a imunoglobulina humana hiperimune contra hepatite B (se agressor sabidamente portador ou de status desconhecido em agressão com lesão mucosa) devem ser oferecidas.
+
+59 - O abortamento previsto em lei (aborto legal) no Brasil é assegurado em condições específicas. Qual das seguintes situações NÃO está prevista em lei ou jurisprudência do Supremo Tribunal Federal (STF) como excludente de ilicitude para a realização do procedimento de interrupção da gestação em serviços públicos de saúde?
+a) Gravidez resultante de estupro ou outra forma de violência sexual.
+b) Gestação que represente risco de vida iminente para a gestante na ausência de outro meio para salvá-la.
+c) Gestação de feto anencéfalo confirmada por exame de ultrassonografia qualificado após 12 semanas.
+►d) Gestação de feto portador de trissomia do cromossomo 21 (síndrome de Down) com cardiopatia congênita grave associada.
+e) Todas as situações acima estão previstas no ordenamento jurídico brasileiro como causas de aborto legal.
+
+60 - Paciente de 32 anos, nuligesta, com diagnóstico de síndrome do anticorpo antifosfolípide (SAF) confirmada laboratorialmente com anticoagulante lúpico positivo em duas ocasiões com intervalo de 12 semanas, refere história de três perdas gestacionais consecutivas espontâneas antes de 10 semanas de gestação, sem outras causas identificadas. Atualmente com desejo de engravidar, procura orientação pré-concepcional. Qual é a terapia profilática de escolha recomendada para essa paciente iniciar assim que constatar atraso menstrual ou teste de gravidez positivo na próxima gestação?
+a) Uso de varfarina sódica em dose terapêutica ajustada pelo RNI durante toda a gestação e suspensão 4 semanas antes do parto.
+►b) Uso associado de ácido acetilsalicílico (AAS) em dose baixa (100 mg/dia) e heparina de baixo peso molecular (enoxaparina) em dose profilática (ex: 40 mg/dia via subcutânea) durante toda a gestação e por 6 semanas no puerpério.
+c) Corticoterapia sistêmica com prednisona 20 mg/dia associada a AAS em dose baixa até a 36ª semana de gestação.
+d) Infusão mensal de imunoglobulina humana endovenosa associada a AAS em dose baixa durante o primeiro e segundo trimestres.
+e) Plasmaférese terapêutica quinzenal no primeiro trimestre associada a uso de heparina não fracionada em dose plena.
+
+PEDIATRIA
+
+61 - Lactente com 10 dias de vida é levado à consulta de puerpério na Unidade Básica de Saúde. Nasceu de parto vaginal normal a termo, pesando 3.400 g, sem intercorrências, com alta com 48 horas de vida em aleitamento materno exclusivo. Mãe refere que o bebê mama bem, mas ela está muito preocupada porque percebeu que as fezes do bebê, que inicialmente eram escuras e pegajosas, agora estão amareladas, semissólidas, com grumos e ocorrem cerca de 6 a 8 vezes ao dia, quase sempre logo após as mamadas. O bebê apresenta-se ativo, reativo, hidratado, corado, anictérico, abdome flácido e globoso, sem visceromegalias, pesando atualmente 3.350 g. Qual a orientação correta a ser dada à mãe?
+a) Diagnosticar diarreia aguda infecciosa neonatal e prescrever antibiótico oral associado a zinco e soro de reidratação oral.
+►b) Orientar que o padrão de evacuação e aspecto das fezes são absolutamente normais para lactente em aleitamento materno exclusivo (reflexo gastrocólico exacerbado) e incentivar a manutenção do aleitamento materno exclusivo sob livre demanda.
+c) Suspender temporariamente o aleitamento materno por 48 horas e introduzir fórmula infantil sem lactose pelo risco de intolerância transitória à lactose do lactente.
+d) Solicitar coprocultura, pesquisa de rotavírus nas fezes e hemograma completo com urgência antes de definir a conduta.
+e) Prescrever simeticona gotas para cólicas e orientar a mãe a espaçar as mamadas para intervalos rígidos de 3 em 3 horas para reduzir o volume de fezes.
+
+62 - Recém-nascido a termo, com 36 horas de vida, em alojamento conjunto, apresenta icterícia visível no tronco e abdome (zonas II e III de Kramer). Nasceu de parto normal, peso de 3.200 g, Apgar 9/10, hígido, tipo sanguíneo O positivo, de mãe A negativa, primigesta, que nega transfusões de sangue prévias. O bebê está ativo, reativo e mamando bem ao seio materno. Os exames laboratoriais iniciais colhidos revelam bilirrubina total de 14,5 mg/dL (com fração indireta de 13,8 mg/dL), hemoglobina de 15,2 g/dL, reticulócitos de 6,5% e teste de Coombs direto positivo. Qual é o diagnóstico provável e a conduta imediata indicada para o caso?
+►a) Doença hemolítica perinatal por incompatibilidade Rh; início imediato de fototerapia de alta intensidade e monitorização frequente de bilirrubinas.
+b) Icterícia fisiológica do recém-nascido; conduta expectante e orientação de banho de sol em domicílio após a alta hospitalar.
+c) Icterícia pelo leite materno; suspensão do aleitamento materno por 24 horas e introdução de fototerapia se a bilirrubina ultrapassar 18 mg/dL.
+d) Atresia de vias biliares extra-hepáticas; encaminhamento imediato para cirurgia de Kasai de urgência.
+e) Síndrome de Crigler-Najjar tipo I; internação em UTI neonatal e programação de exanguíneotransfusão de urgência.
+
+63 - Em relação ao diagnóstico e tratamento da tuberculose na infância e adolescência, conforme o Manual do Ministério da Saúde do Brasil de 2018, assinale a alternativa correta.
+a) O diagnóstico de tuberculose pulmonar em crianças menores de 10 anos baseia-se prioritariamente na positividade da baciloscopia direta do escarro obtida por indução.
+►b) O sistema de escore do Ministério da Saúde avalia parâmetros clínicos, radiológicos, epidemiológicos (histórico de contato com adulto bacilífero) e teste tuberculínico (PT) para o diagnóstico de tuberculose pulmonar em crianças de forma indireta, dispensando confirmação bacteriológica na maioria dos casos.
+c) O esquema terapêutico básico para o tratamento da tuberculose pulmonar em crianças menores de 10 anos inclui o uso de rifampicina, isoniazida, pirazinamida e etambutol (RIPE) na fase de ataque por 2 meses.
+d) A vacina BCG confere proteção de quase 100% contra todas as formas de tuberculose pulmonar e extrapulmonar na infância, não devendo a doença ser considerada em crianças adequadamente vacinadas.
+e) O teste cutâneo tuberculínico (PT) com leitura de 5 mm de enduração em criança vacinada com BCG há menos de dois anos deve ser interpretado sempre como infecção latente por tuberculose ativa.
+
+64 - Em relação à meningite meningocócica na infância, considere as seguintes afirmativas:
+1. O Neisseria meningitidis é um diplococo Gram-negativo que possui diversos sorogrupos, sendo os sorogrupos B e C os mais prevalentes no Brasil historicamente.
+2. A quimioprofilaxia de contatos íntimos de caso confirmado de meningite meningocócica está indicada para reduzir o status de portador nasofaringeo e prevenir casos secundários, sendo a rifampicina a droga de escolha na infância.
+3. O sinal de Brudzinski positivo caracteriza-se pela flexão involuntária dos joelhos e quadril quando se realiza a flexão passiva do pescoço do paciente em decúbito dorsal.
+4. A vacinação meningocócica conjugada quadrivalente (ACWY) faz parte do calendário oficial de vacinação do Ministério da Saúde do Brasil para adolescentes na faixa etária de 11 a 12 anos.
+Assinale a alternativa correta.
+a) Somente as afirmativas 1 e 3 são verdadeiras.
+b) Somente as afirmativas 2 e 4 são verdadeiras.
+c) Somente as afirmativas 1, 2 e 3 são verdadeiras.
+►d) As afirmativas 1, 2, 3 e 4 são verdadeiras.
+e) Somente a afirmativa 3 é verdadeira.
+
+65 - Em relação ao calendário de vacinação da criança do Ministério da Saúde do Brasil (2018/2019), assinale a alternativa INCORRETA.
+a) A vacina pentavalente (DTP + Hib + HepB) deve ser administrada aos 2, 4 e 6 meses de idade.
+b) A vacina oral contra o rotavírus humano (G1P[8]) possui limites rígidos de idade para administração da primeira e segunda doses, não devendo ser iniciada após 3 meses e 15 dias de vida.
+►c) A vacina tríplice viral (sarampo, caxumba e rubéola) deve ter sua primeira dose administrada aos 9 meses de idade de rotina para todas as crianças no Brasil.
+d) A vacina contra a hepatite A (inativada) deve ser administrada em dose única aos 15 meses de idade.
+e) A vacina meningocócica C conjugada deve ser administrada aos 3 e 5 meses de idade, com dose de reforço aos 12 meses de idade.
+
+66 - Lactente de 8 meses apresenta quadro de lesões eritematosas, úmidas, com presença de pápulas e placas de limites imprecisos localizadas na região malar bilateral (bochechas) e superfícies extensoras de membros inferiores, associadas a prurido intenso e irritabilidade crônica. Refere histórico de rinite alérgica na mãe. O diagnóstico provável e a orientação terapêutica correta para o caso são, respectivamente:
+a) Dermatite seborreica infantil; uso de xampu com cetoconazol nas lesões e suspensão de alimentos alergênicos da dieta.
+►b) Dermatite atópica; hidratação intensiva da pele com emolientes sem perfume, banhos rápidos e mornos, uso de corticoide tópico de baixa potência nas lesões agudas inflamatórias por tempo limitado.
+c) Escabiose clássica; aplicação de permetrina 5% creme em todo o corpo por 3 noites consecutivas e tratamento de todos os familiares.
+d) Impetigo bolhoso estreptocócico; antibioticoterapia por via oral com cefalexina por 10 dias e curativos locais com água oxigenada.
+e) Psoríase infantil; fototerapia UVB de banda estreita e corticoterapia sistêmica por via oral.
+
+67 - Menina de 6 anos é levada ao consultório de pediatria com queixa de corrimento vaginal e coceira na região perineal há duas semanas, com piora importante do prurido no período noturno, prejudicando o sono da criança. Ao exame físico ginecológico infantil, visualiza-se discreto eritema vulvar e escoriações perineais por coçadura, sem corrimento purulento ou corpos estranhos em vagina. Qual a hipótese diagnóstica parasitária mais provável e o exame complementar de escolha para confirmação diagnóstica?
+a) Tricomoníase vaginal; exame microscópico direto a fresco do conteúdo vaginal.
+b) Giardíase intestinal; exame parasitológico de fezes pelo método de Hoffman (3 amostras).
+►c) Enterobíase (oxiuríase) por Enterobius vermicularis; teste da fita adesiva transparente na região perianal (método de Graham) realizado pela manhã antes do banho.
+d) Candidíase vulvovaginal; cultura em meio Sabouraud do raspado vulvar.
+e) Escabiose vulvar; biópsia de pele da região vulvar para pesquisa de Sarcoptes scabiei.
+
+68 - Em relação à paralisia facial periférica (paralisia de Bell) na infância, assinale a alternativa correta.
+►a) Clinicamente caracteriza-se por fraqueza ou paralisia completa de todos os músculos da expressão facial ipsilaterais à lesão, incluindo a incapacidade de franzir a testa e fechar o olho (sinal de Bell).
+b) A lesão do neurônio motor superior (paralisia facial central) poupa os músculos da porção inferior da face, acometendo apenas a musculatura da testa e pálpebra superior.
+c) O tratamento de escolha na fase aguda consiste em antibioticoterapia de largo espectro associada a anti-inflamatórios não esteroidais.
+d) A indicação de cirurgia de descompressão do nervo facial é mandatória em todos os casos de paralisia de Bell na infância nas primeiras 48 horas de sintomas.
+e) O prognóstico de recuperação completa na infância é ruim, com sequelas motoras definitivas em mais de 80% das crianças afetadas.
+
+69 - O desenvolvimento neuropsicomotor da criança é um processo contínuo e ordenado. Qual das seguintes sequências de marcos do desenvolvimento motor e social está correta e corresponde à idade cronológica esperada para uma criança nascida a termo normal?
+a) Sustenta a cabeça aos 6 meses; senta sem apoio aos 12 meses; anda sem apoio aos 24 meses.
+b) Sorriso social aos 6 meses; pinça digital aos 9 meses; fala frases simples aos 18 meses.
+►c) Sustenta a cabeça aos 3 meses; senta sem apoio aos 6 a 7 meses; anda sem apoio aos 12 a 15 meses; fala palavras isoladas aos 12 meses.
+d) Pinça digital aos 3 meses; engatinha aos 6 meses; senta com apoio aos 9 meses; brincadeira cooperativa aos 18 meses.
+e) Sustenta a cabeça aos 6 meses; sorriso social aos 2 meses; senta sem apoio aos 9 meses; anda sem apoio aos 18 meses.
+
+70 - Em relação à asma infantil na faixa etária menor de 5 anos, assinale a alternativa INCORRETA.
+a) O diagnóstico de asma baseia-se prioritariamente em parâmetros clínicos de recorrência de sibilância, tosse e dificuldade respiratória, na ausência de outras causas identificáveis.
+b) O uso de corticoides inalatórios em doses baixas de uso diário contínuo é o tratamento preferencial de manutenção para crianças com asma não controlada.
+c) Espirometria convencional com teste de broncodilatação é um exame de difícil realização técnica e pouca utilidade diagnóstica rotineira em crianças menores de 5 anos.
+►d) O uso de beta-2-agonistas de longa duração (LABA) isolados, sem associação com corticoides inalatórios, é seguro e recomendado como terapia de manutenção em lactentes sibilantes recorrentes.
+e) A presença de dermatite atópica na criança ou histórico de asma nos pais são fortes fatores preditores de persistência da asma na vida escolar e adulta (índice preditivo de asma positivo).
+
+71 - Lactente de 18 meses é levado ao pronto atendimento por tosse rouca ("tosse de cachorro"), estridor inspiratório discreto em repouso e rouquidão há 12 horas. Nega febre alta ou disfagia. Apresenta-se ativo, sem desconforto respiratório grave, SpO2 97% em ar ambiente. Qual o diagnóstico provável e a conduta terapêutica imediata mais adequada para o caso?
+►a) Laringotraqueobronquite aguda (crupe viral) leve a moderada; administração de dose única de dexametasona por via oral ou intramuscular (0,6 mg/kg) e observação clínica.
+b) Epiglotite aguda bacteriana; intubação orotraqueal imediata sob anestesia e início de ceftriaxona endovenosa.
+c) Aspiração de corpo estranho laríngeo; encaminhamento imediato para broncoscopia rígida de urgência sob anestesia geral.
+d) Abscesso retrofaríngeo; internação para drenagem cirúrgica por via transoral e antibioticoterapia endovenosa.
+e) Crise asmática grave; nebulização com beta-2-agonista associado a ipratrópio a cada 20 minutos por 3 vezes e oxigenoterapia.
+
+72 - Paciente de 8 anos apresenta queixa de dor abdominal recorrente há 4 meses, de localização periumbilical, de intensidade moderada, sem irradiação, sem relação com alimentação ou evacuações. Nega febre, vômitos, perda de peso, alteração do hábito intestinal ou sangramentos. Exame físico geral e abdominal completamente normais, incluindo peso e estatura adequados para a idade. Qual a conduta correta a ser adotada?
+a) Solicitar colonoscopia com biópsias múltiplas para descartar doença inflamatória intestinal.
+b) Solicitar tomografia computadorizada de abdome total com contraste endovenoso para investigação de massas retroperitoneais.
+►c) Diagnosticar dor abdominal funcional da infância (critérios de Roma IV); orientar e tranquilizar os familiares sobre a natureza benigna do quadro, investigar fatores de estresse psicossocial escolares ou familiares, e evitar exames invasivos desnecessários.
+d) Iniciar tratamento empírico com omeprazol 20 mg/dia por 8 semanas pela suspeita de doença do refluxo gastroesofágico de apresentação atípica.
+e) Solicitar trânsito intestinal contrastado e dosagem de amilase e lipase séricas.
+
+73 - Em relação ao diagnóstico de doença celíaca na infância, conforme as diretrizes recentes da ESPGHAN (European Society for Paediatric Gastroenterology, Hepatology and Nutrition), assinale a alternativa correta.
+a) O diagnóstico histológico por meio de biópsias de duodeno obtidas por endoscopia digestiva alta é obrigatório para confirmar a doença em todos os pacientes pediátricos, sem exceções.
+►b) O diagnóstico de doença celíaca pode ser realizado sem a realização de endoscopia e biópsia duodenal em crianças selecionadas que apresentem sintomas clássicos, títulos de anticorpo anti-transglutaminase tecidual recombinante IgA (tTG-IgA) ≥ 10 vezes o limite superior da normalidade, associado a positividade do anticorpo anti-endomísio IgA (EMA-IgA) em segunda amostra de sangue e presença de haplótipos HLA-DQ2 ou DQ8 positivos.
+c) O teste sorológico de triagem inicial de escolha na suspeita de doença celíaca em crianças maiores de dois anos é a dosagem de anticorpos anti-gliadina IgG e IgA.
+d) A dieta isenta de glúten deve ser iniciada imediatamente no momento da suspeita clínica, antes da realização de exames sorológicos, para aliviar os sintomas do paciente rapidamente.
+e) A doença celíaca apresenta-se exclusivamente na forma clássica de diarreia crônica com esteatorreia e desnutrição grave em escolares e adolescentes.
+
+74 - Menino de 3 anos é levado ao pronto atendimento por palidez de início progressivo há duas semanas associada a irritabilidade e recusa alimentar parcial. Nega febre, sangramentos ou visceromegalias ao exame físico. Mãe refere que a criança consome cerca de 1 litro de leite de vaca integral por dia e quase não aceita alimentos sólidos. Hemograma demonstra: Hb 6,5 g/dL, VCM 58 fL, HCM 18 pg, RDW 18,5%, plaquetas 480.000/mm3, leucócitos normais, reticulócitos normais. Qual o diagnóstico provável e o tratamento indicado?
+a) Anemia megaloblástica por deficiência de ácido fólico; reposição de ácido fólico por via oral.
+►b) Anemia ferropriva por consumo excessivo de leite de vaca (anemia do leite); orientação de redução drástica da ingesta de leite, incentivo à alimentação sólida variada e reposição de ferro elementar (3 a 6 mg/kg/dia) por via oral por pelo menos 3 a 4 meses.
+c) Beta-talassemia menor; aconselhamento genético e contraindicação de reposição de ferro.
+d) Anemia de doença crônica; investigação de focos infecciosos ocultos e transfusão de concentrado de hemácias.
+e) Esferocitose hereditária; encaminhamento para esplenectomia programada após os 5 anos de idade.
+
+75 - O carcinoma de córtex adrenal (carcinoma de suprarrenal) na infância é um tumor raro que apresenta elevada incidência no Sul e Sudeste do Brasil, frequentemente associado à mutação germinativa R337H do gene TP53. Qual a apresentação clínica mais comum desse tumor em crianças menores de 5 anos?
+►a) Virilização isolada ou associada a síndrome de Cushing (puberdade precoce heterossexual em meninas ou homossexual em meninos, acne, hirsutismo, hipertrofia de clitóris ou pênis, hipertensão e ganho de peso).
+b) Insuficiência adrenal aguda com crise perdedora de sal (hiponatremia, hiperpotassemia e choque).
+c) Febre de origem indeterminada associada a anemia hemolítica autoimune microangiopática.
+d) Dor óssea difusa por metástases precoces associada a pancitopenia por infiltração medular.
+e) Hematúria macroscópica assintomática associada a massa abdominal palpável que ultrapassa a linha média.
+
+76 - Em relação ao hipotireoidismo congênito (HC), assinale a alternativa correta.
+a) O HC apresenta manifestações clínicas exuberantes e típicas logo ao nascimento na maioria dos recém-nascidos afetados, permitindo o diagnóstico clínico precoce seguro.
+►b) O Programa Nacional de Triagem Neonatal (teste do pezinho) realiza a triagem primária do HC por meio da dosagem de TSH em sangue capilar em papel de filtro obtido idealmente entre o 3.º e 5.º dia de vida.
+c) O tratamento do HC com levotiroxina sódica deve ser iniciado somente após os dois meses de vida, quando o desenvolvimento cerebral do lactente já se encontra maduro.
+d) A dosagem de TSH coletada nas primeiras 24 horas de vida apresenta elevada acurácia diagnóstica, não sofrendo influência do pico fisiológico neonatal de TSH.
+e) A disgenesia tireoidiana (ectopia, hipoplasia ou agenesia) é causa rara de HC, sendo a disormonogênese tireoidiana autossômica recessiva responsável por mais de 90% dos casos.
+
+77 - Sabe-se que a triagem neonatal biológica no Brasil (teste do pezinho) engloba o diagnóstico de várias doenças genéticas, metabólicas e infecciosas na sua versão básica oferecida pelo SUS. Dentre as doenças abaixo relacionadas, qual NÃO faz parte do Programa Nacional de Triagem Neonatal básico obrigatório no Brasil?
+a) Fenilcetonúria.
+b) Fibrose cística.
+c) Hiperplasia adrenal congênita.
+►d) Doença de Gaucher.
+e) Hemoglobinopatias (anemia falciforme e outras).
+
+78 - Conforme os critérios diagnósticos de crise asmática em crianças menores de 5 anos, qual das seguintes características clínicas de gravidade define uma crise asmática como MUITO GRAVE ou com risco iminente de parada respiratória?
+a) Frequência respiratória de 45 incursões por minuto em lactente.
+b) Sibilância difusa audível na expiração sem esforço respiratório acessório.
+►c) Tórax silencioso à ausculta pulmonar (ausência de sibilos e murmúrio vesicular muito diminuído devido ao fluxo de ar extremamente reduzido), cianose central ou alteração do estado mental (confusão, letargia ou agitação psicomotora).
+d) Capacidade de falar palavras isoladas com interrupções frequentes.
+e) Uso discreto de musculatura acessória (tiragem intercostal leve).
+
+79 - Em relação à pneumonia adquirida na comunidade (PAC) em pediatria, qual é o agente etiológico bacteriano típico mais comum em crianças maiores de 5 anos (escolares e adolescentes)?
+a) Streptococcus agalactiae (GBS).
+b) Chlamydia trachomatis.
+c) Staphylococcus aureus.
+►d) Mycoplasma pneumoniae.
+e) Klebsiella pneumoniae.
+
+80 - Criança de 6 anos, admitida no pronto atendimento com insuficiência respiratória aguda secundária a broncoespasmo grave refratário, é intubada e colocada em ventilação mecânica invasiva. Gasometria arterial colhida 30 minutos após o início da ventilação mecânica demonstra: pH 7,12, pCO2 82 mmHg, pO2 95 mmHg, HCO3 26 mEq/L, BE -4. Qual o diagnóstico do distúrbio ácido-básico evidenciado?
+►a) Acidose respiratória aguda descompensada.
+b) Acidose metabólica grave com alcalose respiratória compensatória.
+c) Alcalose respiratória aguda com acidose metabólica compensatória.
+d) Acidose mista (respiratória e metabólica simultâneas).
+e) Gasometria dentro dos parâmetros da normalidade para paciente ventilado.
+
+MEDICINA PREVENTIVA E SOCIAL
+
+81 - A reatividade cruzada em testes sorológicos para o diagnóstico do HIV pode produzir resultados falso-reagentes em indivíduos saudáveis ou portadores de outras condições clínicas. Dentre as condições abaixo relacionadas, qual NÃO está classicamente associada com a ocorrência de resultados falso-reagentes em imunoensaios de triagem para o HIV?
+a) Gravidez múltipla multiparidade.
+b) Doenças autoimunes ativas (ex: lúpus eritematoso sistêmico).
+c) Vacinação recente contra a influenza.
+►d) Diabetes mellitus tipo 1 compensado.
+e) Insuficiência renal crônica em programa de hemodiálise.
+
+82 - Em relação aos aspectos epidemiológicos das micoses sistêmicas no Brasil, assinale a alternativa INCORRETA.
+a) A esporotricose é atualmente considerada uma zoonose urbana em expansão no Brasil, sendo o Sporothrix brasiliensis o principal agente envolvido na transmissão felina.
+b) A paracoccidioidomicose é uma micose sistêmica endêmica no Brasil, cujo agente etiológico vive em solos de áreas agrícolas, acometendo principalmente trabalhadores rurais do sexo masculino.
+►c) A histoplasmose pulmonar aguda ocorre principalmente por inalação de conídios de Histoplasma capsulatum presentes em solos contaminados com fezes de cães e gatos domésticos.
+d) O tratamento de escolha para formas leves a moderadas de paracoccidioidomicose e esporotricose na ausência de acometimento meníngeo é o uso por via oral de itraconazol.
+e) A esporotricose humana pode se manifestar de forma atípica com lesões oculares (conjuntivite granulomatosa) ou formas sistêmicas em pacientes imunodeprimidos.
+
+83 - Em relação ao preenchimento da Declaração de Óbito (DO) no Brasil, conforme as normas do Ministério da Saúde e do Conselho Federal de Medicina, assinale a alternativa correta.
+►a) Em caso de morte por causa externa (acidentes de trânsito, homicídios, suicídios ou quedas acidentais), o preenchimento da DO é de competência exclusiva do médico legista do Instituto Médico Legal (IML), independentemente do tempo de internação hospitalar do paciente.
+b) Se um paciente internado por causa natural evoluir para óbito no hospital sem médico assistente definido e na ausência de Serviço de Verificação de Óbito (SVO) no município, a DO deve ser preenchida pelo médico legista do IML local.
+c) O médico do Serviço de Atendimento Móvel de Urgência (SAMU) que atesta o óbito em domicílio por causa natural deve sempre preencher a DO no local do atendimento.
+d) Em municípios que contam com Serviço de Verificação de Óbito (SVO), as mortes violentas de causa externa que ocorrem em domicílio devem ser encaminhadas para o SVO para realização de necropsia e preenchimento da DO.
+e) O preenchimento da causa básica da morte na DO deve priorizar sempre o mecanismo terminal da morte, como parada cardiorrespiratória ou falência múltipla de órgãos, mencionando a doença primária apenas de forma acessória.
+
+84 - O estudo epidemiológico de coorte apresenta características metodológicas específicas que o diferenciam de outros desenhos de pesquisa. Qual das seguintes alternativas apresenta uma vantagem clássica dos estudos de coorte?
+a) Baixo custo operacional e execução rápida, ideal para avaliação de doenças muito raras de longo período de latência.
+►b) Capacidade de estabelecer relação de temporalidade segura entre a exposição ao fator de risco e o desenvolvimento do desfecho (incidência), minimizando vieses de seleção e memória.
+c) Facilidade de execução em ambiente ambulatorial pequeno por não exigir acompanhamento longitudinal dos participantes ao longo do tempo.
+d) Ausência total de perdas de seguimento ("vieses de atrito") ao longo do período de acompanhamento da pesquisa.
+e) Dispensa de aprovação por comitês de ética em pesquisa por se tratar de estudo puramente observacional sem intervenções diretas.
+
+85 - Em relação às medidas de associação e impacto em estudos epidemiológicos, o Número Necessário para Tratar (NNT) é uma medida clínica útil que representa o número de pacientes que precisam receber uma determinada intervenção terapêutica para evitar a ocorrência de um desfecho adverso. O NNT é calculado como o inverso matematicamente de qual das seguintes medidas?
+a) Risco Relativo (RR).
+b) Razão de Chances (Odds Ratio).
+►c) Redução Absoluta do Risco (RAR) ou Diferença de Riscos entre os grupos.
+d) Redução Relativa do Risco (RRR).
+e) Incidência Acumulada no grupo exposto.
+
+86 - No rastreamento de doenças crônicas em populações assintomáticas, o uso de exames com alta sensibilidade e exames com alta especificidade destina-se a finalidades diferentes. Qual a combinação correta de propriedades desejadas para um teste de triagem inicial em massa e para um teste confirmatório subsequente, respectivamente?
+►a) Alta sensibilidade para minimizar falso-negativos (capturar todos os prováveis doentes) e alta especificidade para minimizar falso-positivos (confirmar o diagnóstico real e evitar tratamentos desnecessários).
+b) Alta especificidade para minimizar falso-negativos e alta sensibilidade para minimizar falso-positivos.
+c) Baixa sensibilidade para reduzir custos e alta especificidade para triagem populacional rápida.
+d) Alta acurácia isolada, independentemente de sensibilidade ou especificidade, para ambos os momentos diagnósticos.
+e) Alta sensibilidade para confirmação diagnóstica e alta especificidade para triagem inicial de rotina.
+
+87 - A Norma Regulamentadora 32 (NR 32) do Ministério do Trabalho e Emprego do Brasil estabelece as diretrizes básicas para a implementação de medidas de proteção à segurança e à saúde dos trabalhadores dos serviços de saúde. Em relação à proteção radiológica de trabalhadores expostos a radiações ionizantes na prática médica, assinale a alternativa correta.
+►a) A monitoração individual da dose de radiação recebida pelo trabalhador exposto deve ser realizada mensalmente por meio de dosimetria individual, devendo os relatórios ser mantidos à disposição por tempo prolongado.
+b) Mulheres grávidas podem manter atividades regulares de exposição direta a radiações ionizantes, desde que utilizem avental de chumbo duplo e dosímetro de abdome adicional semanal.
+c) As salas de raios X necessitam de sinalização luminosa vermelha externa de "raios X ligado" que deve permanecer acesa continuamente durante todo o horário de funcionamento do serviço de saúde, independentemente da realização de exames.
+d) O auxiliar de limpeza que atua na higienização de salas de radiodiagnóstico médico após o término do expediente diário possui elevado risco de exposição ocupacional à radiação acumulada no ar da sala, exigindo dosimetria individual de rotina.
+e) Equipamentos de proteção individual (EPIs) como avental plumbífero e protetor de tireoide são de uso opcional para a equipe médica que realiza procedimentos hemodinâmicos sob fluoroscopia contínua.
+
+88 - A Vigilância em Saúde do Trabalhador e da Trabalhadora (VISAT) constitui um componente essencial do SUS que visa à promoção da saúde e à redução da morbimortalidade decorrente dos processos produtivos. No âmbito da Atenção Primária à Saúde, qual a responsabilidade principal da equipe da Unidade Básica de Saúde na VISAT?
+a) Realizar fiscalizações de segurança do trabalho com aplicação de multas e interdição de estabelecimentos industriais irregulares no território do município.
+►b) Identificar o perfil produtivo do território, registrar a ocupação e o ramo de atividade econômica dos usuários nos prontuários médicos, e suspeitar do nexo causal entre o trabalho e as patologias apresentadas para subsidiar ações de prevenção e notificação no SINAN.
+c) Realizar exames admissionais e demissionais obrigatórios para todas as empresas privadas instaladas no território do município.
+d) Emitir laudos de insalubridade e periculosidade para fins de concessão de adicionais salariais previstos na CLT para trabalhadores do setor privado.
+e) Assumir a gestão exclusiva dos Centros de Referência em Saúde do Trabalhador (CEREST) estaduais.
+
+89 - Um trabalhador exposto cronicamente a níveis elevados de ruído ocupacional sem proteção adequada desenvolve Perda Auditiva Induzida por Ruído (PAIR). Qual das seguintes características clínicas e audiométricas NÃO é esperada na PAIR clássica?
+a) Perda auditiva do tipo sensorioneural, quase sempre bilateral e simétrica.
+b) Redução inicial da acuidade auditiva afetando as frequências mais altas (principalmente 3.000, 4.000 ou 6.000 Hz), com preservação inicial das frequências da fala.
+►c) Perda auditiva do tipo condutiva, reversível após repouso acústico prolongado de 48 horas em ambiente silencioso.
+d) Sintomas associados como zumbido de tonalidade aguda bilateral e dificuldade de compreensão da fala em ambientes ruidosos.
+e) Progressão lenta ao longo dos anos de exposição continuada, tendendo a estabilizar assim que cessa a exposição ao ruído intenso.
+
+90 - A Comunicação de Acidente de Trabalho (CAT) é um documento legal de emissão obrigatória para trabalhadores sob regime da CLT que sofreram acidente de trabalho ou doença profissional/trabalho. Em relação à emissão da CAT, assinale a alternativa correta.
+a) A CAT deve ser emitida exclusivamente pelo médico do trabalho da empresa onde o trabalhador atua, não possuindo validade legal se preenchida por médico do SUS ou do plano de saúde assistente.
+►b) A empresa possui a obrigação legal de emitir a CAT até o primeiro dia útil seguinte ao da ocorrência e, em caso de recusa ou atraso da empresa, o próprio trabalhador, o sindicato de sua categoria, o médico assistente ou autoridade pública podem proceder à sua emissão.
+c) A CAT só deve ser emitida se o acidente de trabalho resultar em afastamento das atividades laborais por período superior a 15 dias com necessidade de benefício previdenciário.
+d) O preenchimento do diagnóstico da lesão ou CID na CAT pelo médico assistente é estritamente proibido pelo código de ética médica, mesmo com autorização expressa do paciente, para preservar o sigilo das informações do trabalhador perante a empresa.
+e) A emissão da CAT em caso de óbito do trabalhador decorrente de acidente de trabalho deve ser realizada em até 10 dias após o sepultamento do trabalhador.
+
+91 - O modelo assistencial da Atenção Primária à Saúde (APS) no Brasil, centrado na Estratégia Saúde da Família (ESF), baseia-se em princípios e atributos essenciais. Qual das seguintes alternativas define corretamente o atributo da "Longitudinalidade" da APS?
+a) Garantia de que o paciente terá acesso a consultas médicas rápidas e exames complexos de forma descentralizada em diversas unidades de saúde ao longo do território do município.
+b) Capacidade do serviço de saúde de oferecer assistência para todas as necessidades de saúde apresentadas pela população, abrangendo ações de promoção, prevenção, cura e reabilitação.
+►c) Existência de uma relação terapêutica contínua ao longo do tempo entre o usuário e os profissionais de saúde da sua equipe de referência na unidade de saúde, independentemente da presença ou ausência de doenças.
+d) Integração de todas as informações clínicas do paciente em um prontuário eletrônico unificado acessível por todos os níveis de complexidade do sistema de saúde.
+e) Atuação intersetorial coordenada com assistência social e educação para melhoria dos determinantes sociais da saúde da comunidade.
+
+92 - Sabe-se que o sanitarismo campanhista do início da República brasileira, cujos marcos históricos incluem as reformas urbanas e sanitárias do Rio de Janeiro sob a liderança de Oswaldo Cruz e as campanhas contra a febre amarela, peste bubônica e varíola, caracterizou-se metodologicamente por ações de:
+a) Ampla participação popular nas decisões sanitárias com fóruns comunitários democráticos de saúde.
+►b) Caráter militarizado e impositivo, com intervenções diretas nos domicílios da população (como as brigadas "mata-mosquitos" e vacinação obrigatória), sem prévia educação em saúde ou diálogo comunitário.
+c) Foco prioritário na atenção primária continuada e no rastreamento de doenças crônico-degenerativas na população idosa rural.
+d) Integração verticalizada das ações de saúde previdenciárias e de saneamento básico universal sob gestão compartilhada de municípios e estados.
+e) Criação de cooperativas de saúde privadas complementares subsidiadas pelo governo federal para atendimento de trabalhadores fabris.
+
+93 - Em relação ao genograma familiar, que é uma representação gráfica detalhada da estrutura e dinâmica de uma família ao longo de gerações utilizada na medicina de família, é correto afirmar que os homens são representados por qual símbolo geométrico e as mulheres por qual, respectivamente?
+a) Círculo e triângulo.
+►b) Quadrado e círculo.
+c) Retângulo e losango.
+d) Círculo e quadrado.
+e) Losango e triângulo.
+
+94 - Na metodologia científica de ensaios clínicos randomizados, o mascaramento (cegamento) é uma técnica fundamental para minimizar vieses. O termo "estudo duplo-cego" indica que o mascaramento foi aplicado simultaneamente a quais dos seguintes participantes da pesquisa?
+a) Aos pesquisadores estatísticos e aos revisores da revista científica que publicará o artigo.
+►b) Aos participantes do estudo (pacientes) que recebem a intervenção e aos profissionais de saúde (médicos) responsáveis pela aplicação ou avaliação da intervenção.
+c) Aos comitês de ética em pesquisa e aos patrocinadores da indústria farmacêutica financiadora da pesquisa.
+d) Aos formuladores de políticas públicas de saúde e aos diretores dos hospitais participantes da pesquisa.
+e) Aos pacientes que recebem o placebo e aos pacientes que recebem a droga ativa em grupos separados fisicamente.
+
+95 - A transição demográfica e epidemiológica vivenciada pelo Brasil nas últimas décadas caracteriza-se por mudanças significativas no perfil populacional e de adoecimento da população. Quais as principais tendências observadas nesse processo no país?
+►a) Envelhecimento populacional acelerado (aumento da proporção de idosos) associado à transição epidemiológica caracterizada pela tripla carga de doenças (predomínio de doenças crônicas não transmissíveis, coexistindo com causas externas e persistência de doenças infecciosas e parasitárias).
+b) Aumento acentuado das taxas de natalidade e mortalidade infantil de causa infecciosa, reduzindo a expectativa de vida média do brasileiro.
+c) Redução da expectativa de vida ao nascer decorrente do ressurgimento de epidemias de poliomielite e varíola em áreas urbanas de grande densidade populacional.
+d) Estabilização completa das taxas de envelhecimento populacional com aumento da proporção de crianças de 0 a 14 anos na população geral.
+e) Desaparecimento total das doenças infecciosas do perfil epidemiológico brasileiro, restando apenas causas externas e neoplasias malignas de mama e próstata.
+
+96 - A Lei Orgânica da Saúde no Brasil (Lei 8.080 de 1990) detalha a organização e o funcionamento do Sistema Único de Saúde (SUS). Conforme essa lei, o princípio que garante a assistência integral ao indivíduo, entendida como um conjunto articulado e contínuo de ações e serviços preventivos e curativos, individuais e coletivos, exigidos para cada caso em todos os níveis de complexidade do sistema, é denominado:
+a) Universalidade.
+b) Descentralização político-administrativa.
+c) Equidade.
+►d) Integralidade.
+e) Participação da comunidade.
+
+97 - Conforme a Portaria de Consolidação n.º 2 do Ministério da Saúde do Brasil, a Rede de Atenção à Saúde (RAS) estruturada com o objetivo de coordenar o cuidado e ordenar os fluxos de pacientes nos diferentes níveis de complexidade do sistema de saúde possui qual dos seguintes níveis de atenção como a principal "porta de entrada" preferencial e ordenadora da rede?
+►a) Atenção Primária à Saúde (Unidades Básicas de Saúde).
+b) Atenção Secundária (Centros de Especialidades Médicas).
+c) Atenção Terciária (Hospitais Gerais de Alta Complexidade).
+d) Rede de Urgência e Emergência (Pronto-Socorros e UPAs).
+e) Vigilância em Saúde (Vigilância Sanitária e Epidemiológica).
+
+98 - Um estudo epidemiológico de caso-controle foi realizado para avaliar a associação entre uso de telefones celulares e ocorrência de tumores cerebrais malignos. O pesquisador selecionou 500 pacientes com diagnóstico recente de tumor cerebral (casos) e 1.000 voluntários saudáveis de idade e sexo semelhantes sem diagnóstico de tumor (controles), aplicando um questionário detalhado sobre o histórico de uso de celulares nos últimos 10 anos. Qual a medida de associação epidemiológica apropriada para estimar o risco de adoecimento neste estudo?
+a) Risco Relativo (RR).
+b) Taxa de Incidência Acumulada.
+►c) Razão de Chances (Odds Ratio).
+d) Prevalência de tumor cerebral.
+e) Fração Atribuível na População.
+
+99 - Em relação ao financiamento do SUS no Brasil, a Emenda Constitucional n.º 95 de 2016, que instituiu o Novo Regime Fiscal conhecido como "Teto de Gastos", promoveu qual das seguintes alterações nos recursos federais destinados à saúde pública?
+►a) Congelou os limites dos gastos públicos federais em saúde e outras políticas sociais por 20 anos, corrigidos anualmente apenas pela inflação medida pelo IPCA, impactando negativamente o financiamento e a expansão do SUS em face do envelhecimento populacional.
+b) Duplicou os investimentos federais na atenção básica por meio de repasses adicionais automáticos baseados no PIB nacional.
+c) Centralizou todo o financiamento do SUS na esfera estadual, isentando os municípios e a União de aportes financeiros regulares.
+d) Garantiu que pelo menos 25% da receita corrente líquida da União fosse repassada mensalmente para o Fundo Nacional de Saúde.
+e) Extinguiu todos os repasses financeiros de blocos de custeio e investimento para municípios com menos de 50 mil habitantes.
+
+100 - O controle social no SUS, garantindo a participação da comunidade na gestão do sistema de saúde, é regulamentado pela Lei Orgânica 8.142 de 1990. Conforme essa lei, os Conselhos de Saúde e as Conferências de Saúde possuem caráter e periodicidade de reunião ordinária, respectivamente:
+a) Caráter consultivo; os conselhos reúnem-se anualmente e as conferências a cada dois anos.
+►b) Caráter deliberativo (permanente e paritário); os conselhos reúnem-se mensalmente e as conferências a cada quatro anos convocadas pelo poder executivo ou extraordinariamente.
+c) Caráter meramente informativo; as conferências e conselhos reúnem-se de forma extraordinária apenas em situações de surto epidêmico.
+d) Caráter deliberativo corporativo; os conselhos possuem representação de 100% de profissionais médicos e reúnem-se semestralmente.
+e) Caráter fiscalizador sindical; as conferências reúnem-se ordinariamente a cada cinco anos.
