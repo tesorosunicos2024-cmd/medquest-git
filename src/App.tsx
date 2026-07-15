@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
 import { Mascot, MASCOT_PHRASES, pickPhrase } from './Mascot';
-import { normalizeQuestion } from './questionNormalize';
+import { normalizeQuestion, isUsableQuestion } from './questionNormalize';
 import { ENARE_EXTRA_QUESTIONS } from './enare_extra_questions';
 import { ENARE_2024_FULL as ENARE_2024_QUESTIONS } from './enare_2024_questions';
 import { ANAT_QUESTIONS } from './estudante_basico_anat';
@@ -59,11 +59,12 @@ import {
   bumpWin, fetchWins,
   type Friendship, type Battle, type Room,
 } from './social';
-import { 
-  Trophy, 
-  Flame, 
-  Zap, 
+import {
+  Trophy,
+  Flame,
+  Zap,
   Heart,
+  Snowflake,
   ChevronRight, 
   CheckCircle2, 
   XCircle, 
@@ -201,12 +202,36 @@ interface UserState {
   lastActiveDate: string;
   // Registro real de atividade por dia (data ISO 'YYYY-MM-DD' -> nº de questões respondidas).
   activityLog: Record<string, number>;
+  // Matérias estudadas em cada dia (data ISO 'YYYY-MM-DD' -> matéria -> nº de questões respondidas).
+  activitySubjects: Record<string, Record<string, number>>;
   // Último dia em que o usuário efetivamente estudou (para o streak diário).
   lastStudyDate: string;
+  // Congelamentos de sequência disponíveis (estilo Duolingo Streak Freeze).
+  // Protege o streak automaticamente quando 1 dia é perdido. Máx. 2 guardados.
+  streakFreezes: number;
+  // Dias (ISO 'YYYY-MM-DD') em que o streak foi salvo por um congelamento —
+  // usado pra mostrar o ícone de gelo no heatmap em vez de dia vazio/perdido.
+  frozenDays: string[];
+  // Flashcards criados pela própria pessoa (pergunta/resposta livres).
+  customFlashcards: CustomFlashcard[];
+}
+
+export interface CustomFlashcard {
+  id: string;
+  subject: string;
+  front: string;
+  back: string;
+  explanation?: string;
+  createdAt: number;
 }
 
 // Máximo de corações (recarrega para este valor a cada novo dia).
 const MAX_HEARTS = 5;
+
+// Streak Freeze (estilo Duolingo): protege a sequência quando a pessoa perde
+// um dia de estudo. Guarda no máximo 2; ganha +1 a cada 7 dias de streak.
+const MAX_STREAK_FREEZES = 2;
+const FREEZE_MILESTONE_DAYS = 7;
 
 // Embaralhamento uniforme (Fisher-Yates) — substitui o enviesado sort(()=>Math.random()-0.5).
 function shuffle<T>(arr: T[]): T[] {
@@ -225,6 +250,12 @@ export type QuizMode = 'foco' | 'zen';
 
 const ZEN_XP = 50;          // XP fixo por acerto no modo zen
 const FOCO_BASE_XP = 50;    // base do modo foco (sobe com o combo)
+
+// Simulado montado pelo usuário: prova longa de até 100 questões.
+const SIMULADO_SIZE = 100;
+// No simulado de residência, mistura questões da própria banca com questões
+// "baseadas na banca" (mesmos assuntos, de outras fontes). Alvo de ~70% da banca.
+const SIMULADO_BANCA_SHARE = 0.7;
 
 // Bônus de rapidez (modo foco): quanto mais rápido o acerto, mais XP.
 function speedBonusFor(seconds: number): number {
@@ -251,20 +282,130 @@ function dateKey(d: Date = new Date()): string {
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
+// Progresso é salvo por conta (uid), nunca numa chave global compartilhada —
+// senão um usuário novo no mesmo aparelho herdaria os dados de quem usou antes.
+const LAST_UID_KEY = 'mq_last_uid';
+function userStorageKey(uid: string): string {
+  return `mq_user_${uid}`;
+}
+
+// Estado zerado de um usuário novo. Usado tanto no primeiro carregamento
+// quanto sempre que detectamos uma conta diferente da que estava carregada.
+function makeDefaultUserState(): UserState {
+  const today = dateKey();
+  return {
+    name: '',
+    profileImage: undefined,
+    xp: 0,
+    level: 1,
+    streak: 0,
+    hearts: MAX_HEARTS,
+    dailyGoalDone: 0,
+    dailyGoalTotal: 10,
+    weeklyGoalDone: 0,
+    weeklyGoalTotal: 70,
+    friends: [],
+    mastery: {
+      'Clínica Médica': 0, 'Clínica Cirúrgica': 0, 'Pediatria': 0,
+      'Ginecologia & Obstetrícia': 0, 'Medicina de Família/SUS': 0,
+      'Anatomia': 0, 'Fisiologia': 0, 'Histologia': 0,
+      'Embriologia': 0, 'Microbiologia': 0, 'Imunologia': 0, 'Farmacologia': 0,
+    },
+    subjectAttempts: {},
+    planStartDate: today,
+    missedQuestionIds: [],
+    dailyQuestionsUsed: 0,
+    lastActiveDate: today,
+    activityLog: {},
+    activitySubjects: {},
+    lastStudyDate: '',
+    streakFreezes: 1,
+    frozenDays: [],
+    customFlashcards: [],
+  };
+}
+
+// Lê o snapshot local (se houver) de uma conta específica e mescla com os
+// padrões, aplicando o reset diário de corações/meta quando já é outro dia.
+function loadLocalUserState(uid: string): UserState {
+  const defaults = makeDefaultUserState();
+  try {
+    const saved = localStorage.getItem(userStorageKey(uid));
+    if (!saved) return defaults;
+    const parsed: UserState = JSON.parse(saved);
+    const isNewDay = parsed.lastActiveDate !== defaults.lastActiveDate;
+    return {
+      ...defaults,
+      ...parsed,
+      hearts: isNewDay ? MAX_HEARTS : (parsed.hearts ?? MAX_HEARTS),
+      dailyGoalDone: isNewDay ? 0 : (parsed.dailyGoalDone ?? 0),
+      dailyQuestionsUsed: isNewDay ? 0 : (parsed.dailyQuestionsUsed ?? 0),
+      activityLog: parsed.activityLog ?? {},
+      activitySubjects: parsed.activitySubjects ?? {},
+      lastStudyDate: parsed.lastStudyDate ?? '',
+      streakFreezes: parsed.streakFreezes ?? defaults.streakFreezes,
+      frozenDays: parsed.frozenDays ?? [],
+      customFlashcards: parsed.customFlashcards ?? [],
+      lastActiveDate: defaults.lastActiveDate,
+    };
+  } catch {
+    return defaults;
+  }
+}
+
 // Atualiza streak (dias consecutivos) e registra a atividade real do dia.
 // Chamado a cada questão respondida (certa ou errada).
-function dailyProgress(prev: UserState): Pick<UserState, 'streak' | 'lastStudyDate' | 'activityLog'> {
+//
+// Streak Freeze (estilo Duolingo): se a pessoa pulou dias e tem gelo
+// suficiente guardado, o streak é preservado automaticamente em vez de
+// zerar — cada dia pulado consome 1 gelo. Sem gelo suficiente, reinicia
+// em 1 como antes. A cada marco de 7 dias de streak, ganha +1 gelo (máx. 2).
+function dailyProgress(prev: UserState, subject?: string): Pick<UserState, 'streak' | 'lastStudyDate' | 'activityLog' | 'activitySubjects' | 'streakFreezes' | 'frozenDays'> {
   const today = dateKey();
   const yesterday = dateKey(new Date(Date.now() - 86400000));
   let streak = prev.streak;
   let lastStudyDate = prev.lastStudyDate;
+  let streakFreezes = prev.streakFreezes ?? 0;
+  let frozenDays = prev.frozenDays ?? [];
+
   if (prev.lastStudyDate !== today) {
-    // Primeiro estudo do dia: +1 se estudou ontem, senão recomeça em 1.
-    streak = prev.lastStudyDate === yesterday ? prev.streak + 1 : 1;
+    if (prev.lastStudyDate === '') {
+      streak = 1; // primeiro estudo de todos
+    } else if (prev.lastStudyDate === yesterday) {
+      streak = prev.streak + 1; // continuação normal
+    } else {
+      // Quantos dias corridos ficaram sem nenhum estudo entre o último
+      // dia estudado e hoje (exclusive nas duas pontas).
+      const lastDate = new Date(prev.lastStudyDate + 'T00:00:00');
+      const todayDate = new Date(today + 'T00:00:00');
+      const daysMissed = Math.round((todayDate.getTime() - lastDate.getTime()) / 86400000) - 1;
+
+      if (daysMissed > 0 && streakFreezes >= daysMissed) {
+        streakFreezes -= daysMissed;
+        const newlyFrozen: string[] = [];
+        for (let i = 1; i <= daysMissed; i++) {
+          const d = new Date(lastDate);
+          d.setDate(d.getDate() + i);
+          newlyFrozen.push(dateKey(d));
+        }
+        frozenDays = [...frozenDays, ...newlyFrozen];
+        streak = prev.streak + 1;
+      } else {
+        streak = 1; // sem gelo suficiente pra cobrir os dias perdidos
+      }
+    }
     lastStudyDate = today;
+    if (streak > 0 && streak % FREEZE_MILESTONE_DAYS === 0) {
+      streakFreezes = Math.min(MAX_STREAK_FREEZES, streakFreezes + 1);
+    }
   }
+
   const activityLog = { ...prev.activityLog, [today]: (prev.activityLog[today] || 0) + 1 };
-  return { streak, lastStudyDate, activityLog };
+  const todaySubjects = prev.activitySubjects?.[today] || {};
+  const activitySubjects = subject
+    ? { ...prev.activitySubjects, [today]: { ...todaySubjects, [subject]: (todaySubjects[subject] || 0) + 1 } }
+    : prev.activitySubjects || {};
+  return { streak, lastStudyDate, activityLog, activitySubjects, streakFreezes, frozenDays };
 }
 
 interface SessionResult {
@@ -701,7 +842,7 @@ const QUESTIONS_RAW: Question[] = [
     options: [
       'Artrite, artralgia, febre.',
       'Artralgia, febre, aumento do intervalo PR.',
-      'Artralgia, febre, aumento do intervalo PR.',
+      'Febre, poliartrite migratória, elevação de VHS.',
       'Eritema marginatum, febre, sopro sistólico mitral.',
       'Cardite, bloqueio atrioventricular do primeiro grau, artralgia.',
     ],
@@ -32662,79 +32803,4 @@ const QUESTIONS_RAW: Question[] = [
     banca: 'ENARE',
     cycle: 'Ciclo Clínico',
     subject: 'Nefrologia',
-    text: 'Joana, mãe de 4 filhos, recebeu diagnóstico de tuberculose pulmonar há 7 dias (BAAR positivo no escarro espontâneo), ao sair da maternidade. Procura a unidade básica de saúde para avaliação dos menores. Todos estão assintomáticos e têm radiografias de tórax normais. As idades e os resultados da prova t uberculínica (PT) estão descritos a seguir. • Criança A: 8 dias de vida; não realizou PT; não vacinada com BCG; • Criança B: 1 ano; PT = 6 mm; vacinada com BCG ao nascer; • Criança C: 3 anos; PT = 0 mm; vacinada com BCG ao nascer; • Adolescente D: 12 anos; PT = 5 mm; vacinado com BCG ao nascer. A conduta correta para cada caso, nesse momento, é:',
-    options: [
-      'criança A: iniciar quimioprofilaxia primária para tuberculose; criança B: iniciar tratamento para tuberculose latente; criança C: repetir PT em 8 semanas; adolescente D: iniciar tratamento para tuberculose latente;',
-      'criança A: iniciar quimioprofilaxia primária para tuberculose; criança B: repetir PT em 8 semanas; criança C: repetir PT em 8 semanas; adolescente D: iniciar tratamento para tuberculose latente;',
-      'cria nça A: realizar PT e, se positiva, iniciar quimioprofilaxia primária para tuberculose; criança B: repetir PT em 8 semanas; criança C: repetir PT em 8 semanas; adolescente D: repetir PT em 8 semanas;',
-      'criança A: realizar BCG e não realizar PT pela idade; criança B: repetir PT em 8 semanas; criança C: repetir PT em 8 semanas; adolescente D: repetir PT em 8 semanas;',
-      'criança A: aguardar até o terceiro mês de vida para realizar PT; criança B: iniciar tratamento para tuberculose latente; criança C: repetir PT em 8 semanas; adolescente D: repetir PT em 8 semanas.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_065',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um menino de 5 anos é trazido para consulta pediátrica na unidade básica de saúde, por estar apresentando perda de peso há 2 meses, esteatorreia, dor epigástrica, náuseas e vômitos. Traz um exam e parasitológico de fezes, que indica a presença de Giardia lamblia. O único antiparasitário disponível para dispensação é o albendazol, que, nesse caso:',
-    options: [
-      'deve ser prescrito em uma dose diária por 3 dias, sem necessidade de repetir;',
-      'deve ser prescrito em uma dose diária por 7 dias e repetido após 1 semana;',
-      'deve ser prescrito em uma dose diária por 5 dias, sem necessidade de repetir;',
-      'deve ser prescrito em uma dose única e repetido após 7 dias;',
-      'deve ser prescrito em uma dose diária por 5 dias e repetido após 7 dias.',
-    ],
-    correctIndex: 4,
-  },
-  {
-    id: 'enare_2024_at_nefroled_066',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma menina de 2 anos é trazida à emergência porque sofreu trauma de crânio após queda da cama dos pais (altura de 50 cm), há 30 minutos. Apresentou um episódio de vômito após a queda, mas não teve alteração no nível de consciência. No momento, pontua 15 na escala de coma de Glasgow e está assintomática. A conduta correta, nesse caso, é:',
-    options: [
-      'alta hospitalar com observação domiciliar;',
-      'observação clínica por 2 horas e alta após, se assintomática;',
-      'realizaç ão de tomografia de crânio e observação hospitalar por 6 horas;',
-      'observação clínica por no mínimo 6 horas e alta após, se assintomática;',
-      'realização de tomografia de crânio e observação hospitalar por 12 horas.',
-    ],
-    correctIndex: 2,
-  },
-  {
-    id: 'enare_2024_at_nefroled_067',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma menina de 10 anos chega à emerg ência com edema de lábios e língua, broncoespasmo e vômitos. Os sintomas se iniciaram há 30 minutos, após uso de anti-inflamatório para cefaleia. A hipótese diagnóstica e a conduta nesse caso são, respectivamente:',
-    options: [
-      'angioedema; adrenalina intramuscular no vastolateral da coxa na dose de 0,01 mg/kg da diluição 1:1000;',
-      'anafilaxia; adrenalina subcutânea no braço na dose de 0, 01 mg/kg da diluição 1:1000;',
-      'angioedema; adrenalina subcutânea no braço na dose de 0,01 mg/kg da diluição 1:1000;',
-      'anafilax ia; adrenalina intramuscular no vastolateral da coxa na dose de 0,01 mg/kg da diluição 1:1000;',
-      'anafilaxia; adrenalina intramuscular no vastolateral da coxa na dose de 0,01 mg/kg da diluição 1:10000.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_068',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um menino de 7 anos é admitido na emergência com cefaleia de forte intensidade, febre alta e vômitos há 24 horas. Ao exame, apresenta-se prostrado e com rigidez de nuca, além de exibir petéquias em membros superiores e tronco. A punção lombar é realizada, e o resultado do líquor é sugestivo de meningite bacteriana. A antibioticoterapia de escolha para o caso é:',
-    options: [
-      'ceftriaxona (100 mg/kg/dia);',
-      'ceftriaxona (100 mg/kg/dia) + vancomicina (60 mg/kg/dia);',
-      'cefotaxima (200 mg/kg/dia) + vancomicina (60 mg /kg/dia);',
-      'ceftriaxona (50 mg/kg/dia) + vancomicina (60 mg/kg/dia);',
-      'cefotaxima (200 mg/kg/dia) + ampicilina (200 mg/kg/dia).',
-    ],
-    correctIndex: 0,
-  },
-  {
-    id: 'enare_2024_at_nefroled_069',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um adolescente de 12 anos apresenta febre (38 – 38,5 �
+    text: 'Joana, mãe de 4 filhos, recebeu diagnóstico de tuberculose pulmona
