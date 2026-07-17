@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 function main() {
   const filePath = 'src/App.tsx';
-  let content = fs.readFileSync(filePath, 'utf8');
+  let content = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
 
   // 1. Add spread of generated student questions inside QUESTIONS_RAW
   // Find where QUESTIONS_RAW ends: ...(Q_INTERNATO_1 as unknown as Question[]),

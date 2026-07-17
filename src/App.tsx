@@ -6,7 +6,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
-import { Mascot, MASCOT_PHRASES, pickPhrase } from './Mascot';
+import { Mascot, mascotPhrasesFor, pickPhrase, MASCOT_PERSONALITIES, type MascotPersonality } from './Mascot';
 import { normalizeQuestion, isUsableQuestion } from './questionNormalize';
 import { ENARE_EXTRA_QUESTIONS } from './enare_extra_questions';
 import { ENARE_2024_FULL as ENARE_2024_QUESTIONS } from './enare_2024_questions';
@@ -47,17 +47,15 @@ import { Q_CLINICO_2 } from './q_clinico_2';
 import { Q_CLINICO_3 } from './q_clinico_3';
 import { Q_CLINICO_4 } from './q_clinico_4';
 import { Q_INTERNATO_1 } from './q_internato_1';
-import { BASICO_QUESTIONS } from './basico_questions';
-import { CLINICO_QUESTIONS } from './clinico_questions';
-import { INTERNATO_QUESTIONS } from './internato_questions';
+import { REAL_FLASHCARDS } from './flashcards';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
   ensureFriendCode, addFriendByCode, acceptFriend, watchFriendships,
   createBattle, getBattle, submitBattleScore, markRewarded, watchBattles,
   createRoom, findRoomByCode, joinRoom, watchRoom, updateRoom, answerRoom,
-  bumpWin, fetchWins,
-  type Friendship, type Battle, type Room,
+  bumpWin, fetchWins, fetchProfiles,
+  type Friendship, type Battle, type Room, type PublicProfile,
 } from './social';
 import {
   Trophy,
@@ -132,7 +130,9 @@ import {
   BarChart2,
   Star,
   Building2,
-  Leaf
+  Leaf,
+  Trash2,
+  Bell
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -214,6 +214,21 @@ interface UserState {
   frozenDays: string[];
   // Flashcards criados pela própria pessoa (pergunta/resposta livres).
   customFlashcards: CustomFlashcard[];
+  // Agenda de provas/atividades marcadas pelo usuário (lembretes + estudo do dia).
+  agenda: AgendaEvent[];
+  // Personalidade do mascote Dr. Quest (muda as falas durante o quiz).
+  mascotPersonality: MascotPersonality;
+}
+
+// Evento na agenda: prova ou atividade marcada para um dia, opcionalmente
+// vinculada a uma matéria (para o app oferecer questões do assunto).
+export interface AgendaEvent {
+  id: string;
+  title: string;                 // ex.: "Prova de Cardiologia"
+  subject: string;               // matéria para gerar questões ('' = sem vínculo)
+  date: string;                  // 'YYYY-MM-DD' (dia do evento)
+  type: 'prova' | 'atividade';
+  createdAt: number;
 }
 
 export interface CustomFlashcard {
@@ -322,6 +337,8 @@ function makeDefaultUserState(): UserState {
     streakFreezes: 1,
     frozenDays: [],
     customFlashcards: [],
+    agenda: [],
+    mascotPersonality: 'motivador',
   };
 }
 
@@ -346,6 +363,8 @@ function loadLocalUserState(uid: string): UserState {
       streakFreezes: parsed.streakFreezes ?? defaults.streakFreezes,
       frozenDays: parsed.frozenDays ?? [],
       customFlashcards: parsed.customFlashcards ?? [],
+      agenda: parsed.agenda ?? [],
+      mascotPersonality: parsed.mascotPersonality ?? 'motivador',
       lastActiveDate: defaults.lastActiveDate,
     };
   } catch {
@@ -32788,19 +32807,4 @@ const QUESTIONS_RAW: Question[] = [
     banca: 'ENARE',
     cycle: 'Ciclo Clínico',
     subject: 'Nefrologia',
-    text: 'Uma menina de 7 anos, portadora de epilepsia, associou carbamazepina ao esquema anticonvulsivante prévio por descontrole de crises. Após uma semana do início da medicação, evolui u com melhora das crises, mas há 24 horas apresenta anorexia, cefaleia e exantema maculopapular eritematoso em face e tórax, doloroso ao toque, com formação de bolhas no centro e ocupando 40% da superfície corporal. Há lesões em conjuntiva e mucosa oral. A hipótese diagnóstica, com base nos dados apresentados, é:',
-    options: [
-      'necrólise epidérmica tóxica;',
-      'eritema multiforme;',
-      'síndrome de Stevens-Johnson;',
-      'penfigoide bolhoso;',
-      'vasculite.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_064',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Joana, mãe de 4 filhos, recebeu diagnóstico de tuberculose pulmona
+    text: 'Uma menina de 7 anos, portadora de epilepsia, associou carbamazepina ao esquema anticonvulsivante
