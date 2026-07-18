@@ -47,6 +47,9 @@ import { Q_CLINICO_2 } from './q_clinico_2';
 import { Q_CLINICO_3 } from './q_clinico_3';
 import { Q_CLINICO_4 } from './q_clinico_4';
 import { Q_INTERNATO_1 } from './q_internato_1';
+import { BASICO_QUESTIONS } from './basico_questions';
+import { CLINICO_QUESTIONS } from './clinico_questions';
+import { INTERNATO_QUESTIONS } from './internato_questions';
 import { REAL_FLASHCARDS } from './flashcards';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
@@ -32804,7 +32807,4 @@ const QUESTIONS_RAW: Question[] = [
   },
   {
     id: 'enare_2024_at_nefroled_063',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma menina de 7 anos, portadora de epilepsia, associou carbamazepina ao esquema anticonvulsivante
+    banca: 'ENA
