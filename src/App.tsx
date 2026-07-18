@@ -6,6 +6,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
+import { PaywallModal, CheckoutReturnModal, type PaywallReason } from './Paywall';
 import { Mascot, mascotPhrasesFor, pickPhrase, MASCOT_PERSONALITIES, type MascotPersonality } from './Mascot';
 import { normalizeQuestion, isUsableQuestion } from './questionNormalize';
 import { ENARE_EXTRA_QUESTIONS } from './enare_extra_questions';
@@ -47,14 +48,26 @@ import { Q_CLINICO_2 } from './q_clinico_2';
 import { Q_CLINICO_3 } from './q_clinico_3';
 import { Q_CLINICO_4 } from './q_clinico_4';
 import { Q_INTERNATO_1 } from './q_internato_1';
-import { AMRIGS_QUESTIONS } from './amrigs_questions';
-import { CERMAM_NEW_QUESTIONS } from './cermam_new_questions';
-import { ENARE_NEW_QUESTIONS } from './enare_new_questions';
-import { IAMSPE_NEW_QUESTIONS } from './iamspe_new_questions';
-import { UFPR_2019_501_QUESTIONS } from './ufpr_2019_501_questions';
-import { UNESP_EXTRA_QUESTIONS } from './unesp_extra_questions';
-import { UNESP_NEW_QUESTIONS } from './unesp_new_questions';
-import { UNICAMP_NEW_QUESTIONS } from './unicamp_new_questions';
+import { BASICO_QUESTIONS } from './basico_questions';
+import { CLINICO_QUESTIONS } from './clinico_questions';
+import { INTERNATO_QUESTIONS } from './internato_questions';
+import { ENAMED_2025_QUESTIONS } from './enamed_2025_questions';
+import { ENAMED_INEDITA_QUESTIONS } from './enamed_inedita_questions';
+import { ENAMED_INEDITA_2_QUESTIONS } from './enamed_inedita_2_questions';
+import { ENARE_EXTRA_100 } from './enare_extra_100';
+import { CERMAM_EXTRA_100 } from './cermam_extra_100';
+import { UNESP_EXTRA_100 } from './unesp_extra_100';
+import { IAMSPE_EXTRA_100 } from './iamspe_extra_100';
+import { UNICAMP_EXTRA_100 } from './unicamp_extra_100';
+import { UFPR_EXTRA_100 } from './ufpr_extra_100';
+import { UFRJ_EXTRA_100 } from './ufrj_extra_100';
+import { HCPA_EXTRA_100 } from './hcpa_extra_100';
+import { PSU_MG_EXTRA_100 } from './psu_mg_extra_100';
+import { AMRIGS_EXTRA_100 } from './amrigs_extra_100';
+import { PUC_PR_EXTRA_100 } from './puc_pr_extra_100';
+import { EINSTEIN_EXTRA_100 } from './einstein_extra_100';
+import { UNIFESP_EXTRA_100 } from './unifesp_extra_100';
+import { UFSC_EXTRA_100 } from './ufsc_extra_100';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
@@ -249,6 +262,11 @@ export interface CustomFlashcard {
 
 // Máximo de corações (recarrega para este valor a cada novo dia).
 const MAX_HEARTS = 5;
+
+// Limite diário do plano free. Premium (por trilha) = ilimitado. O gate nunca
+// trava sem aviso: o contador fica visível no header e, ao esgotar, abre o
+// paywall com os planos (Estudante 29,90 / Residência 79,90 — ver Paywall.tsx).
+const FREE_DAILY_LIMIT = 10;
 
 // Streak Freeze (estilo Duolingo): protege a sequência quando a pessoa perde
 // um dia de estudo. Guarda no máximo 2; ganha +1 a cada 7 dias de streak.
@@ -498,6 +516,77 @@ const HIERARCHY: Record<Cycle, Partial<Record<Subject, string[]>>> = {
     'Neurocirurgia': []
   }
 };
+
+// Metadados visuais por matéria, usados para montar o Roteiro da Semana
+// dinamicamente a partir do ciclo escolhido (ver buildWeekPlan).
+const SUBJECT_META: Partial<Record<Subject, { emoji: string; shortLabel: string; tip: string; color: string }>> = {
+  // Ciclo Básico
+  'Anatomia':                   { emoji: '📖', shortLabel: 'Anatomia',   tip: 'Estruturas fundamentais que sustentam todas as especialidades.',   color: '#6366F1' },
+  'Fisiologia':                 { emoji: '🫀', shortLabel: 'Fisiologia', tip: 'Como o corpo funciona — a base pra entender toda doença.',          color: '#0e9f43' },
+  'Bioquímica':                 { emoji: '🧪', shortLabel: 'Bioquímica', tip: 'As reações que explicam metabolismo e doenças metabólicas.',        color: '#f1c100' },
+  'Histologia':                 { emoji: '🔬', shortLabel: 'Histologia', tip: 'Tecidos ao microscópio — a ponte entre anatomia e patologia.',      color: '#7C3AED' },
+  'Embriologia':                { emoji: '🐣', shortLabel: 'Embriologia',tip: 'Desenvolvimento humano, da fecundação às malformações.',            color: '#DB2777' },
+  'Microbiologia':              { emoji: '🦠', shortLabel: 'Microbio',   tip: 'Bactérias, vírus e fungos — a base da infectologia.',                color: '#12b449' },
+  'Imunologia':                 { emoji: '🛡️', shortLabel: 'Imuno',      tip: 'Como o corpo se defende — essencial pra entender autoimunidade.',    color: '#00a7e1' },
+  'Genética':                   { emoji: '🧬', shortLabel: 'Genética',   tip: 'Herança, mutações e as doenças genéticas mais cobradas.',            color: '#6366F1' },
+  'Farmacologia':                { emoji: '💊', shortLabel: 'Farmaco',    tip: 'Os fármacos mais cobrados. Base pra toda prescrição.',               color: '#EA580C' },
+  'Patologia':                  { emoji: '🔬', shortLabel: 'Patologia',  tip: 'O mecanismo por trás de cada doença clínica.',                       color: '#64748B' },
+  'Parasitologia':              { emoji: '🪱', shortLabel: 'Parasito',   tip: 'Parasitoses endêmicas no Brasil — clássico de prova.',                color: '#0e9f43' },
+  'Semiologia':                 { emoji: '🩺', shortLabel: 'Semiologia', tip: 'A arte de examinar — a base de todo diagnóstico clínico.',           color: '#00658a' },
+  'Epidemiologia':              { emoji: '📊', shortLabel: 'Epidemio',   tip: 'Indicadores de saúde e desenho de estudos. Sempre cai.',             color: '#00a7e1' },
+  // Ciclo Clínico
+  'Ginecologia & Obstetrícia':  { emoji: '🤰', shortLabel: 'Gineco',     tip: 'Pré-natal, parto, puerpério e ginecologia geral.',                   color: '#DB2777' },
+  'Pediatria':                  { emoji: '👶', shortLabel: 'Pediatria',  tip: 'Do neonato à adolescência. Alta frequência nas principais bancas.',  color: '#7C3AED' },
+  'Medicina de Família/SUS':    { emoji: '🩺', shortLabel: 'Família',    tip: 'Atenção primária e políticas de saúde pública. Muito cobrado!',      color: '#0e9f43' },
+  'Cirurgia Geral':             { emoji: '🏨', shortLabel: 'Cir. Geral', tip: 'Abdome agudo, trauma e pré/pós-operatório.',                         color: '#DC2626' },
+  'Cardiologia':                { emoji: '❤️', shortLabel: 'Cardio',     tip: 'Síndromes coronarianas, IC e arritmias. Alto peso nas bancas.',      color: '#ba1a1a' },
+  'Pneumologia':                { emoji: '💨', shortLabel: 'Pneumo',     tip: 'Asma, DPOC e pneumonias — recorrente em todas as provas.',           color: '#00a7e1' },
+  'Gastroenterologia':          { emoji: '🫁', shortLabel: 'Gastro',     tip: 'Doenças do trato digestivo e hepatobiliares.',                       color: '#EA580C' },
+  'Infectologia':               { emoji: '🦠', shortLabel: 'Infecto',    tip: 'Doenças infecciosas prevalentes no Brasil.',                         color: '#12b449' },
+  'Endocrinologia':             { emoji: '💉', shortLabel: 'Endocrino',  tip: 'Diabetes, tireoide e distúrbios hormonais.',                         color: '#f1c100' },
+  'Clínica Médica':             { emoji: '🏥', shortLabel: 'Clínica M.',  tip: 'A matéria com maior peso nas provas de residência do Brasil.',       color: '#00658a' },
+  'Clínica Cirúrgica':          { emoji: '🔬', shortLabel: 'Clínica C.',  tip: 'Urgências, trauma e procedimentos cirúrgicos essenciais.',            color: '#DC2626' },
+  'Psiquiatria':                { emoji: '💬', shortLabel: 'Psiquiatria',tip: 'Transtornos mentais e psicofarmacologia.',                           color: '#7C3AED' },
+  'Reumatologia':               { emoji: '🦴', shortLabel: 'Reumato',    tip: 'Doenças autoimunes e articulares.',                                  color: '#EA580C' },
+  'Nefrologia':                 { emoji: '🫘', shortLabel: 'Nefro',      tip: 'Distúrbios renais e hidroeletrolíticos.',                            color: '#0e9f43' },
+  'Neurologia':                 { emoji: '🧠', shortLabel: 'Neuro',      tip: 'AVC, epilepsia e emergências neurológicas.',                         color: '#6366F1' },
+  'Hematologia':                { emoji: '🩸', shortLabel: 'Hemato',     tip: 'Anemias, coagulopatias e neoplasias hematológicas.',                 color: '#ba1a1a' },
+  'Dermatologia':               { emoji: '🧴', shortLabel: 'Dermato',    tip: 'Lesões de pele mais cobradas nas provas.',                           color: '#DB2777' },
+  'Oftalmologia':               { emoji: '👁️', shortLabel: 'Oftalmo',    tip: 'Urgências oftalmológicas e doenças prevalentes.',                    color: '#00a7e1' },
+  'Otorrinolaringologia':       { emoji: '👂', shortLabel: 'Otorrino',   tip: 'Vias aéreas superiores e audição.',                                  color: '#f1c100' },
+  'Ortopedia':                  { emoji: '🦴', shortLabel: 'Orto',       tip: 'Fraturas, luxações e afecções do aparelho locomotor.',               color: '#64748B' },
+  'Urologia':                   { emoji: '💧', shortLabel: 'Uro',        tip: 'Afecções do trato urinário e próstata.',                             color: '#00658a' },
+  'Geriatria':                  { emoji: '👴', shortLabel: 'Geriatria',  tip: 'Síndromes geriátricas e polifarmácia.',                              color: '#7C3AED' },
+  'Radiologia':                 { emoji: '🩻', shortLabel: 'Radio',      tip: 'Interpretação de exames de imagem essenciais.',                      color: '#64748B' },
+  // Internato
+  'Urgência e Emergência':      { emoji: '🚨', shortLabel: 'Urgência',   tip: 'Suporte de vida e condutas na sala de emergência.',                  color: '#DC2626' },
+  'Medicina Intensiva':         { emoji: '🫀', shortLabel: 'UTI',        tip: 'Cuidados críticos e suporte multiorgânico.',                         color: '#ba1a1a' },
+  'Anestesiologia':             { emoji: '💉', shortLabel: 'Anestesia',  tip: 'Farmacologia anestésica e manejo perioperatório.',                   color: '#6366F1' },
+  'Neonatologia':               { emoji: '👼', shortLabel: 'Neonato',    tip: 'Cuidados com o recém-nascido, do parto à UTI neonatal.',             color: '#DB2777' },
+  'Traumatologia-Ortopedia':    { emoji: '🩹', shortLabel: 'Trauma-Orto',tip: 'Trauma ortopédico e condutas de urgência.',                          color: '#EA580C' },
+  'Cirurgia Vascular':          { emoji: '🫀', shortLabel: 'Cir. Vasc.', tip: 'Doenças arteriais e venosas mais cobradas.',                         color: '#00658a' },
+  'Neurocirurgia':              { emoji: '🧠', shortLabel: 'Neurocir.',  tip: 'Emergências neurocirúrgicas essenciais pro internato.',              color: '#6366F1' },
+};
+
+interface WeekPlanItem { emoji: string; shortLabel: string; label: string; subject: Subject; cycle: Cycle; tip: string; color: string }
+
+// Monta o roteiro de 7 dias a partir do ciclo escolhido, usando só matérias
+// que de fato têm questões no pool passado (evita "Iniciar" cair em vazio).
+// Repete a lista quando o ciclo tem menos de 7 matérias com conteúdo.
+function buildWeekPlan(cycle: Cycle, pool: Question[]): WeekPlanItem[] {
+  const withQuestions = (Object.keys(HIERARCHY[cycle]) as Subject[])
+    .map(subject => ({ subject, count: pool.reduce((n, q) => n + (q.subject === subject ? 1 : 0), 0) }))
+    .filter(s => s.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  if (withQuestions.length === 0) return [];
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const { subject } = withQuestions[i % withQuestions.length];
+    const meta = SUBJECT_META[subject] ?? { emoji: '📚', shortLabel: subject.slice(0, 10), tip: '', color: '#00658a' };
+    return { ...meta, label: subject, subject, cycle };
+  });
+}
 
 
 const QUESTIONS_RAW: Question[] = [
@@ -32615,190 +32704,4 @@ const QUESTIONS_RAW: Question[] = [
     correctIndex: 3,
   },
   {
-    id: 'enare_2024_at_nefroled_050',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um paciente de 8 anos, com sobrepeso, apresenta pressão arterial (PA) entre o percentil 90 e 95 para sexo, idade e altura. A pressão arterial nunca havia sido aferida. Nega sintomas. É correto afirmar que:',
-    options: [
-      'o paciente está normotenso;',
-      'ele deve ser encaminhado ao nefrologista;',
-      'a medicação anti-hipertensiva deve ser iniciada;',
-      'o paciente está hipertenso, mas sem necessidade de tratamento;',
-      'a PA de ve ser aferida mais duas vezes, com cálculo da média das aferições, para definição diagnóstica.',
-    ],
-    correctIndex: 4,
-  },
-  {
-    id: 'enare_2024_at_nefroled_051',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um lactente de 6 meses, internado com bronquiolite, está em suporte ventilatório. Sobre a necessidade de analgesia/sedação do paciente, é correto afirmar q ue:',
-    options: [
-      'deve ser realizada sedação, sem necessidade de analgesia;',
-      'deve ser utilizado o pancurônio, sem necessidade de sedação/analgesia;',
-      'deve ser realizada sedação com benzodiazepínico e analgesia com tramadol;',
-      'não há necessidade de analgésicos ou sedativos se o paciente estiver ventilando bem;',
-      'deve ser realizada analgesia com meperidina pelo baixo risco de dependência química.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_052',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Os pais de uma criança de 4 anos com fimose perguntam ao médico sobre a necessidade de cirurgia. O médico deve:',
-    options: [
-      'indicar postectomia;',
-      'informar que a cirurgia tem alto potencial de complicações;',
-      'aguardar ocorrência de infecção urinária para indicar cirurgia;',
-      'aguardar queixa de dificuldade para urinar para indicar a cirurgia;',
-      'explicar que a cirurgia aumenta risco futuro de infecções sexualmente transmissíveis.',
-    ],
-    correctIndex: 0,
-  },
-  {
-    id: 'enare_2024_at_nefroled_053',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um recém-nascido de mãe adolescente com 15 anos recebe alta com orientação para que seja realizado o registro civil de nascimento (RCN) da criança. As orientações para o procediment o devem incluir:',
-    options: [
-      'a necessidade da presença do pai e da mãe para registro no cartório;',
-      'a não obrigatoriedade de apresentação de documentos de identidade dos pais;',
-      'a obrigatoriedade de que o registro seja realizado na Vara da Infância e da Juvent ude, por ser a mãe menor de idade;',
-      'a necessidade da presença de um dos avós do bebê, caso a mãe não seja emancipada;',
-      'a necessidade de apresentação de certidão de casamento ou contrato de união estável dos pais.',
-    ],
-    correctIndex: 2,
-  },
-  {
-    id: 'enare_2024_at_nefroled_054',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Durante consulta de puericultura, a mãe de um lactente de 8 meses demonstra preocupação com o desenvolvimento psicomotor de sua filha, que é bem diferente do de outras crianças da mesma idade. Ela não responde ao olhar ou sons, faz movimentos repetitivos, tem dificuldade em aceitar novos alimentos e comportamento agitado. O pediatra corretamente:',
-    options: [
-      'considera o comportamento do bebê normal para a idade;',
-      'considera que o bebê pode ser hiperativo;',
-      'indica matriculá-lo na creche para melhor socialização;',
-      'prescreve um complexo vitam ínico para melhora no desenvolvimento;',
-      'aplica o formulário M-CHAT-R/F para auxiliar no diagnóstico.',
-    ],
-    correctIndex: 1,
-  },
-  {
-    id: 'enare_2024_at_nefroled_055',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um lactente de 7 meses, com salivação excessiva, coceira nas gengivas e irritabilidade, ao exame, apresenta erupção parcial do dente incisivo central inferior esquerdo. Sobre a saúde oral dessa criança, devem ser dadas as seguintes orientações:',
-    options: [
-      'a escovação dos dentes é necessária quando completar 1 ano;',
-      'a chupeta deve ser oferecida;',
-      'a utilização de anestésico tópico para red ução do desconforto;',
-      'a suspensão do aleitamento materno está indicada quando nascerem os dentes pelo risco de lesão mamária;',
-      'a escovação dos dentes deve ser realizada com pequena quantidade de creme dental para bebê.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_056',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um escolar de 7 anos aprese nta, há 3 dias, cefaleia, edema de membros inferiores, sem sinais flogísticos, e urina escura. Ao exame, foram constatadas hipertensão arterial e hematúria no exame de urina. Está em uso de polivitamínicos e dipirona. A principal hipótese diagnóstica, ness e caso, é de:',
-    options: [
-      'reação alérgica medicamentosa;',
-      'síndrome nefrótica;',
-      'complicação de infecção estreptocócica;',
-      'intoxicação exógena;',
-      'hipertensão arterial primária com lesão renal.',
-    ],
-    correctIndex: 4,
-  },
-  {
-    id: 'enare_2024_at_nefroled_057',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um paciente de 1 ano e 3 meses, com síndrome gripal, realiz ou teste rápido para SARS-CoV-2, que foi positivo. O exame físico identificou estertores subcrepitantes difusos, e a radiografia de tórax revelou infiltrado intersticial peri-hilar, bilateralmente. O tratamento deve ser:',
-    options: [
-      'internado em enfermaria para ob servação da resposta ao tratamento sintomático;',
-      'domiciliar, nebulizando com corticoide e beta-2 adrenérgico;',
-      'internado, para realização de antibiótico venoso;',
-      'domiciliar, com uso de sintomáticos;',
-      'internado em unidade de terapia intensiva com administração de oxigênio.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_058',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma criança de 2 anos, com febre alta (39 °C) há 3 dias e irritabilidade, se recusa a se alimentar, tem dor abdominal intensa e a mãe relata 3 episódios de vômitos nas últimas 12 horas. A mãe procurou a emergência, onde foram realizados exames, e foi dado o diagnóstico de dengue. O tratamento deve ser:',
-    options: [
-      'prescrever prednisolona e sais de reidratação oral;',
-      'prescrever sintomáticos e orientar sinais de gravidade;',
-      'internar a criança para início de a ntibiótico venoso;',
-      'prescrever nitazoxanida e solicitar exames de controle;',
-      'internar a criança para hidratação venosa, sintomáticos e observação.',
-    ],
-    correctIndex: 0,
-  },
-  {
-    id: 'enare_2024_at_nefroled_059',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Na avaliação de rotina de uma criança de 7 anos, foi observado ganho ponderal excessivo nos últimos 6 meses. Em relação à realização de exercícios físicos, o paciente deve ser orientado a:',
-    options: [
-      'evitar atividades de flexibilidade pelo risco de lesões articulares;',
-      'evitar exercícios ao ar livre, devido à exposição solar;',
-      'priorizar exercícios extenuantes que estimulam a produção do hormônio de crescimento;',
-      'fazer 60 m inutos diários de atividade física de moderada a vigorosa intensidade;',
-      'iniciar atividades físicas estruturadas (danças, lutas, esportes coletivos) após os 8 anos.',
-    ],
-    correctIndex: 1,
-  },
-  {
-    id: 'enare_2024_at_nefroled_060',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma criança de 5 anos, atendida na emergência com queixa de coriza e tosse há 5 dias, tem usado desloratadina com pouca melhora. Ontem iniciou dor nos tornozelos e dor abdominal intensa, além de terem aparecido petéquias elevadas nas nádegas e nos membros inferiores, com discreto edema de mãos e tornozelos. A principal hipótese diagnóstica , nesse caso, é:',
-    options: [
-      'leucemia;',
-      'farmacodermia;',
-      'distúrbio da coagulação;',
-      'púrpura de Henoch-Schönlein;',
-      'púrpura trombocitopênica idiopática.',
-    ],
-    correctIndex: 3,
-  },
-  {
-    id: 'enare_2024_at_nefroled_061',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Um adolescente que estava praticando surfe apresentou, subitamente, dor em queimação na perna. Após sair do mar, observou lesão de queimadura na panturrilha esquerda. No posto do salva-vidas, foi corretamente realizada:',
-    options: [
-      'limpeza da lesão com água doce;',
-      'aplicação de urina do paciente na lesão;',
-      'aplicação de pasta d’água no local;',
-      'limpeza d a lesão com água do mar e aplicação de vinagre;',
-      'fricção da lesão com água morna para retirada do veneno.',
-    ],
-    correctIndex: 0,
-  },
-  {
-    id: 'enare_2024_at_nefroled_062',
-    banca: 'ENARE',
-    cycle: 'Ciclo Clínico',
-    subject: 'Nefrologia',
-    text: 'Uma lactente de 10 meses, com episódios de melena e anemia, foi avaliada na emergência, onde o cirurgião pediátrico realizou toque retal, que foi livre de sangramento, e clister opaco, sem evidências de pólipos intestinais. Com o objetivo de elucidação diagnóstica, deve-se solicitar:',
-    options: [
-      'pesquisa de ele
+    id: 'enare_2024_at_nefroled_

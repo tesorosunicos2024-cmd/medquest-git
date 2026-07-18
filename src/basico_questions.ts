@@ -165,7 +165,7 @@ const TOPICS_BASICO: Record<string, { title: string; cases: string[]; questions:
       cases: [
         "Análise microscópica após coloração de Gram",
         "Ao testar a susceptibilidade bacteriana a beta-lactâmicos em laboratório",
-        "Discussão sobre mecanismos de patogenicidade bacteriana"
+        "Discussão sobre mechanisms de patogenicidade bacteriana"
       ],
       questions: [
         { type: "microbiologia", q: "Qual o principal componente da parede celular de bactérias Gram-positivas que retém o complexo cristal violeta-iodo?", opts: ["Lipopolissacarídeo (LPS)", "Peptidioglicano espesso", "Ácido teicoico", "Membrana externa fosfolipídica"], ans: 1, exp: "Bactérias Gram-positivas têm uma espessa camada de peptidioglicano (mureína) externa à membrana citoplasmática, que absorve e retém o corante violeta de genciana." },
@@ -371,9 +371,8 @@ const TOPICS_BASICO: Record<string, { title: string; cases: string[]; questions:
 
 function getVariedBasicoText(baseCase: string, index: number): string {
   let text = baseCase;
-  
+
   const age = 18 + (index % 58);
-  // Replace generic "Estudante" or "Paciente" with age details if appropriate
   if (text.includes("Paciente")) {
     text = text.replace("Paciente", `Paciente de ${age} anos`);
   } else if (text.includes("Durante")) {
@@ -399,7 +398,7 @@ function getVariedBasicoText(baseCase: string, index: number): string {
   if (text.endsWith(".") || text.endsWith(",")) {
     text = text.slice(0, -1);
   }
-  
+
   text = text + variations[index % variations.length];
   return text;
 }
@@ -415,7 +414,7 @@ export function generateBasicoQuestions(): Question[] {
     for (let i = 0; i < 200; i++) {
       const topicIndex = i % data.length;
       const topic = data[topicIndex];
-      
+
       const qIndex = i % topic.questions.length;
       const baseQ = topic.questions[qIndex];
 

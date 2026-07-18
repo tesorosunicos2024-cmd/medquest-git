@@ -119,7 +119,7 @@ const TOPICS_CLINICO: Record<string, { title: string; cases: string[]; questions
       ],
       questions: [
         { type: "exame", q: "Como se caracteriza o diagnóstico espirométrico clássico da asma?", opts: ["Distúrbio obstrutivo irreversível após broncodilatador", "Distúrbio obstrutivo com resposta broncodilatadora significativa (reversibilidade)", "Distúrbio restritivo puro", "Capacidade vital forçada normal com VEF1 aumentado"], ans: 1, exp: "A asma é caracterizada por limitação variável ao fluxo aéreo. O achado de obstrução que reverte de forma significativa (aumento do VEF1 de 12% e 200ml) após beta-2 agonista confirma o diagnóstico." },
-        { type: "conduta", q: "Qual a medida terapêutica não farmacológica que comprovadamente aumenta a sobrevida de pacientes com DPOC e hipoxemia grave em repouso?", opts: ["Fisioterapia respiratória diária", "Vacinação pneumocócica", "Oxigenoterapia domiciliar contínua", "Reabilitação pulmonar ambulatorial"], ans: 2, exp: "A oxigenoterapia domiciliar de longo prazo (mínimo de 15 horas/dia) aumenta a sobrevida em pacientes com DPOC estável que apresentam hipoxemia grave (PaO2 < 55 mmHg ou SaO2 < 88%)." }
+        { type: "conduta", q: "Qual a medida terapêutica não farmacológica que comprovadamente aumenta a sobrevida de pacientes com DPOC e hipoxemia grave em repouso?", opts: ["Fisioterapia respiratória diária", "Vacinação pneumocócica", "Oxigenoterapia domiciliar contínua", "Reabilitação pulmonar ambulatorial"], ans: 2, exp: "A oxigenoterapia domiciliar de longo prazo (mínimo de 15 horas/dia) aumenta a sobrevida in patients com DPOC estável que apresentam hipoxemia grave (PaO2 < 55 mmHg ou SaO2 < 88%)." }
       ]
     }
   ],
@@ -230,7 +230,7 @@ const TOPICS_CLINICO: Record<string, { title: string; cases: string[]; questions
         "Paciente internado apresenta oligúria severa e aumento rápido de creatinina sérica"
       ],
       questions: [
-        { type: "diagnostico", q: "Qual a definição laboratorial de Doença Renal Crônica (DRC) de acordo com a duração temporal dos parâmetros?", opts: ["Queda abrupta da taxa de filtração glomerular em menos de 48 horas", "Filtração glomerular < 60 mL/min/1,73m² ou evidência de lesão renal (ex: proteinúria) por pelo menos 3 meses", "Elevação de creatinina sérica associada a episódios de obstrução prostática aguda", "Anemia inexplicada associada a proteinúria de fita isolada"], ans: 1, exp: "A DRC é caracterizada por anormalidades estruturais ou funcionais do rim (TFG < 60 ou proteinúria/hematúria) persistentes por um período mínimo de 3 meses." },
+        { type: "diagnostico", q: "Qual a definição laboratorial de Doença Renal Crônica (DRC) de acordo com a duração temporal dos parâmetros?", opts: ["Queda abrupta da taxa de filtração glomerular em menos de 48 horas", "Filtração glomerular < 60 mL/min/1,73m² ou evidência de lesão renal (ex: proteinúria) por pelo menos 3 meses", "Elevação de creatinina sérica associada a episódios de fluxo urinário obstruído", "Anemia inexplicada associada a proteinúria de fita isolada"], ans: 1, exp: "A DRC é caracterizada por anormalidades estruturais ou funcionais do rim (TFG < 60 ou proteinúria/hematúria) persistentes por um período mínimo de 3 meses." },
         { type: "diagnostico", q: "Qual a principal causa fisiopatológica da Injúria Renal Aguda pré-renal?", opts: ["Obstrução mecânica da uretra ou ureteres", "Necrose tubular aguda induzida por aminoglicosídeos", "Hipoperfusão renal secundária a hipovolemia ou choque", "Glomerulonefrite aguda difusa"], ans: 2, exp: "A IRA pré-renal decorre da redução do fluxo sanguíneo renal e da pressão de perfusão glomerular (causada por desidratação, hemorragia, IC), sem lesão parenquimatosa intrínseca inicial." }
       ]
     }
@@ -314,7 +314,7 @@ const TOPICS_CLINICO: Record<string, { title: string; cases: string[]; questions
         "Paciente apresenta dor lombar mecânica que melhora ao deitar e nega sintomas neurológicos"
       ],
       questions: [
-        { type: "diagnostico", q: "A dor lombar que se irradia abaixo do nível do joelho seguindo um trajeto dermatômico, acompanhada de parestesia, sugere:", opts: ["Estiramento muscular lombar simples", "Lombociatalgia por hérnia de disco", "Espondilite anquilosante", "Artrite reumatoide juvenil"], ans: 1, exp: "A irradiação dermatômica da dor lombar abaixo do joelho (ciatalgia) indica compressão radicular, comumente provocada por herniação discal lombar." },
+        { type: "diagnostico", q: "La dor lombar que se irradia abaixo do nível do joelho seguindo um trajeto dermatômico, acompanhada de parestesia, sugere:", opts: ["Estiramento muscular lombar simples", "Lombociatalgia por hérnia de disco", "Espondilite anquilosante", "Artrite reumatoide juvenil"], ans: 1, exp: "A irradiação dermatômica da dor lombar abaixo do joelho (ciatalgia) indica compressão radicular, comumente provocada por herniação discal lombar." },
         { type: "exame", q: "Qual alteração radiográfica clássica é encontrada na osteoartrite (artrose) de joelho ou quadril?", opts: ["Osteopenia difusa e erosões marginais", "Redução assimétrica do espaço articular, esclerose subcondral e presença de osteófitos", "Destruição óssea lítica sem reação periosteal", "Fratura patológica subcondral imediata"], ans: 1, exp: "A osteoartrite (doença articular degenerativa) apresenta sinais característicos ao raio-X: pinçamento do espaço articular, esclerose do osso subcondral (que reage ao atrito), osteófitos marginais e cistos subcondrais." }
       ]
     }
@@ -365,7 +365,7 @@ const TOPICS_CLINICO: Record<string, { title: string; cases: string[]; questions
 
 function getVariedClinicoText(baseCase: string, index: number): string {
   let text = baseCase;
-  
+
   const age = 22 + (index % 55);
   if (text.includes("Paciente")) {
     text = text.replace("Paciente", `Paciente de ${age} anos`);
@@ -398,7 +398,7 @@ function getVariedClinicoText(baseCase: string, index: number): string {
   if (text.endsWith(".") || text.endsWith(",")) {
     text = text.slice(0, -1);
   }
-  
+
   text = text + variations[index % variations.length];
   return text;
 }
@@ -414,7 +414,7 @@ export function generateClinicoQuestions(): Question[] {
     for (let i = 0; i < 200; i++) {
       const topicIndex = i % data.length;
       const topic = data[topicIndex];
-      
+
       const qIndex = i % topic.questions.length;
       const baseQ = topic.questions[qIndex];
 

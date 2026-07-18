@@ -231,8 +231,7 @@ const TOPICS_DATA: Record<string, { title: string; cases: string[]; questions: {
 
 function getVariedCaseText(baseCase: string, index: number): string {
   let text = baseCase;
-  
-  // Vary age if present
+
   const ageMatch = text.match(/Paciente de (\d+) anos/);
   if (ageMatch) {
     const baseAge = parseInt(ageMatch[1], 10);
@@ -240,13 +239,11 @@ function getVariedCaseText(baseCase: string, index: number): string {
     text = text.replace(/Paciente de \d+ anos/, `Paciente de ${variedAge} anos`);
   }
 
-  // Vary Recém-nascido parameters if present
   if (text.includes("Recém-nascido")) {
     const hours = (index % 12) + 2;
     text = text + ` Atendido com ${hours} horas de vida.`;
   }
 
-  // Clinical suffixes for realistic variation
   const variations = [
     ", apresentando estabilidade hemodinâmica no momento.",
     ", trazido pelo Serviço de Atendimento Móvel de Urgência (SAMU).",
@@ -271,26 +268,21 @@ export function generateInternatoQuestions(): Question[] {
   const result: Question[] = [];
 
   for (const subject of SUBJECTS) {
-    const data = TOPICS_DATA[subject] || TOPICS_DATA["Urgência e Emergência"]; // Fallback to avoid empty
+    const data = TOPICS_DATA[subject] || TOPICS_DATA["Urgência e Emergência"];
     let idCounter = 1;
 
-    // Generate exactly 200 questions per subject
     for (let i = 0; i < 200; i++) {
-      // Rotate through topics
       const topicIndex = i % data.length;
       const topic = data[topicIndex];
-      
-      // Rotate through questions inside topic
+
       const qIndex = i % topic.questions.length;
       const baseQ = topic.questions[qIndex];
 
-      // Rotate through cases
       const caseIndex = i % topic.cases.length;
       const baseCase = topic.cases[caseIndex];
 
-      // Get procedural variation without case numbering
       const variedCase = getVariedCaseText(baseCase, i);
-      const difficulty: "easy" | "medium" | "hard" = "medium"; // Median level
+      const difficulty: "easy" | "medium" | "hard" = "medium";
 
       result.push({
         id: `internato_${subject.toLowerCase().replace(/[^a-z]/g, "")}_q${idCounter++}`,
