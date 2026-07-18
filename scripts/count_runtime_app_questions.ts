@@ -37,6 +37,14 @@ import { Q_CLINICO_2 } from '../src/q_clinico_2';
 import { Q_CLINICO_3 } from '../src/q_clinico_3';
 import { Q_CLINICO_4 } from '../src/q_clinico_4';
 import { Q_INTERNATO_1 } from '../src/q_internato_1';
+import { AMRIGS_QUESTIONS } from '../src/amrigs_questions';
+import { CERMAM_NEW_QUESTIONS } from '../src/cermam_new_questions';
+import { ENARE_NEW_QUESTIONS } from '../src/enare_new_questions';
+import { IAMSPE_NEW_QUESTIONS } from '../src/iamspe_new_questions';
+import { UFPR_2019_501_QUESTIONS } from '../src/ufpr_2019_501_questions';
+import { UNESP_EXTRA_QUESTIONS } from '../src/unesp_extra_questions';
+import { UNESP_NEW_QUESTIONS } from '../src/unesp_new_questions';
+import { UNICAMP_NEW_QUESTIONS } from '../src/unicamp_new_questions';
 
 const arrays = [
   ...ENARE_EXTRA_QUESTIONS,
@@ -60,6 +68,14 @@ const arrays = [
   ...AMRIGS_2023_QUESTIONS,
   ...AMRIGS_2024_QUESTIONS,
   ...AMRIGS_2025_QUESTIONS,
+  ...AMRIGS_QUESTIONS,
+  ...CERMAM_NEW_QUESTIONS,
+  ...ENARE_NEW_QUESTIONS,
+  ...IAMSPE_NEW_QUESTIONS,
+  ...UFPR_2019_501_QUESTIONS,
+  ...UNESP_EXTRA_QUESTIONS,
+  ...UNESP_NEW_QUESTIONS,
+  ...UNICAMP_NEW_QUESTIONS,
   ...PUCPR_2010_QUESTIONS,
   ...EINSTEIN_2026_QUESTIONS,
   ...EINSTEIN_MEDWAY_2025_QUESTIONS,

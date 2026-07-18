@@ -47,10 +47,14 @@ import { Q_CLINICO_2 } from './q_clinico_2';
 import { Q_CLINICO_3 } from './q_clinico_3';
 import { Q_CLINICO_4 } from './q_clinico_4';
 import { Q_INTERNATO_1 } from './q_internato_1';
-import { BASICO_QUESTIONS } from './basico_questions';
-import { CLINICO_QUESTIONS } from './clinico_questions';
-import { INTERNATO_QUESTIONS } from './internato_questions';
-import { REAL_FLASHCARDS } from './flashcards';
+import { AMRIGS_QUESTIONS } from './amrigs_questions';
+import { CERMAM_NEW_QUESTIONS } from './cermam_new_questions';
+import { ENARE_NEW_QUESTIONS } from './enare_new_questions';
+import { IAMSPE_NEW_QUESTIONS } from './iamspe_new_questions';
+import { UFPR_2019_501_QUESTIONS } from './ufpr_2019_501_questions';
+import { UNESP_EXTRA_QUESTIONS } from './unesp_extra_questions';
+import { UNESP_NEW_QUESTIONS } from './unesp_new_questions';
+import { UNICAMP_NEW_QUESTIONS } from './unicamp_new_questions';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
@@ -32797,14 +32801,4 @@ const QUESTIONS_RAW: Question[] = [
     subject: 'Nefrologia',
     text: 'Uma lactente de 10 meses, com episódios de melena e anemia, foi avaliada na emergência, onde o cirurgião pediátrico realizou toque retal, que foi livre de sangramento, e clister opaco, sem evidências de pólipos intestinais. Com o objetivo de elucidação diagnóstica, deve-se solicitar:',
     options: [
-      'pesquisa de elementos anormais nas fezes;',
-      'colonoscopia;',
-      'ressonância magnética do abdômen;',
-      'ser iografia esôfago-gastro-duodenal;',
-      'cintilografia intestinal com Tc-99.',
-    ],
-    correctIndex: 1,
-  },
-  {
-    id: 'enare_2024_at_nefroled_063',
-    banca: 'ENA
+      'pesquisa de ele
