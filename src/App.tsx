@@ -2978,6 +2978,21 @@ export default function App() {
                     <ChevronRight size={18} className="text-white/60 shrink-0" />
                   </button>
 
+                  {/* Flashcards */}
+                  <button
+                    onClick={() => { setFlashStage('pick'); setView('flashcards'); }}
+                    className="flex items-center gap-3 bg-gradient-to-br from-violet-600 to-purple-900 rounded-3xl p-4 text-white shadow-lg active:scale-[0.98] transition-transform text-left"
+                  >
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/15 shrink-0">
+                      <Layers size={22} className="text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-200/80 leading-none mb-1">Memorização Ativa</p>
+                      <p className="text-sm font-black leading-tight">Flashcards Personalizados</p>
+                    </div>
+                    <ChevronRight size={18} className="text-white/60 shrink-0" />
+                  </button>
+
                   {/* Roteiro Semanal — muda de acordo com o ciclo selecionado no toggle abaixo */}
                   {(() => {
                     const PLAN = buildWeekPlan(selectedCycle, QUESTIONS_ESTUDANTE);
@@ -4650,7 +4665,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col gap-0 pb-4 min-h-screen bg-gradient-to-b from-cyan-950 via-slate-900 to-cyan-950"
+              className="flex flex-col gap-0 pb-32 min-h-screen bg-gradient-to-b from-cyan-950 via-slate-900 to-cyan-950"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6">
@@ -5689,54 +5704,104 @@ export default function App() {
 
                 {/* ESCOLHER TÓPICO */}
                 {flashStage === 'pick' && (
-                  <>
-                    <div className="relative rounded-[2rem] overflow-hidden shadow-xl" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)' }}>
-                      <div className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
-                      <div className="relative z-10 p-6">
-                        <p className="text-[10px] font-black text-white/80 uppercase tracking-[0.25em] mb-1">Memorize com cartas</p>
-                        <h3 className="text-2xl font-black text-white tracking-tight leading-tight">Escolha um tópico<br/>para estudar</h3>
-                        <p className="text-white/70 text-sm font-medium mt-2">Veja a pergunta, tente lembrar e vire a carta. O que você não souber volta no fim.</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map((s, i) => {
-                        const ic = SUBJECT_ICONS[s] || {}; const Ic = ic.icon;
-                        return (
-                          <motion.button key={s} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03, type: 'spring', stiffness: 300, damping: 20 }} whileHover={{ y: -3 }} whileTap={{ scale: 0.94 }} onClick={() => startFlashcards(s as Subject)} className="flex flex-col items-center gap-2 p-3.5 rounded-2xl border-2 border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg transition-colors">
-                            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md overflow-hidden" style={{ background: ic.ringColor || '#00658a' }}>
-                              {ic.image ? <img src={ic.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" /> : Ic ? <Ic size={20} className="text-white" /> : null}
-                            </div>
-                            <span className="text-[11px] font-black text-slate-700 text-center leading-tight">{s}</span>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Meus flashcards — criados pela própria pessoa */}
-                    {user.customFlashcards.length > 0 && (
-                      <button onClick={startCustomFlashcards} className="group relative w-full text-left rounded-[2rem] overflow-hidden shadow-xl active:scale-[0.98] transition-transform" style={{ background: 'linear-gradient(135deg,#7C3AED 0%,#2E1065 100%)' }}>
-                        <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
-                        <div className="relative z-10 p-5 flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.15)' }}>
-                            <User size={22} className="text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-black text-white tracking-tight leading-none mb-1">Meus Flashcards</h3>
-                            <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{user.customFlashcards.length} {user.customFlashcards.length === 1 ? 'carta criada' : 'cartas criadas'} por você</p>
-                          </div>
-                          <ChevronRight size={18} className="text-white/70 shrink-0 group-hover:translate-x-1 transition-transform" />
+                  selectedTrack === 'estudante' ? (
+                    <>
+                      <div className="relative rounded-[2rem] overflow-hidden shadow-xl" style={{ background: 'linear-gradient(135deg,#7C3AED 0%,#2E1065 100%)' }}>
+                        <div className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+                        <div className="relative z-10 p-6">
+                          <p className="text-[10px] font-black text-white/80 uppercase tracking-[0.25em] mb-1">Trilha do Estudante</p>
+                          <h3 className="text-2xl font-black text-white tracking-tight leading-tight">Seus Flashcards<br/>Personalizados</h3>
+                          <p className="text-white/70 text-sm font-medium mt-2">Crie suas próprias cartas de estudo e teste seus conhecimentos a qualquer momento.</p>
                         </div>
-                      </button>
-                    )}
+                      </div>
 
-                    {/* Criar um flashcard próprio */}
-                    <button
-                      onClick={() => setShowCreateFlashcard(true)}
-                      className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary/5 transition-colors font-black text-sm uppercase tracking-widest"
-                    >
-                      <Plus size={18} /> Criar meu flashcard
-                    </button>
-                  </>
+                      {/* Lista de flashcards criados */}
+                      {user.customFlashcards.length > 0 ? (
+                        <button onClick={startCustomFlashcards} className="group relative w-full text-left rounded-[2rem] overflow-hidden shadow-xl active:scale-[0.98] transition-transform" style={{ background: 'linear-gradient(135deg,#7C3AED 0%,#2E1065 100%)' }}>
+                          <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+                          <div className="relative z-10 p-5 flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                              <User size={22} className="text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-black text-white tracking-tight leading-none mb-1">Estudar Meus Flashcards</h3>
+                              <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{user.customFlashcards.length} {user.customFlashcards.length === 1 ? 'carta criada' : 'cartas criadas'} por você</p>
+                            </div>
+                            <ChevronRight size={18} className="text-white/70 shrink-0 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center p-8 bg-white border-2 border-dashed border-slate-200 rounded-3xl text-center shadow-sm">
+                          <Layers className="text-slate-300 mb-3" size={40} />
+                          <p className="text-sm font-black text-slate-700">Nenhum flashcard criado ainda</p>
+                          <p className="text-xs text-slate-500 mt-1">Toque no botão abaixo para criar suas cartas personalizadas de estudo.</p>
+                        </div>
+                      )}
+
+                      {/* Criar um flashcard próprio */}
+                      <button
+                        onClick={() => {
+                          setNewFlashSubject(selectedTrack === 'estudante' ? 'Anatomia' : 'Clínica Médica');
+                          setShowCreateFlashcard(true);
+                        }}
+                        className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary/5 transition-colors font-black text-sm uppercase tracking-widest"
+                      >
+                        <Plus size={18} /> Criar meu flashcard
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="relative rounded-[2rem] overflow-hidden shadow-xl" style={{ background: 'linear-gradient(135deg,#00a7e1 0%,#00658a 100%)' }}>
+                        <div className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+                        <div className="relative z-10 p-6">
+                          <p className="text-[10px] font-black text-white/80 uppercase tracking-[0.25em] mb-1">Memorize com cartas</p>
+                          <h3 className="text-2xl font-black text-white tracking-tight leading-tight">Escolha um tópico<br/>para estudar</h3>
+                          <p className="text-white/70 text-sm font-medium mt-2">Veja a pergunta, tente lembrar e vire a carta. O que você não souber volta no fim.</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].filter(s => QUESTIONS.some(q => q.subject === s)).map((s, i) => {
+                          const ic = SUBJECT_ICONS[s] || {}; const Ic = ic.icon;
+                          return (
+                            <motion.button key={s} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03, type: 'spring', stiffness: 300, damping: 20 }} whileHover={{ y: -3 }} whileTap={{ scale: 0.94 }} onClick={() => startFlashcards(s as Subject)} className="flex flex-col items-center gap-2 p-3.5 rounded-2xl border-2 border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg transition-colors">
+                              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md overflow-hidden" style={{ background: ic.ringColor || '#00658a' }}>
+                                {ic.image ? <img src={ic.image} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" /> : Ic ? <Ic size={20} className="text-white" /> : null}
+                              </div>
+                              <span className="text-[11px] font-black text-slate-700 text-center leading-tight">{s}</span>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Meus flashcards — criados pela própria pessoa */}
+                      {user.customFlashcards.length > 0 && (
+                        <button onClick={startCustomFlashcards} className="group relative w-full text-left rounded-[2rem] overflow-hidden shadow-xl active:scale-[0.98] transition-transform" style={{ background: 'linear-gradient(135deg,#7C3AED 0%,#2E1065 100%)' }}>
+                          <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+                          <div className="relative z-10 p-5 flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                              <User size={22} className="text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-black text-white tracking-tight leading-none mb-1">Meus Flashcards</h3>
+                              <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{user.customFlashcards.length} {user.customFlashcards.length === 1 ? 'carta criada' : 'cartas criadas'} por você</p>
+                            </div>
+                            <ChevronRight size={18} className="text-white/70 shrink-0 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </button>
+                      )}
+
+                      {/* Criar um flashcard próprio */}
+                      <button
+                        onClick={() => {
+                          setNewFlashSubject(selectedTrack === 'estudante' ? 'Anatomia' : 'Clínica Médica');
+                          setShowCreateFlashcard(true);
+                        }}
+                        className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary/5 transition-colors font-black text-sm uppercase tracking-widest"
+                      >
+                        <Plus size={18} /> Criar meu flashcard
+                      </button>
+                    </>
+                  )
                 )}
 
                 {/* ESTUDAR */}
@@ -5809,7 +5874,7 @@ export default function App() {
                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Revisou</p>
                       </div>
                     </div>
-                    <button onClick={() => startFlashcards(flashSubject as Subject)} className="w-full py-4 bg-brand-primary text-white font-black rounded-2xl uppercase tracking-widest text-sm shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"><RotateCw size={18} /> Estudar de novo</button>
+                    <button onClick={() => { if (flashSubject === 'Meus Flashcards') { startCustomFlashcards(); } else { startFlashcards(flashSubject as Subject); } }} className="w-full py-4 bg-brand-primary text-white font-black rounded-2xl uppercase tracking-widest text-sm shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"><RotateCw size={18} /> Estudar de novo</button>
                     <button onClick={() => setFlashStage('pick')} className="w-full py-4 bg-white text-slate-700 font-black rounded-2xl uppercase tracking-widest text-sm border border-slate-200 active:scale-95 transition-transform">Outro tópico</button>
                   </>
                 )}
@@ -6710,7 +6775,10 @@ export default function App() {
                       onChange={e => setNewFlashSubject(e.target.value as Subject)}
                       className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-brand-primary outline-none font-bold text-slate-900 bg-slate-50 transition-colors"
                     >
-                      {['Clínica Médica','Cirurgia Geral','Pediatria','Ginecologia & Obstetrícia','Medicina de Família/SUS','Cardiologia','Pneumologia','Gastroenterologia','Infectologia','Endocrinologia','Neurologia','Reumatologia'].map(s => (
+                      {(selectedTrack === 'estudante'
+                        ? ['Anatomia', 'Fisiologia', 'Bioquímica', 'Histologia', 'Embriologia', 'Microbiologia', 'Imunologia', 'Genética', 'Farmacologia', 'Clínica Médica', 'Clínica Cirúrgica', 'Pediatria', 'Ginecologia & Obstetrícia', 'Medicina de Família/SUS']
+                        : ['Clínica Médica', 'Cirurgia Geral', 'Pediatria', 'Ginecologia & Obstetrícia', 'Medicina de Família/SUS', 'Cardiologia', 'Pneumologia', 'Gastroenterologia', 'Infectologia', 'Endocrinologia', 'Neurologia', 'Reumatologia']
+                      ).map(s => (
                         <option key={s} value={s}>{s}</option>
                       ))}
                     </select>
@@ -7014,10 +7082,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Navegação principal — aparece só na página inicial (home). Nas demais
-          telas o retorno é pelo logo do MedQuest no topo ou pelo botão voltar,
-          evitando que a barra sobreponha botões fixos das telas de fluxo. */}
-      {view === 'home' && (
+      {/* Navegação principal — aparece na página inicial e nas abas principais (desafios, progresso, liga, perfil e amigos). */}
+      {['home', 'desafios', 'progress', 'ranking', 'profile', 'amigos'].includes(view) && (
         <nav className={`fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t px-6 py-4 flex justify-around z-40
           md:bottom-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-auto md:justify-center md:gap-12 md:px-10 md:rounded-[2rem] md:border ${
           view === 'ranking' || view === 'progress' || view === 'revision'

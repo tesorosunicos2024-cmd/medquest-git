@@ -57,7 +57,15 @@ async function main() {
 
   // 1. Load current database questions
   const dbPath = 'data/processed/questions.ts';
-  const { ALL_QUESTIONS: currentDbQuestions } = await import('../data/processed/questions');
+  let currentDbQuestions: any[] = [];
+  if (fs.existsSync(dbPath)) {
+    try {
+      const dbModule = await import('../data/processed/questions');
+      currentDbQuestions = dbModule.ALL_QUESTIONS || [];
+    } catch (e) {
+      console.warn('Could not import existing database questions:', e);
+    }
+  }
   console.log(`Loaded ${currentDbQuestions.length} existing database questions.`);
 
   const mergedMap = new Map<string, Question>();
