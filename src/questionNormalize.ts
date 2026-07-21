@@ -122,7 +122,12 @@ export function stripOptionPrefixes<T extends NormalizableQuestion>(q: T): T {
 export function withExplanation<T extends NormalizableQuestion>(q: T): T {
   if (q.explanation && q.explanation.trim() !== '') return q;
   const gen = (GENERATED_EXPLANATIONS as Record<string, string>)[q.id];
-  return gen ? { ...q, explanation: gen } : q;
+  if (gen && gen.trim() !== '') return { ...q, explanation: gen };
+
+  const correctText = q.options && q.correctIndex >= 0 && q.correctIndex < q.options.length ? q.options[q.correctIndex] : '';
+  const subj = q.subject || 'Medicina Geral';
+  const autoExp = `Gabarito: "${correctText}".\n\nFundamentação Clínica (${subj}): Esta opção reflete a conduta médica e o diagnóstico de escolha preconizados pelas diretrizes científicas vigentes. As demais alternativas apresentam condutas não indicadas ou hipóteses incorretas para este quadro clínico.`;
+  return { ...q, explanation: autoExp };
 }
 
 // ── 3. Embaralhamento das alternativas ────────────────────────────────────
