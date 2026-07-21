@@ -66,6 +66,13 @@ import { UFRJ_GERADO_2026_QUESTIONS } from './ufrj_gerado_2026_questions';
 import { CERMAM_EXTRA_100 } from './cermam_extra_100';
 import { CERMAM_GERADO_2026_QUESTIONS } from './cermam_gerado_2026_questions';
 import { INTERNATO_EXTRA_700 } from './internato_extra_700';
+import { HCOR_EXTRA_200 } from './hcor_extra_200';
+import { USP_EXTRA_200 } from './usp_extra_200';
+import { UNESP_EXTRA_200 } from './unesp_extra_200';
+import { ENAMED_EXTRA_200 } from './enamed_extra_200';
+import { UFRJ_EXTRA_200 } from './ufrj_extra_200';
+import { CERMAM_EXTRA_200_V2 } from './cermam_extra_200_v2';
+import { SIRIOLIBANES_EXTRA_200 } from './siriolibanes_extra_200';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
@@ -32661,10 +32668,4 @@ const QUESTIONS_RAW: Question[] = [
     banca: 'ENARE',
     cycle: 'Ciclo Clínico',
     subject: 'Nefrologia',
-    text: 'Um médico, residente da pediatria, atendeu uma criança que evoluiu para parada cardiorrespiratória. Ele realizou, sob supervisão, manobras de reanimação, sem sucesso. Não fez anotações da evolução e tratamento no prontuário. A conduta do residente deve ser considerada:',
-    options: [
-      'correta, pois como residente não tem essa obrigação;',
-      'corr eta, pois a criança faleceu;',
-      'errada, pois ele não deveria ter participado da reanimação cardiorrespiratória;',
-      'correta, pois na emergência não há necessidade de registro no prontuário;',
-      'errada, pois to
+    text: 'Um médico, residente da pediatria, atendeu uma criança que evoluiu para parada cardiorrespiratória. Ele realizou, sob supervisão, manobras de reanimação, sem sucesso. Não fez anotações da evolução e tratamento no

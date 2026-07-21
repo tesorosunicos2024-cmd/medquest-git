@@ -7,7 +7,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_001',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 26 anos, 26 semanas, obesa (IMC pré-gestacional 32 kg/m²), realiza teste oral de tolerância à glicose de 75g conforme protocolo do pré-natal. Resultados: glicemia de jejum 88 mg/dL; glicemia de 1 hora 185 mg/dL; glicemia de 2 horas 145 mg/dL.\n\nCom base nos critérios diagnósticos vigentes, a interpretação correta é',
     options: [
       'resultado normal, não configura diabetes gestacional.',
@@ -22,7 +22,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_002',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 24 anos, com atraso menstrual de 10 semanas, procura atendimento por sangramento vaginal intermitente e náuseas intensas. Ao exame, altura uterina compatível com 16 semanas de gestação, ausência de batimentos cardíacos fetais à sonar Doppler. Beta-hCG sérico de 850.000 mUI/mL. Ultrassonografia transvaginal evidencia útero com conteúdo heterogêneo, com múltiplas vesículas anecoicas, sem identificação de embrião ou saco gestacional.\n\nQual é o diagnóstico mais provável e a conduta inicial?',
     options: [
       'Aborto retido; curetagem uterina de urgência.',
@@ -37,7 +37,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_003',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 32 semanas, hipertensa gestacional em acompanhamento, é internada com queixa de dor em hipocôndrio direito, cefaleia e mal-estar. Exames: plaquetas 78.000/mm³; TGO 210 U/L; TGP 195 U/L; LDH elevado; esfregaço de sangue periférico com esquizócitos.\n\nQual é o diagnóstico e a conduta definitiva?',
     options: [
       'Esteatose hepática aguda da gestação; suporte hepático e aguardar termo.',
@@ -52,7 +52,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_004',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Recém-nascido a termo, com 30 horas de vida, apresenta icterícia que já se estende até o abdome. Nasceu de parto vaginal, sem intercorrências, em aleitamento materno exclusivo. Mãe tipo sanguíneo O positivo, recém-nascido tipo A positivo. Bilirrubina total de 14 mg/dL, predominantemente indireta.\n\nQual característica torna essa icterícia patológica, exigindo investigação, e não fisiológica?',
     options: [
       'O início nas primeiras 24-36 horas de vida.',
@@ -67,7 +67,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_005',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 4 semanas, sexo masculino, primeiro filho, é levado à emergência por vômitos em jato, não biliosos, após as mamadas, com piora progressiva nos últimos 5 dias. A mãe relata que a criança permanece faminta logo após vomitar. Ao exame, criança levemente desidratada, com oliva palpável em região epigástrica à palpação profunda. Exames: gasometria venosa com alcalose metabólica, hipocloremia e hipocalemia.\n\nQual é o diagnóstico mais provável e o exame confirmatório de escolha?',
     options: [
       'Refluxo gastroesofágico; pHmetria de 24 horas.',
@@ -82,7 +82,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_006',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 8 meses, previamente hígido, é levado à emergência por episódios de choro intenso e súbito, com flexão das pernas sobre o abdome, alternados com períodos de letargia. A mãe percebeu fezes com aspecto de "geleia de framboesa" na última troca de fralda. Ao exame, massa palpável em formato alongado no quadrante superior direito do abdome.\n\nQual é o diagnóstico mais provável e a conduta inicial recomendada?',
     options: [
       'Apendicite aguda; laparotomia exploradora imediata.',
@@ -97,7 +97,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_007',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Durante discussão de caso em uma Unidade Básica de Saúde, a equipe debate a solicitação de exames de rotina para um paciente assintomático, sem fatores de risco, que insiste em realizar um extenso "check-up" anual com dezenas de exames sem indicação baseada em evidências, temendo doenças não diagnosticadas.\n\nA conduta da equipe, orientada pelo princípio da prevenção quaternária, deve ser',
     options: [
       'atender integralmente à solicitação do paciente, respeitando sua autonomia sobre o próprio corpo.',
@@ -112,7 +112,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_008',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Médico de Unidade Básica de Saúde atende paciente com quadro clínico compatível com meningite meningocócica, confirmado por punção lombar com cultura positiva para Neisseria meningitidis.\n\nConsiderando as normas de vigilância epidemiológica brasileira, a notificação desse caso deve ser feita',
     options: [
       'em até 7 dias, por se tratar de doença de notificação semanal.',
@@ -127,7 +127,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_009',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 32 semanas realiza VDRL de rotina no terceiro trimestre, com resultado reagente em titulação 1:32 (o primeiro exame do pré-natal, no primeiro trimestre, havia sido não reagente). Recebe tratamento com 3 doses de penicilina G benzatina 2,4 milhões UI, com intervalo semanal, mas o parceiro sexual não foi tratado.\n\nEm relação ao recém-nascido, a conduta adequada ao nascimento é',
     options: [
       'considerar o tratamento materno adequado e não realizar nenhuma investigação adicional no recém-nascido.',
@@ -142,7 +142,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_010',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Profissional de saúde, contactante domiciliar de paciente com tuberculose pulmonar bacilífera, realiza prova tuberculínica (PPD), com resultado de 12 mm de enduração. Radiografia de tórax sem alterações. Nega sintomas respiratórios. Não possui comorbidades e não vive com HIV.\n\nConsiderando o resultado, a conduta indicada é',
     options: [
       'não é necessária nenhuma intervenção, pois o PPD só é considerado positivo acima de 15 mm em imunocompetentes.',
@@ -157,7 +157,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_011',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 27 anos é levado por familiares à emergência psiquiátrica por apresentar, há 5 dias, humor eufórico persistente, diminuição da necessidade de sono (dorme cerca de 2 horas por noite sem cansaço), fala acelerada e difícil de interromper, grandiosidade (afirma ter "planos para mudar o mundo") e envolvimento em gastos financeiros excessivos e impulsivos. Nega uso de substâncias psicoativas. Exame físico e neurológico sem alterações.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Transtorno depressivo maior com sintomas psicóticos.',
@@ -172,7 +172,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_012',
     cycle: 'Ciclo Clínico',
     subject: 'Geriatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 78 anos, internado por pneumonia comunitária, evolui no terceiro dia de internação com flutuação do nível de consciência, desatenção, agitação psicomotora alternada com sonolência, e alucinações visuais, com piora predominantemente noturna. Não havia alteração cognitiva prévia relatada pela família.\n\nQual é o diagnóstico mais provável e a conduta prioritária?',
     options: [
       'Demência de início agudo; iniciar donepezila.',
@@ -187,7 +187,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_013',
     cycle: 'Ciclo Clínico',
     subject: 'Cirurgia Geral',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 45 anos, obesa, procura pronto-socorro com dor em hipocôndrio direito há 8 horas, contínua, com irradiação para dorso, associada a náuseas e febre de 38,3 °C. Ao exame, dor intensa à palpação do hipocôndrio direito com interrupção da inspiração profunda durante a manobra (sinal de Murphy positivo). Leucócitos 15.200/mm³. Ultrassonografia de abdome: vesícula biliar distendida, parede espessada (5 mm), com cálculo impactado no infundíbulo.\n\nQual é o diagnóstico e a conduta mais adequada?',
     options: [
       'Cólica biliar simples; analgesia e alta com encaminhamento eletivo para colecistectomia.',
@@ -202,7 +202,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_014',
     cycle: 'Ciclo Clínico',
     subject: 'Cirurgia Geral',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 68 anos, com antecedente de duas cirurgias abdominais prévias, procura pronto-socorro com dor abdominal difusa em cólica, distensão abdominal progressiva, parada de eliminação de gases e fezes há 2 dias, e vômitos biliosos. Ao exame, abdome distendido, timpânico, com ruídos hidroaéreos aumentados em "salva". Radiografia de abdome em pé mostra alças intestinais distendidas com múltiplos níveis hidroaéreos escalonados.\n\nQual é a principal hipótese diagnóstica e a causa mais provável nesse contexto?',
     options: [
       'Íleo paralítico; causa provavelmente metabólica.',
@@ -217,7 +217,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_015',
     cycle: 'Ciclo Clínico',
     subject: 'Gastroenterologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 29 anos relata diarreia crônica intermitente, distensão abdominal e flatulência há cerca de 1 ano, associadas a episódios de anemia ferropriva que não respondem adequadamente à suplementação oral de ferro. Nega perda de peso importante. Exames: anticorpo antitransglutaminase IgA fortemente positivo; IgA sérica total normal.\n\nQual é o diagnóstico mais provável e o exame confirmatório?',
     options: [
       'Síndrome do intestino irritável; não requer confirmação histológica.',
@@ -232,7 +232,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_016',
     cycle: 'Ciclo Clínico',
     subject: 'Gastroenterologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 58 anos, etilista crônico, é avaliado em ambulatório de hepatologia. Apresenta ascite de moderado volume, discreta desorientação intermitente (flapping presente), bilirrubina total de 3,2 mg/dL, albumina sérica de 2,6 g/dL e RNI de 1,9.\n\nCom base nesses dados, a classificação de Child-Pugh para esse paciente corresponde a qual classe, e qual sua implicação prognóstica?',
     options: [
       'Classe A; doença hepática compensada, sem necessidade de avaliação para transplante.',
@@ -247,7 +247,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_017',
     cycle: 'Internato',
     subject: 'Urgência e Emergência',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 30 anos, minutos após picada de inseto, desenvolve urticária generalizada, edema de lábios e língua, rouquidão, sibilância difusa e hipotensão (PA 80 x 50 mmHg), com sensação de morte iminente.\n\nQual é o diagnóstico e a conduta medicamentosa imediata de primeira linha?',
     options: [
       'Reação alérgica leve; anti-histamínico oral e observação domiciliar.',
@@ -262,7 +262,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_018',
     cycle: 'Internato',
     subject: 'Urgência e Emergência',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Trabalhador rural é trazido à emergência após exposição a agrotóxico organofosforado durante pulverização sem proteção adequada. Apresenta sudorese profusa, salivação excessiva, lacrimejamento, broncorreia, miose bilateral, bradicardia e fasciculações musculares.\n\nQual é o antídoto de primeira linha indicado nesse quadro?',
     options: ['Naloxona.', 'Atropina.', 'Flumazenil.', 'N-acetilcisteína.'],
     correctIndex: 1,
@@ -272,7 +272,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_019',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 72 anos, hipertenso e diabético, é diagnosticado com fibrilação atrial persistente em consulta de rotina, assintomática, identificada ao acaso no eletrocardiograma.\n\nConsiderando o escore CHA2DS2-VASc para esse paciente (hipertensão, diabetes e idade ≥ 75 seriam pontos adicionais; aqui ele tem 72 anos, hipertensão e diabetes, totalizando pontuação de risco intermediário-alto para homem), a conduta referente à profilaxia de eventos tromboembólicos deve ser',
     options: [
       'não indicar anticoagulação, pois o paciente está assintomático.',
@@ -287,7 +287,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_020',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 65 anos, com insuficiência cardíaca crônica conhecida, é internada por dispneia progressiva, ortopneia e ganho de 4 kg em uma semana. Ao exame, estertores crepitantes bibasais, turgência jugular patológica e edema de membros inferiores +++/4+. Saturação de O2 de 90% em ar ambiente.\n\nAlém da oxigenoterapia, qual é a conduta medicamentosa inicial mais indicada para o alívio da congestão?',
     options: [
       'Diurético de alça endovenoso (furosemida).',
@@ -302,7 +302,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_021',
     cycle: 'Ciclo Clínico',
     subject: 'Reumatologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 26 anos apresenta, nos últimos 4 meses, artralgia migratória em pequenas articulações das mãos, lesão eritematosa em "asa de borboleta" na face que piora com exposição solar, úlceras orais indolores recorrentes e episódios de queda de cabelo. Exames: anticorpo antinuclear (FAN) positivo, título 1:640, padrão homogêneo; anti-DNA dupla hélice positivo; complemento (C3 e C4) reduzido; proteinúria de 24 horas de 800 mg.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Dermatomiosite juvenil.',
@@ -317,7 +317,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_022',
     cycle: 'Ciclo Básico',
     subject: 'Epidemiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Um estudo observacional encontrou associação entre o consumo de café e maior incidência de câncer de pulmão. Ao analisar os dados mais detalhadamente, os pesquisadores perceberam que grande parte dos consumidores frequentes de café da amostra também eram tabagistas, e que o tabagismo, isoladamente, já é fator de risco bem estabelecido para câncer de pulmão.\n\nEsse fenômeno, que pode distorcer a associação observada entre café e câncer de pulmão, é denominado',
     options: ['viés de aferição.', 'viés de confusão (confundimento).', 'viés de seleção.', 'viés de memória.'],
     correctIndex: 1,
@@ -327,7 +327,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_023',
     cycle: 'Ciclo Clínico',
     subject: 'Endocrinologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 40 anos relata fadiga progressiva, ganho de peso, intolerância ao frio, constipação intestinal e queda de cabelos nos últimos 6 meses. Ao exame, pele seca e fria, bradicardia, e discreto edema periorbitário. Exames: TSH de 18 mUI/L (referência 0,4-4,0); T4 livre de 0,6 ng/dL (referência 0,8-1,8).\n\nQual é o diagnóstico e o tratamento de escolha?',
     options: [
       'Hipertireoidismo subclínico; observação sem tratamento medicamentoso.',
@@ -342,7 +342,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_024',
     cycle: 'Ciclo Clínico',
     subject: 'Endocrinologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 34 anos apresenta ganho de peso centrípeto nos últimos 8 meses, com face arredondada ("em lua cheia"), giba dorsal, estrias violáceas largas no abdome, fraqueza muscular proximal e pressão arterial persistentemente elevada. Exames: cortisol salivar noturno elevado em duas medidas; teste de supressão com dexametasona 1 mg sem supressão adequada do cortisol matinal.\n\nQual é a hipótese diagnóstica mais provável?',
     options: [
       'Síndrome metabólica isolada, sem disfunção endócrina específica.',
@@ -357,7 +357,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_025',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 34 semanas, sem pré-natal regular, procura pronto-atendimento obstétrico por sangramento vaginal vermelho vivo, de início súbito, indolor, em grande quantidade, sem contrações associadas. Ao exame físico, útero indolor, tônus normal, batimentos cardíacos fetais presentes e regulares. Não foi realizado toque vaginal.\n\nQual é a principal hipótese diagnóstica e a conduta inicial?',
     options: [
       'Descolamento prematuro de placenta; toque vaginal para avaliar dilatação cervical.',
@@ -372,7 +372,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_026',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Durante parto vaginal de recém-nascido macrossômico, após o desprendimento da cabeça fetal, observa-se retração da cabeça contra o períneo ("sinal da tartaruga") e dificuldade na saída dos ombros, sem progressão com a tração habitual.\n\nQual é a manobra inicial recomendada para a resolução dessa distocia?',
     options: [
       'Manobra de McRoberts, com hiperflexão das coxas maternas sobre o abdome, associada à pressão suprapúbica.',
@@ -387,7 +387,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_027',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Puérpera de 10 dias, em aleitamento materno exclusivo, procura Unidade Básica de Saúde com dor, hiperemia e calor em quadrante superior externo da mama esquerda, associada a febre de 38,5 °C e mal-estar. Relata fissura mamilar recente e pega inadequada do recém-nascido. Ao exame, área endurecida e dolorosa, sem flutuação ou abscesso palpável.\n\nQual é a conduta mais adequada?',
     options: [
       'Suspender imediatamente a amamentação na mama afetada até resolução completa do quadro.',
@@ -402,7 +402,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_028',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 22 anos procura ginecologista por ciclos menstruais irregulares (intervalos de 45 a 90 dias) desde a menarca, associados a hirsutismo (presença de pelos em face e região periumbilical) e acne persistente. Exame físico com IMC de 29 kg/m². Ultrassonografia transvaginal evidencia ovários com aumento de volume e múltiplos folículos pequenos dispostos perifericamente. Exames hormonais mostram relação LH/FSH aumentada e testosterona total discretamente elevada.\n\nQual é o diagnóstico mais provável, considerando os critérios diagnósticos vigentes?',
     options: [
       'Insuficiência ovariana primária.',
@@ -417,7 +417,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_029',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 5 meses, previamente hígido, é levado à emergência com quadro de coriza e tosse há 3 dias, seguido de piora com sibilância, taquipneia e retração intercostal nas últimas 24 horas. Frequenta creche, onde há relato de colegas com sintomas respiratórios semelhantes. Ao exame, sibilos difusos e estertores finos bilaterais, saturação de O2 de 93% em ar ambiente.\n\nQual é o diagnóstico mais provável e a conduta inicial recomendada?',
     options: [
       'Pneumonia bacteriana; iniciar antibioticoterapia empírica imediatamente.',
@@ -432,7 +432,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_030',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 3 anos apresenta febre alta há 6 dias, não responsiva a antitérmicos, associada a hiperemia conjuntival bilateral não purulenta, fissuras labiais e língua em "framboesa", exantema polimorfo no tronco, edema e eritema de mãos e pés, além de linfonodomegalia cervical unilateral maior que 1,5 cm.\n\nQual é o diagnóstico mais provável e a principal complicação a ser rastreada?',
     options: [
       'Escarlatina; complicação renal (glomerulonefrite pós-estreptocócica).',
@@ -447,7 +447,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_031',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Menina de 7 anos é levada ao pediatra por desenvolvimento de mamas (Tanner M3) e pelos pubianos (Tanner P2), além de estirão de crescimento, iniciados há 8 meses. Idade óssea avançada em relação à idade cronológica. Dosagens de LH e FSH basais elevadas para a idade, com resposta puberal ao teste de estímulo com GnRH.\n\nQual é o diagnóstico e o principal exame de imagem a ser solicitado para investigação etiológica?',
     options: [
       'Puberdade precoce periférica; ultrassonografia pélvica isolada é suficiente, sem necessidade de outros exames.',
@@ -462,7 +462,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_032',
     cycle: 'Ciclo Clínico',
     subject: 'Neurologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 24 anos é trazido à emergência após apresentar episódio de perda súbita de consciência, com queda, rigidez generalizada seguida de abalos musculares rítmicos em membros, mordedura de língua e liberação esfincteriana, com duração de cerca de 2 minutos, seguido de período de confusão mental (estado pós-ictal) por 20 minutos. Trata-se do segundo episódio semelhante em 6 meses, sem fator desencadeante identificável.\n\nApós estabilização clínica e exclusão de causas secundárias agudas, qual é a conduta apropriada?',
     options: [
       'Não é necessário eletroencefalograma nem tratamento, pois crises isoladas não requerem investigação.',
@@ -477,7 +477,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_033',
     cycle: 'Ciclo Clínico',
     subject: 'Neurologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 45 anos procura atendimento por fraqueza progressiva e simétrica em membros inferiores, iniciada há 4 dias, com ascensão para os membros superiores nas últimas 24 horas, associada a parestesias distais e arreflexia global. Relata episódio de diarreia aguda há 2 semanas. Punção lombar evidencia proteína elevada no líquor, com celularidade normal (dissociação albumino-citológica).\n\nQual é o diagnóstico mais provável e a principal complicação a ser monitorada?',
     options: [
       'Esclerose múltipla; complicação visual (neurite óptica).',
@@ -492,7 +492,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_034',
     cycle: 'Internato',
     subject: 'Neonatologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Recém-nascido pré-termo de 34 semanas, filho de mãe com febre intraparto (38,2 °C), rotura de membranas há 20 horas antes do parto e líquido amniótico fétido, nasce hipoativo, com desconforto respiratório e temperatura instável nas primeiras horas de vida.\n\nConsiderando os fatores de risco maternos apresentados, qual é a principal hipótese diagnóstica a ser investigada e a conduta inicial?',
     options: [
       'Taquipneia transitória do recém-nascido; conduta apenas observacional, sem necessidade de exames.',
@@ -507,7 +507,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_035',
     cycle: 'Ciclo Clínico',
     subject: 'Hematologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 19 anos, com diagnóstico conhecido de anemia falciforme, procura emergência com dor óssea intensa em membros e região lombar, de início súbito, associada a febre baixa, após exposição a frio intenso. Nega sintomas respiratórios. Exame físico sem achados focais além da dor à palpação óssea.\n\nQual é a conduta prioritária no manejo dessa crise?',
     options: [
       'Analgesia adequada e agressiva, hidratação venosa e investigação de fatores desencadeantes ou complicações associadas.',
@@ -522,7 +522,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_036',
     cycle: 'Ciclo Clínico',
     subject: 'Nefrologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 6 anos apresenta, 2 semanas após quadro de faringoamigdalite não tratada, edema periorbitário matinal, urina com aspecto "cor de coca-cola" e hipertensão arterial (130 x 90 mmHg para a idade). Exames: hematúria dismórfica, proteinúria discreta, complemento C3 reduzido, creatinina discretamente elevada.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Síndrome nefrótica de lesões mínimas.',
@@ -537,7 +537,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_037',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Equipe de Saúde da Família identifica, em sua área adstrita, um paciente com transtorno depressivo moderado, já em uso de antidepressivo prescrito pelo médico da unidade, mas com resposta parcial após 8 semanas de tratamento. A unidade não possui psiquiatra fixo, mas conta com apoio do Núcleo Ampliado de Saúde da Família (NASF).\n\nQual estratégia é mais coerente com o modelo de cuidado compartilhado em saúde mental na Atenção Primária?',
     options: [
       'Encaminhar o paciente diretamente para internação psiquiátrica, dada a resposta parcial ao tratamento.',
@@ -552,7 +552,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_038',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Paciente de 74 anos, com câncer de pulmão metastático, em fase avançada da doença, sem possibilidade de tratamento curativo, é acompanhado pela equipe de Saúde da Família em seu domicílio. A família questiona sobre a possibilidade de manter o cuidado em casa, com foco no controle da dor e conforto, sem investimento em medidas de prolongamento da vida.\n\nEssa abordagem de cuidado, centrada no alívio do sofrimento e na qualidade de vida, sem intenção de acelerar ou postergar a morte, é denominada',
     options: ['eutanásia passiva.', 'distanásia domiciliar.', 'cuidado paliativo.', 'ortotanásia assistida por terceiros.'],
     correctIndex: 2,
@@ -562,7 +562,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_039',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 35 anos relata preocupação excessiva e difícil de controlar com múltiplos aspectos da vida (trabalho, saúde da família, finanças) há mais de 8 meses, na maioria dos dias, associada a tensão muscular, fadiga fácil, irritabilidade, dificuldade de concentração e distúrbio do sono. Os sintomas causam prejuízo funcional significativo. Nega uso de substâncias e não há doença clínica que justifique o quadro.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Transtorno do pânico.',
@@ -577,7 +577,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_040',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 50 anos, etilista de longa data, é internado para cirurgia eletiva. No terceiro dia de internação, sem consumo de álcool desde a admissão, desenvolve agitação psicomotora intensa, tremores grosseiros de extremidades, sudorese profusa, taquicardia, hipertensão, febre baixa e alucinações visuais vívidas (relata ver "insetos" na parede).\n\nQual é o diagnóstico e a conduta medicamentosa de escolha?',
     options: [
       'Encefalopatia de Wernicke; reposição isolada de tiamina, sem outras medidas.',
@@ -592,7 +592,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_041',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 28 anos apresenta quadro de mal-estar, náuseas, dor em hipocôndrio direito, colúria e icterícia há 5 dias. Exames sorológicos: HBsAg reagente; anti-HBc IgM reagente; anti-HBs não reagente; HBeAg reagente.\n\nCom base no perfil sorológico apresentado, a interpretação correta é',
     options: [
       'infecção crônica pelo vírus da hepatite B, sem replicação viral ativa.',
@@ -607,7 +607,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_042',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Paciente de 38 anos, vivendo com HIV há 6 anos, em uso irregular de terapia antirretroviral, comparece à consulta de rotina. Exames atuais: contagem de linfócitos T CD4+ de 180 células/mm³; carga viral detectável.\n\nConsiderando a contagem de CD4+, qual profilaxia de infecção oportunista deve ser iniciada nesse momento?',
     options: [
       'Profilaxia para pneumocistose (sulfametoxazol-trimetoprima), pois CD4+ está abaixo de 200 células/mm³.',
@@ -622,7 +622,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_043',
     cycle: 'Ciclo Clínico',
     subject: 'Urologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Adolescente de 14 anos procura emergência com dor testicular direita súbita e intensa, iniciada durante a madrugada, associada a náuseas e vômitos. Ao exame, testículo direito elevado, com posição horizontalizada, extremamente doloroso à palpação, sem alívio da dor à elevação manual do testículo (sinal de Prehn negativo). Ausência de febre.\n\nQual é o diagnóstico mais provável e a conduta imediata?',
     options: [
       'Epididimite aguda; iniciar antibioticoterapia e reavaliar em 48 horas.',
@@ -637,7 +637,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_044',
     cycle: 'Ciclo Clínico',
     subject: 'Pneumologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 70 anos, previamente hígido, é levado à emergência com tosse produtiva, febre e dispneia há 3 dias. Ao exame, confuso quanto ao tempo (desorientado), frequência respiratória de 32 irpm, pressão arterial de 88 x 58 mmHg, e ureia sérica de 60 mg/dL. Radiografia de tórax evidencia consolidação em lobo inferior direito.\n\nCom base no escore CURB-65, qual é a conduta mais adequada?',
     options: [
       'Escore de baixo risco; tratamento ambulatorial com antibiótico oral.',
@@ -652,7 +652,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_045',
     cycle: 'Internato',
     subject: 'Neurocirurgia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 3 meses é levado à consulta de puericultura por aumento progressivo do perímetro cefálico, cruzando dois canais no gráfico de crescimento nos últimos 2 meses. Ao exame, fontanela anterior abaulada e tensa, olhar em "sol poente" (desvio dos olhos para baixo com esclera visível acima da íris), e irritabilidade.\n\nQual é a principal hipótese diagnóstica e o exame de imagem inicial mais indicado?',
     options: [
       'Macrocefalia benigna familiar; nenhum exame de imagem é necessário.',
@@ -667,7 +667,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_046',
     cycle: 'Ciclo Clínico',
     subject: 'Clínica Cirúrgica',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 55 anos, obeso, apresenta abaulamento em região umbilical há 2 anos, redutível e indolor, que aumentava aos esforços. Há 6 horas, nota que a protrusão não retorna mais espontaneamente ou à manobra manual, associada a dor local progressiva, náuseas e distensão abdominal.\n\nQual é a principal complicação suspeitada e a conduta adequada?',
     options: [
       'Hérnia umbilical não complicada; conduta expectante e reavaliação eletiva em 30 dias.',
@@ -682,7 +682,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_047',
     cycle: 'Ciclo Clínico',
     subject: 'Oftalmologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 62 anos procura emergência com dor ocular intensa unilateral de início súbito, associada a cefaleia, náuseas, vômitos e visão de halos coloridos ao redor de luzes. Ao exame, olho direito hiperemiado, córnea com aspecto turvo/edemaciado, pupila em midríase média fixa e não reagente à luz. Pressão intraocular acentuadamente elevada à palpação.\n\nQual é o diagnóstico e a conduta imediata?',
     options: [
       'Conjuntivite viral aguda; colírio lubrificante e compressas frias.',
@@ -697,7 +697,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_048',
     cycle: 'Ciclo Clínico',
     subject: 'Dermatologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 40 anos apresenta placas eritematosas bem delimitadas, recobertas por escamas esbranquiçadas espessas, localizadas em cotovelos, joelhos e couro cabeludo, há vários anos, com períodos de piora e melhora. Relata que, ao remover as escamas com a espátula, surgem pequenos pontos de sangramento puntiforme. Refere também dor e edema em articulações interfalangianas distais das mãos.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Dermatite atópica com artrite reativa associada.',
@@ -712,7 +712,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_049',
     cycle: 'Ciclo Clínico',
     subject: 'Otorrinolaringologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Menino de 9 anos apresenta espirros em salva, coriza hialina, obstrução nasal e prurido nasal e ocular, de padrão sazonal, mais intensos na primavera. Ao exame, mucosa nasal pálida e edemaciada, com presença de "saudação alérgica" (prega horizontal no dorso nasal). Nega febre.\n\nQual é o diagnóstico mais provável e o tratamento de primeira linha?',
     options: [
       'Rinossinusite bacteriana aguda; amoxicilina com clavulanato.',
@@ -727,7 +727,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_050',
     cycle: 'Internato',
     subject: 'Cirurgia Vascular',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 58 anos, obesa, em pós-operatório de 5 dias de artroplastia de joelho, com mobilização reduzida, apresenta dor e edema unilateral em panturrilha esquerda, com aumento de temperatura local e empastamento muscular. Doppler venoso confirma trombo oclusivo em veia poplítea esquerda.\n\nQual é o tratamento de primeira linha indicado?',
     options: [
       'Anticoagulação plena (heparina de baixo peso molecular ou anticoagulante oral direto).',
@@ -742,7 +742,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_051',
     cycle: 'Internato',
     subject: 'Anestesiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Durante avaliação pré-anestésica de paciente programado para cirurgia eletiva, o anestesiologista observa classificação de Mallampati IV, pescoço curto, retrognatia e limitação da extensão cervical.\n\nEsses achados indicam risco aumentado para qual complicação, e qual conduta deve ser priorizada?',
     options: [
       'Risco de hipertermia maligna; disponibilizar dantrolene na sala cirúrgica.',
@@ -757,7 +757,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_052',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 52 anos, sem antecedentes familiares de câncer de mama, assintomática, comparece à Unidade Básica de Saúde para consulta de rotina.\n\nSegundo as recomendações de rastreamento do câncer de mama do Ministério da Saúde para mulheres de risco habitual, a conduta adequada é',
     options: [
       'solicitar mamografia anual a partir dos 40 anos, para todas as mulheres.',
@@ -772,7 +772,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_053',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 27 anos, com atraso menstrual de 7 semanas, procura emergência com dor abdominal súbita e intensa em fossa ilíaca direita, seguida de tontura e quase síncope. Ao exame, hipotensão (PA 85 x 55 mmHg), taquicardia (118 bpm), abdome doloroso difusamente com sinais de irritação peritoneal, e dor à mobilização do colo uterino ao toque vaginal. Beta-hCG positivo. Ultrassonografia transvaginal não evidencia saco gestacional intrauterino, com presença de líquido livre em fundo de saco de Douglas em grande quantidade.\n\nQual é o diagnóstico mais provável e a conduta imediata?',
     options: [
       'Ameaça de abortamento; repouso e progesterona vaginal, com reavaliação em 1 semana.',
@@ -787,7 +787,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_054',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Menina de 2 anos apresenta terceiro episódio de infecção do trato urinário febril confirmada por urocultura em 8 meses. Após tratamento adequado de cada episódio, a mãe é orientada a investigar a causa das infecções recorrentes.\n\nQual exame deve ser solicitado prioritariamente para investigar a principal causa anatômica associada a infecções urinárias febris recorrentes em crianças pequenas?',
     options: [
       'Tomografia computadorizada de abdome com contraste.',
@@ -802,7 +802,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_055',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 14 meses, em consulta de puericultura, é notado com ausência do testículo direito na bolsa escrotal desde o nascimento, não palpável no canal inguinal nem na bolsa escrotal ao exame físico repetido em consultas anteriores. O testículo esquerdo está tópico e de volume normal.\n\nQual é a conduta mais adequada nesse momento?',
     options: [
       'Aguardar até os 5 anos de idade, pois a maioria dos casos desce espontaneamente até essa idade.',
@@ -817,7 +817,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_056',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Equipe de Saúde da Família organiza uma ação programática de rastreamento de hipertensão arterial e diabetes mellitus (Programa Hiperdia) em sua área de abrangência, com busca ativa de pacientes com fatores de risco não cadastrados no programa.\n\nEssa ação, realizada antes do aparecimento de sintomas, com o objetivo de identificar precocemente a doença em fase assintomática, caracteriza qual nível de prevenção?',
     options: ['Prevenção primária.', 'Prevenção secundária.', 'Prevenção terciária.', 'Prevenção quaternária.'],
     correctIndex: 1,
@@ -827,7 +827,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_057',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 55 anos, tabagista, hipertenso, sem diagnóstico prévio de doença cardiovascular, procura Unidade Básica de Saúde para avaliação de risco cardiovascular. Perfil lipídico: LDL-colesterol de 165 mg/dL; HDL-colesterol de 38 mg/dL; triglicerídeos de 190 mg/dL. Escore de risco cardiovascular calculado indica risco alto em 10 anos.\n\nAlém das medidas de mudança de estilo de vida, qual é a conduta farmacológica mais adequada?',
     options: [
       'Iniciar estatina de alta potência, visando redução do LDL-colesterol e do risco cardiovascular.',
@@ -842,7 +842,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_058',
     cycle: 'Ciclo Básico',
     subject: 'Epidemiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Um ensaio clínico randomizado avaliou o efeito de uma nova medicação na prevenção de infarto do miocárdio. No grupo tratado, a incidência do desfecho foi de 5%; no grupo placebo, foi de 10%.\n\nCom base nesses dados, o número necessário para tratar (NNT) para prevenir um caso de infarto é',
     options: ['2.', '10.', '20.', '50.'],
     correctIndex: 2,
@@ -852,7 +852,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_059',
     cycle: 'Ciclo Clínico',
     subject: 'Geriatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 84 anos, viúva, morando sozinha, é avaliada em consulta geriátrica. Relata perda de peso não intencional de 5 kg no último ano, exaustão referida, baixa velocidade de marcha, baixo nível de atividade física e força de preensão manual reduzida para sua idade e sexo.\n\nConsiderando os critérios de Fried, o diagnóstico dessa paciente é',
     options: [
       'robustez (ausência de fragilidade), pois nenhum critério isolado define a síndrome.',
@@ -867,7 +867,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_060',
     cycle: 'Ciclo Clínico',
     subject: 'Endocrinologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 45 anos, assintomática, tem nódulo tireoidiano de 1,8 cm identificado em exame de rotina. TSH normal. Ultrassonografia de tireoide descreve nódulo sólido, hipoecogênico, com margens irregulares, microcalcificações e maior altura que largura.\n\nConsiderando as características ultrassonográficas de suspeita, qual é a conduta mais adequada?',
     options: [
       'Repetir a ultrassonografia em 2 anos, sem necessidade de outros exames, por se tratar de nódulo pequeno.',
@@ -882,7 +882,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_061',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 26 anos, sexualmente ativa desde os 17 anos, nunca realizou exame preventivo (citologia oncótica).\n\nSegundo as diretrizes brasileiras de rastreamento do câncer de colo do útero, qual é a conduta adequada?',
     options: [
       'Iniciar o rastreamento com citologia oncótica, repetindo anualmente até os 25 anos.',
@@ -897,7 +897,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_062',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 50 anos, com amenorreia há 14 meses, relata ondas de calor frequentes, sudorese noturna, insônia e secura vaginal, sintomas que interferem significativamente em sua qualidade de vida. Não possui contraindicações conhecidas (nega histórico pessoal de câncer de mama, tromboembolismo ou doença hepática) e tem menos de 10 anos desde a menopausa.\n\nPara o alívio dos sintomas vasomotores, qual terapia apresenta a maior eficácia nessa paciente?',
     options: [
       'Terapia de reposição hormonal com estrogênio (associado a progestagênio, pois possui útero).',
@@ -912,7 +912,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_063',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 18 meses, procedente de área rural de baixa renda, é levada à UBS com quadro de edema bilateral de membros inferiores, cabelos finos e quebradiços com áreas de despigmentação, apatia, lesões cutâneas descamativas e hepatomegalia leve. Peso muito abaixo do esperado para a idade, mas o edema mascara parcialmente a perda de peso real.\n\nQual é o diagnóstico nutricional mais provável?',
     options: [
       'Marasmo (desnutrição energético-proteica grave, forma não edematosa).',
@@ -927,7 +927,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_064',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mãe de recém-nascido de 20 dias, em aleitamento materno exclusivo, questiona na consulta de puericultura sobre a necessidade de iniciar água, chás ou outros líquidos, pois considera que o leite materno "pode não ser suficiente" durante os dias mais quentes.\n\nSegundo as recomendações do Ministério da Saúde para lactentes saudáveis, a orientação adequada é',
     options: [
       'orientar a introdução de água nos intervalos das mamadas, especialmente em dias quentes.',
@@ -942,7 +942,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_065',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 35 anos, trabalhador em limpeza de área alagada após enchente na cidade, procura atendimento com febre alta, mialgia intensa (principalmente em panturrilhas), hiperemia conjuntival bilateral sem secreção, e, no terceiro dia de sintomas, evolui com icterícia rubínica, oligúria e sangramento gengival.\n\nQual é o diagnóstico mais provável e o tratamento indicado?',
     options: [
       'Hepatite A aguda; suporte clínico, sem antibioticoterapia específica.',
@@ -957,7 +957,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_066',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 30 anos, residente em área endêmica para arboviroses, apresenta febre de início súbito, exantema maculopapular pruriginoso e artralgia intensa e incapacitante em pequenas articulações de mãos e pés, com duração de vários dias, dificultando atividades cotidianas. Nega sinais de alarme (sem dor abdominal intensa ou sangramentos).\n\nQual arbovirose apresenta como principal característica diferencial a artralgia intensa e potencialmente incapacitante e persistente?',
     options: ['Dengue.', 'Chikungunya.', 'Zika vírus.', 'Febre amarela.'],
     correctIndex: 1,
@@ -967,7 +967,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_067',
     cycle: 'Ciclo Clínico',
     subject: 'Gastroenterologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 52 anos, com cirrose hepática conhecida por hepatite C não tratada, é levado à emergência após episódio de vômitos com sangue vivo em grande quantidade, associado a tontura e palidez. Ao exame, hipotensão (PA 82 x 50 mmHg), taquicardia, ascite volumosa e circulação colateral visível no abdome.\n\nAlém da estabilização hemodinâmica, qual é a conduta específica mais indicada para o provável sangramento?',
     options: [
       'Endoscopia digestiva alta precoce, com ligadura elástica de varizes esofágicas, associada a droga vasoativa (terlipressina ou octreotida).',
@@ -982,7 +982,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_068',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Equipe de Saúde da Família que está assumindo uma nova área de abrangência realiza o mapeamento da comunidade, identificando famílias, condições de moradia, saneamento básico, grupos de risco e equipamentos sociais disponíveis (escolas, igrejas, associações).\n\nEsse processo de reconhecimento e organização do cuidado a partir da realidade local é denominado',
     options: ['acolhimento com classificação de risco.', 'territorialização.', 'linha de cuidado.', 'regionalização da assistência.'],
     correctIndex: 1,
@@ -992,7 +992,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_069',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 45 anos, usuário de drogas injetáveis, apresenta febre persistente há 3 semanas, associada a mal-estar, perda de peso e sopro cardíaco novo em foco tricúspide. Ao exame, lesões purpúricas dolorosas em polpas digitais (nódulos de Osler) e hemorragias subungueais em estilhaço. Hemoculturas seriadas positivas para Staphylococcus aureus em três amostras distintas. Ecocardiograma transesofágico evidencia vegetação em valva tricúspide.\n\nCom base nos critérios de Duke, qual é o diagnóstico desse paciente?',
     options: [
       'Endocardite infecciosa rejeitada, pois faltam critérios suficientes.',
@@ -1007,7 +1007,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_070',
     cycle: 'Ciclo Clínico',
     subject: 'Neurologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 32 anos relata fraqueza muscular que piora ao longo do dia e com esforços repetitivos, melhorando com o repouso. Refere queda progressiva das pálpebras (ptose) à tarde e dificuldade para mastigar alimentos duros ao final das refeições. Ao exame, ptose palpebral bilateral que piora ao sustentar o olhar para cima por 1 minuto, sem outras alterações neurológicas focais.\n\nQual é o diagnóstico mais provável e o mecanismo fisiopatológico associado?',
     options: [
       'Esclerose lateral amiotrófica; degeneração de neurônios motores superiores e inferiores.',
@@ -1022,7 +1022,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_071',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 38 semanas, primigesta, em trabalho de parto, é avaliada e apresenta apresentação pélvica completa confirmada por ultrassonografia, com peso fetal estimado em 3.400 g e bacia materna sem alterações aparentes ao exame clínico.\n\nConsiderando as recomendações atuais para apresentação pélvica a termo em primigesta, a conduta mais adequada é',
     options: [
       'indicar parto vaginal pélvico assistido, por ser sempre a via preferencial, independente de outros fatores.',
@@ -1037,7 +1037,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_072',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 29 anos relata corrimento vaginal acinzentado, de odor fétido, mais perceptível após relações sexuais, sem prurido significativo. Ao exame especular, corrimento fino e homogêneo aderido às paredes vaginais. Teste das aminas (whiff test) positivo com KOH a 10%. pH vaginal de 5,2. Bacterioscopia evidencia "clue cells" (células-guia).\n\nQual é o diagnóstico e o tratamento de primeira linha?',
     options: [
       'Candidíase vulvovaginal; fluconazol oral em dose única.',
@@ -1052,7 +1052,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_073',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 4 anos, não vacinada por opção da família, apresenta febre alta, tosse, coriza e conjuntivite há 3 dias, seguidos do surgimento de pequenas manchas esbranquiçadas com halo eritematoso na mucosa jugal, próximo aos molares. No dia seguinte, surge exantema maculopapular que se inicia na face e região retroauricular, progredindo em sentido cefalocaudal.\n\nQual é o diagnóstico mais provável e o achado patognomônico descrito?',
     options: [
       'Rubéola; linfonodomegalia retroauricular isolada.',
@@ -1067,7 +1067,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_074',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 2 meses, com esquema vacinal incompleto para a idade, apresenta tosse seca há 10 dias, que evoluiu para crises de tosse paroxística intensa, com guincho inspiratório ao final dos acessos, seguidos de episódios de cianose e vômitos. Entre as crises, a criança permanece relativamente bem.\n\nQual é o diagnóstico mais provável e o tratamento indicado?',
     options: [
       'Bronquiolite viral aguda; suporte clínico, sem necessidade de antibiótico.',
@@ -1082,7 +1082,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_075',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Equipe de Saúde da Família organiza, mensalmente, um grupo de educação em saúde para pacientes hipertensos e diabéticos da área adstrita, com atividades de orientação nutricional, prática de exercícios físicos supervisionados e espaço de escuta coletiva sobre dificuldades no controle das doenças crônicas.\n\nEssa estratégia de cuidado coletivo, que complementa o atendimento individual, caracteriza qual modelo de atenção?',
     options: [
       'Modelo biomédico tradicional, centrado exclusivamente na consulta individual.',
@@ -1097,7 +1097,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_076',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 45 anos comparece à Unidade Básica de Saúde apenas quando apresenta sintomas agudos, relatando dificuldade de conciliar consultas de rotina com o horário de trabalho. A equipe percebe baixa adesão dos homens da comunidade às ações preventivas oferecidas pela unidade.\n\nQual estratégia é mais coerente com a Política Nacional de Atenção Integral à Saúde do Homem para ampliar essa adesão?',
     options: [
       'Manter o funcionamento da unidade apenas em horário comercial, sem alterações na oferta de serviços.',
@@ -1112,7 +1112,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_077',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 24 anos apresenta padrão persistente de instabilidade em relacionamentos interpessoais (alternando entre idealização e desvalorização extremas das pessoas próximas), autoimagem instável, impulsividade em pelo menos duas áreas potencialmente prejudiciais (gastos, direção perigosa), episódios recorrentes de comportamento autolesivo sem intenção suicida clara, instabilidade afetiva marcante e sentimentos crônicos de vazio.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Transtorno de personalidade antissocial.',
@@ -1127,7 +1127,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_078',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 30 anos, em uso de haloperidol para tratamento de esquizofrenia, é levado à emergência com rigidez muscular generalizada ("em cano de chumbo"), febre alta (39,8 °C), instabilidade autonômica (taquicardia, pressão arterial oscilante, sudorese profusa) e rebaixamento do nível de consciência. Exames laboratoriais mostram creatinofosfoquinase (CPK) muito elevada.\n\nQual é o diagnóstico e a conduta imediata?',
     options: [
       'Síndrome serotoninérgica; suspender antidepressivos serotoninérgicos, que não estão em uso nesse caso.',
@@ -1142,7 +1142,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_079',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 24 anos procura Unidade Básica de Saúde com secreção uretral purulenta abundante e disúria intensa, iniciadas há 3 dias, após relação sexual desprotegida. Nega outros sintomas.\n\nConsiderando o manejo sindrômico das infecções sexualmente transmissíveis preconizado pelo Ministério da Saúde, a conduta terapêutica deve cobrir empiricamente quais agentes, e qual esquema é indicado?',
     options: [
       'Apenas Neisseria gonorrhoeae; ceftriaxona intramuscular em dose única, isoladamente.',
@@ -1157,7 +1157,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_080',
     cycle: 'Internato',
     subject: 'Urgência e Emergência',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 26 anos, vítima de acidente motociclístico, é atendido no pronto-socorro com dor abdominal difusa e hipotensão (PA 84 x 56 mmHg) apesar da reposição volêmica inicial. Realizado protocolo FAST (Focused Assessment with Sonography for Trauma) à beira do leito, que evidencia líquido livre em espaço hepatorrenal (espaço de Morrison).\n\nConsiderando a instabilidade hemodinâmica associada ao FAST positivo, a conduta mais adequada é',
     options: [
       'observação clínica prolongada, com reavaliações seriadas do FAST a cada 6 horas.',
@@ -1172,7 +1172,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_081',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 28 anos, sem cardiopatia estrutural conhecida, procura emergência com palpitações de início súbito, associadas a leve tontura, sem dor torácica ou síncope. Ao exame, frequência cardíaca de 190 bpm, ritmo regular, pressão arterial de 100 x 70 mmHg. Eletrocardiograma mostra taquicardia de complexo QRS estreito e regular, sem ondas P identificáveis.\n\nApós a tentativa inicial de manobra vagal sem sucesso, qual é a conduta farmacológica de escolha?',
     options: [
       'Amiodarona endovenosa em infusão contínua, como primeira escolha medicamentosa.',
@@ -1187,7 +1187,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_082',
     cycle: 'Ciclo Básico',
     subject: 'Epidemiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Um novo teste rápido para triagem de determinada doença foi aplicado em 1.000 pessoas, das quais 100 realmente tinham a doença (confirmado por padrão-ouro). Do total de doentes, 90 tiveram resultado positivo no teste. Entre os 900 sem a doença, 810 tiveram resultado negativo.\n\nCom base nesses dados, a sensibilidade e a especificidade do teste são, respectivamente,',
     options: ['90% e 90%.', '90% e 10%.', '10% e 90%.', '100% e 81%.'],
     correctIndex: 0,
@@ -1197,7 +1197,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_083',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 30 semanas, diagnosticada com diabetes gestacional há 4 semanas, está em acompanhamento com dieta e atividade física orientadas. Apesar da adesão referida às orientações nutricionais, o perfil glicêmico domiciliar mostra glicemias de jejum persistentemente acima de 95 mg/dL e glicemias pós-prandiais de 1 hora acima de 140 mg/dL em mais de duas ocasiões na última semana.\n\nQual é a conduta terapêutica mais adequada nesse momento?',
     options: [
       'Manter apenas dieta e atividade física, aguardando mais 4 semanas antes de qualquer mudança.',
@@ -1212,7 +1212,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_084',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Lactente de 3 meses, em aleitamento materno exclusivo, apresenta episódios recorrentes de regurgitação, cólicas intensas, fezes com raias de sangue e muco, além de dermatite eczematosa persistente. Após exclusão de proteína do leite de vaca da dieta materna, houve melhora significativa dos sintomas em 2 semanas.\n\nQual é o diagnóstico mais provável?',
     options: [
       'Refluxo gastroesofágico fisiológico do lactente.',
@@ -1227,7 +1227,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_085',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Adolescente de 13 anos, sexo feminino, é avaliada em consulta de rotina. Ao exame físico, com a paciente flexionando o tronco para frente (teste de Adams), observa-se assimetria na altura das costelas de um lado em relação ao outro, sugerindo giba costal.\n\nQual é a principal hipótese diagnóstica e a conduta subsequente mais apropriada?',
     options: [
       'Cifose postural simples; apenas orientações posturais, sem necessidade de exames.',
@@ -1242,7 +1242,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_086',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Gestante de 16 semanas, sem pré-natal prévio, realiza sorologias de rotina que evidenciam IgM positivo e IgG positivo para toxoplasmose, com teste de avidez de IgG baixo, sugerindo infecção aguda recente, provavelmente adquirida durante a gestação atual.\n\nQual é a conduta terapêutica indicada nesse momento, considerando ainda não haver confirmação de infecção fetal?',
     options: [
       'Iniciar espiramicina, para reduzir o risco de transmissão vertical, e investigar infecção fetal por amniocentese.',
@@ -1257,7 +1257,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_087',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 68 anos, hipertenso, procura atendimento com dor em queimação intensa em hemitórax direito, seguida, 2 dias depois, pelo aparecimento de vesículas agrupadas sobre base eritematosa, distribuídas em faixa unilateral, respeitando um dermátomo torácico. Procurou atendimento no terceiro dia de lesões.\n\nQual é o diagnóstico e a conduta terapêutica mais adequada nesse momento?',
     options: [
       'Herpes simples recorrente; aciclovir tópico apenas, sem necessidade de tratamento sistêmico.',
@@ -1272,7 +1272,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_088',
     cycle: 'Ciclo Clínico',
     subject: 'Cirurgia Geral',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 45 anos, assintomático, sem antecedentes pessoais ou familiares de câncer colorretal ou doença inflamatória intestinal, procura Unidade Básica de Saúde para orientação sobre rastreamento de câncer colorretal.\n\nSegundo as recomendações vigentes para população de risco habitual, a conduta adequada é',
     options: [
       'iniciar o rastreamento com colonoscopia (ou pesquisa de sangue oculto nas fezes anual) a partir dos 45-50 anos.',
@@ -1287,7 +1287,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_089',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 60 anos chega ao pronto-socorro de um hospital sem hemodinâmica com dor torácica típica iniciada há 40 minutos. Eletrocardiograma mostra supradesnivelamento de ST em parede inferior. O hospital não dispõe de sala de hemodinâmica, e o serviço de referência para angioplastia primária fica a 3 horas de transporte terrestre.\n\nConsiderando a indisponibilidade de angioplastia primária em tempo hábil, qual é a conduta mais adequada?',
     options: [
       'Aguardar o transporte para angioplastia primária, mesmo que o tempo total ultrapasse 120 minutos, sem outra alternativa terapêutica.',
@@ -1302,7 +1302,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_090',
     cycle: 'Ciclo Clínico',
     subject: 'Neurologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 48 anos apresenta cefaleia súbita, de intensidade máxima já no início ("a pior dor de cabeça da vida"), associada a rigidez de nuca, náuseas, vômitos e fotofobia. Nega trauma. Ao exame, sem déficits motores focais, mas com sonolência leve.\n\nQual é a principal hipótese diagnóstica e a conduta inicial mais apropriada?',
     options: [
       'Enxaqueca com aura; analgesia e alta com retorno ambulatorial.',
@@ -1317,7 +1317,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_091',
     cycle: 'Ciclo Clínico',
     subject: 'Geriatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 72 anos relata perda involuntária de pequenas quantidades de urina ao tossir, espirrar ou realizar esforço físico, sem urgência miccional associada. Nega perdas durante o sono. Antecedente de três partos vaginais.\n\nQual é o tipo de incontinência urinária mais provável, e qual a primeira linha de tratamento não farmacológico?',
     options: [
       'Incontinência urinária de urgência; treinamento vesical e anticolinérgicos.',
@@ -1332,7 +1332,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_092',
     cycle: 'Ciclo Clínico',
     subject: 'Endocrinologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 8 anos, previamente saudável e com peso adequado, é levada à emergência pelos pais por apresentar, nas últimas 3 semanas, sede excessiva, aumento da frequência urinária (inclusive enurese noturna secundária, que não ocorria antes) e perda de peso não intencional, apesar do apetite aumentado. Glicemia capilar na admissão: 380 mg/dL. Cetonúria presente, sem sinais de acidose grave.\n\nQual é o diagnóstico mais provável e a conduta terapêutica de longo prazo?',
     options: [
       'Diabetes mellitus tipo 2; metformina como tratamento inicial.',
@@ -1347,7 +1347,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_093',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Puérpera de 6 semanas, em consulta de puericultura do bebê, relata à enfermeira da UBS tristeza persistente, choro fácil, dificuldade de sentir prazer em atividades que antes gostava, sensação de estar "sobrecarregada" e culpa por não conseguir cuidar bem do filho, sintomas presentes há cerca de 1 mês.\n\nQual é a conduta mais adequada da equipe de Atenção Primária diante desse relato?',
     options: [
       'Considerar normal o "baby blues" e orientar apenas que os sintomas passarão espontaneamente em poucos dias.',
@@ -1362,7 +1362,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_094',
     cycle: 'Ciclo Clínico',
     subject: 'Psiquiatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Menino de 2 anos e 6 meses é levado à consulta por preocupação dos pais quanto ao desenvolvimento. Relatam que a criança não estabelece contato visual consistente, não aponta para objetos de interesse compartilhado, não responde ao próprio nome de forma consistente, apresenta movimentos repetitivos das mãos (flapping) e forte resistência a mudanças em sua rotina diária, além de ainda não ter desenvolvido linguagem verbal.\n\nConsiderando esses sinais, qual é a principal hipótese diagnóstica e a conduta apropriada?',
     options: [
       'Atraso de linguagem isolado; apenas encaminhar para fonoaudiologia, sem necessidade de avaliação mais ampla.',
@@ -1377,7 +1377,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_095',
     cycle: 'Ciclo Clínico',
     subject: 'Ginecologia & Obstetrícia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Puérpera evolui, 20 minutos após parto vaginal sem intercorrências, com sangramento vaginal abundante e persistente. Ao exame, útero amolecido, com fundo uterino acima da cicatriz umbilical, sem boa resposta à massagem uterina inicial. Placenta já foi expelida integralmente.\n\nQual é a principal causa de hemorragia pós-parto nesse contexto e a conduta medicamentosa de primeira linha?',
     options: [
       'Retenção de restos placentários; curetagem uterina imediata, sem uso de uterotônicos.',
@@ -1392,7 +1392,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_096',
     cycle: 'Ciclo Clínico',
     subject: 'Pediatria',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Criança de 4 anos apresenta crise convulsiva em vigência de febre de 39 °C, com características focais (desvio do olhar e abalos restritos ao membro superior direito), duração de 20 minutos, e um segundo episódio dentro do mesmo dia febril. Exame neurológico pós-ictal com leve assimetria de força, que se resolve em algumas horas.\n\nDiferentemente da crise febril simples, esse quadro caracteriza uma crise febril complexa, e a conduta adequada inclui',
     options: [
       'tranquilizar a família e liberar sem qualquer investigação adicional, como na crise febril simples.',
@@ -1407,7 +1407,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_097',
     cycle: 'Ciclo Clínico',
     subject: 'Cardiologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Mulher de 55 anos, em uso regular e comprovadamente aderente a três classes de anti-hipertensivos em doses otimizadas (incluindo um diurético), mantém pressão arterial persistentemente acima da meta (155 x 95 mmHg) em múltiplas aferições, inclusive fora do consultório (MAPA confirmatório).\n\nEssa condição é definida como hipertensão arterial resistente, e a investigação inicial mais apropriada deve incluir a pesquisa de',
     options: [
       'causas secundárias de hipertensão, como hiperaldosteronismo primário, doença renal e apneia obstrutiva do sono.',
@@ -1422,7 +1422,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_098',
     cycle: 'Ciclo Clínico',
     subject: 'Infectologia',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Técnica de enfermagem sofre acidente perfurocortante com agulha utilizada em paciente-fonte com sorologia desconhecida, durante coleta de sangue. A lesão foi profunda, com sangramento visível, e a agulha continha sangue visível no momento do acidente.\n\nConsiderando a profilaxia pós-exposição ocupacional a material biológico, a conduta imediata mais adequada é',
     options: [
       'aguardar o resultado da sorologia do paciente-fonte, que pode levar dias, antes de iniciar qualquer conduta profilática.',
@@ -1437,7 +1437,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_099',
     cycle: 'Ciclo Clínico',
     subject: 'Cirurgia Geral',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Homem de 58 anos relata dispepsia (desconforto epigástrico e saciedade precoce) há 3 meses, associada a emagrecimento não intencional de 6 kg, anemia ferropriva de início recente e episódios de disfagia progressiva para sólidos. Nega uso de anti-inflamatórios.\n\nConsiderando a presença de sinais de alarme associados à dispepsia, qual é a conduta prioritária?',
     options: [
       'Tratamento empírico com inibidor de bomba de prótons por 8 semanas, reavaliando apenas se não houver melhora.',
@@ -1452,7 +1452,7 @@ export const ENAMED_INEDITA_QUESTIONS: any[] = [
     id: 'enamed_inedita_100',
     cycle: 'Ciclo Clínico',
     subject: 'Medicina de Família/SUS',
-    banca: 'ENAMED (inédita)',
+    banca: 'ENAMED',
     text: 'Paciente acompanhado na Unidade Básica de Saúde por hipertensão arterial de difícil controle é encaminhado ao cardiologista de um ambulatório de especialidades. Após a consulta especializada, o cardiologista devolve um relatório à equipe da UBS com orientações sobre ajuste terapêutico e recomendação de manutenção do acompanhamento conjunto.\n\nEsse fluxo de comunicação entre os níveis de atenção, essencial para a continuidade e a integralidade do cuidado, é denominado',
     options: [
       'prevenção quaternária.',
