@@ -65,6 +65,7 @@ import { SIRIOLIBANES_GERADO_2026_QUESTIONS } from './siriolibanes_gerado_2026_q
 import { UFRJ_GERADO_2026_QUESTIONS } from './ufrj_gerado_2026_questions';
 import { CERMAM_EXTRA_100 } from './cermam_extra_100';
 import { CERMAM_GERADO_2026_QUESTIONS } from './cermam_gerado_2026_questions';
+import { INTERNATO_EXTRA_700 } from './internato_extra_700';
 import DoctordleMode from './DoctordleMode';
 import { setSfxEnabled, playCorrect, playWrong, playLevelUp, playTick, playTimeout } from './sfx';
 import {
@@ -32666,5 +32667,4 @@ const QUESTIONS_RAW: Question[] = [
       'corr eta, pois a criança faleceu;',
       'errada, pois ele não deveria ter participado da reanimação cardiorrespiratória;',
       'correta, pois na emergência não há necessidade de registro no prontuário;',
-      'errada, pois todo atendimento deve ser registrado no prontuár io.',
-    ],
+      'errada, pois to
